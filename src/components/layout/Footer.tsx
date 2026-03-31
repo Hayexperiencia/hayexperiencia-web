@@ -19,14 +19,14 @@ export default function Footer() {
             </p>
           </div>
 
-          {/* Enlaces */}
+          {/* Navegacion */}
           <div>
             <h3 className="text-sm font-semibold text-[var(--color-accent)] uppercase tracking-wider">Navegacion</h3>
             <ul className="mt-4 space-y-2">
               <li><Link href="/propiedades" className="text-sm text-gray-300 hover:text-white transition-colors">Propiedades</Link></li>
-              <li><Link href="/proyectos/aluna" className="text-sm text-gray-300 hover:text-white transition-colors">Proyecto ALUNA</Link></li>
-              <li><Link href="/proyectos/el-faro" className="text-sm text-gray-300 hover:text-white transition-colors">Proyecto El Faro</Link></li>
+              <li><Link href="/proyectos" className="text-sm text-gray-300 hover:text-white transition-colors">Proyectos</Link></li>
               <li><Link href="/nosotros" className="text-sm text-gray-300 hover:text-white transition-colors">Nosotros</Link></li>
+              <li><Link href="/contacto" className="text-sm text-gray-300 hover:text-white transition-colors">Contacto</Link></li>
             </ul>
           </div>
 
@@ -41,19 +41,36 @@ export default function Footer() {
             </ul>
           </div>
 
-          {/* Horario */}
+          {/* Marcas del grupo */}
           <div>
-            <h3 className="text-sm font-semibold text-[var(--color-accent)] uppercase tracking-wider">Horario</h3>
+            <h3 className="text-sm font-semibold text-[var(--color-accent)] uppercase tracking-wider">Grupo Hay Experiencia</h3>
             <ul className="mt-4 space-y-2">
-              <li className="text-sm text-gray-300">Lunes a Viernes: 8am - 6pm</li>
-              <li className="text-sm text-gray-300">Sabado: 9am - 1pm</li>
+              <li>
+                <Link href="/" className="text-sm text-gray-300 hover:text-white transition-colors">
+                  hayexperiencia.com — Inmobiliaria
+                </Link>
+              </li>
+              <li>
+                <a href="https://capiolab.com" target="_blank" rel="noopener noreferrer" className="text-sm text-gray-300 hover:text-white transition-colors">
+                  capiolab.com — Tecnologia y CRM
+                </a>
+              </li>
+              <li className="text-sm text-gray-500">
+                hayexperiencia.co — Corporativa (proximamente)
+              </li>
             </ul>
+            <div className="mt-4">
+              <p className="text-xs text-gray-500">Lun-Vie: 8am-6pm | Sab: 9am-1pm</p>
+            </div>
           </div>
         </div>
 
-        <div className="mt-8 pt-8 border-t border-white/10 text-center">
+        <div className="mt-8 pt-8 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-4">
           <p className="text-sm text-gray-400">
             &copy; {new Date().getFullYear()} Hay Experiencia SAS. Todos los derechos reservados.
+          </p>
+          <p className="text-xs text-gray-500">
+            Marinilla, Antioquia, Colombia
           </p>
         </div>
       </div>
