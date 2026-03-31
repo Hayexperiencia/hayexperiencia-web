@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Script from "next/script";
 import MobileBottomBar from "./MobileBottomBar";
 
@@ -21,8 +21,21 @@ export default function PropertyContactSidebar({
 }: PropertyContactSidebarProps) {
   const [showForm, setShowForm] = useState(false);
 
+  // Lock body scroll when modal is open
+  useEffect(() => {
+    if (showForm) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+    return () => { document.body.style.overflow = ""; };
+  }, [showForm]);
+
   return (
     <>
+      {/* Hide global WhatsApp button on this page in mobile (bottom bar replaces it) */}
+      <style>{`@media (max-width: 1023px) { .whatsapp-global { display: none !important; } }`}</style>
+
       <div className="sticky top-24 space-y-4">
         <div className="p-6 rounded-2xl border border-[var(--color-border)] bg-white">
           <h3 className="text-lg font-semibold text-[var(--color-primary)] mb-2">Te interesa esta propiedad?</h3>
@@ -30,7 +43,7 @@ export default function PropertyContactSidebar({
 
           {/* CTA Solicitar visita */}
           <button
-            onClick={() => setShowForm(!showForm)}
+            onClick={() => setShowForm(true)}
             className="flex items-center justify-center gap-2 w-full px-6 py-3 rounded-lg bg-[var(--color-accent)] text-[var(--color-primary)] font-semibold hover:bg-[var(--color-accent-light)] transition-colors"
           >
             <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -74,24 +87,34 @@ export default function PropertyContactSidebar({
             Respuesta en menos de 24 horas
           </p>
         </div>
+      </div>
 
-        {/* Inline GHL Form */}
-        {showForm && (
-          <div className="p-4 rounded-2xl border border-[var(--color-border)] bg-white">
-            <div className="flex items-center justify-between mb-3">
-              <h4 className="text-sm font-semibold text-[var(--color-primary)]">Solicitar visita</h4>
-              <button onClick={() => setShowForm(false)} className="text-[var(--color-text-light)] hover:text-[var(--color-primary)]">
+      {/* Modal GHL Form */}
+      {showForm && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 p-4" onClick={() => setShowForm(false)}>
+          <div
+            className="relative w-full max-w-lg bg-white rounded-2xl shadow-xl overflow-hidden"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-center justify-between p-4 border-b border-[var(--color-border)]">
+              <div>
+                <h4 className="text-lg font-semibold text-[var(--color-primary)]">Solicitar visita</h4>
+                <p className="text-xs text-[var(--color-text-light)]">
+                  {propertyTitle} (Ref: {propertyId})
+                </p>
+              </div>
+              <button
+                onClick={() => setShowForm(false)}
+                className="p-2 rounded-lg hover:bg-gray-100 text-[var(--color-text-light)] hover:text-[var(--color-primary)] transition-colors"
+              >
                 <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
               </button>
             </div>
-            <p className="text-xs text-[var(--color-text-light)] mb-3">
-              Propiedad: {propertyTitle} (Ref: {propertyId})
-            </p>
-            <div className="rounded-xl overflow-hidden">
+            <div className="p-4">
               <iframe
                 src="https://links.capiolab.com/widget/form/giw7Q3Kz4jQWprjZztSb"
                 style={{ width: "100%", height: "515px", border: "none" }}
-                id={`inline-form-${propertyId}`}
+                id={`modal-form-${propertyId}`}
                 data-layout='{"id":"INLINE"}'
                 data-trigger-type="alwaysShow"
                 data-trigger-value=""
@@ -101,15 +124,15 @@ export default function PropertyContactSidebar({
                 data-deactivation-value=""
                 data-form-name="Real Estate Consulting Lead"
                 data-height="515"
-                data-layout-iframe-id={`inline-form-${propertyId}`}
+                data-layout-iframe-id={`modal-form-${propertyId}`}
                 data-form-id="giw7Q3Kz4jQWprjZztSb"
                 title="Solicitar visita"
               />
             </div>
             <Script src="https://links.capiolab.com/js/form_embed.js" strategy="lazyOnload" />
           </div>
-        )}
-      </div>
+        </div>
+      )}
 
       {/* Mobile bottom bar */}
       <MobileBottomBar
