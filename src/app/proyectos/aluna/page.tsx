@@ -1,6 +1,4 @@
 import Image from "next/image";
-import { getProperties } from "@/lib/wasi";
-import PropertyGrid from "@/components/propiedades/PropertyGrid";
 import Link from "next/link";
 import type { Metadata } from "next";
 
@@ -8,8 +6,6 @@ export const metadata: Metadata = {
   title: "ALUNA Campestre",
   description: "Lotes campestres desde 2.500 m2 en Marinilla. Proyecto Hay Experiencia + Arka11. Unidad cerrada, vias pavimentadas, entorno natural.",
 };
-
-export const revalidate = 3600;
 
 const CARACTERISTICAS = [
   "Lotes desde 2.500 m2",
@@ -20,12 +16,7 @@ const CARACTERISTICAS = [
   "45-50 minutos de Medellin",
 ];
 
-export default async function AlunaPage() {
-  const { properties } = await getProperties({
-    id_property_type: 5,
-    for_sale: true,
-    take: 20,
-  });
+export default function AlunaPage() {
 
   return (
     <div>
@@ -75,14 +66,6 @@ export default async function AlunaPage() {
               </div>
             ))}
           </div>
-        </div>
-      </section>
-
-      {/* Lotes disponibles */}
-      <section className="py-16">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <h2 className="text-2xl font-bold text-[var(--color-primary)] mb-8">Lotes disponibles</h2>
-          <PropertyGrid properties={properties} />
         </div>
       </section>
 
