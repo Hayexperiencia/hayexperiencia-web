@@ -3,23 +3,41 @@ import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Proyectos",
-  description: "Proyectos inmobiliarios de Hay Experiencia: ALUNA Campestre en Marinilla, El Faro nautico en El Penol.",
+  description: "Proyectos inmobiliarios de Hay Experiencia en el Oriente Antioqueno: ALUNA Campestre, El Faro, Remanso de Oriente, Aquaverde.",
 };
 
 const PROYECTOS = [
   {
     name: "ALUNA Campestre",
-    description: "Lotes campestres en Marinilla, Oriente Antioqueno. Proyecto en sociedad con Arka11. 9 lotes disenados para aprovechar el paisaje y la tranquilidad de la zona.",
+    location: "Marinilla, Antioquia",
+    description: "Lotes campestres desde 2.500 m2 en Marinilla. Proyecto en sociedad con Arka11. Unidad cerrada con vias pavimentadas, redes subterraneas y entorno natural privilegiado.",
     href: "/proyectos/aluna",
-    badge: "9 lotes disponibles",
-    status: "En venta",
+    badge: "En venta",
+    highlights: ["9 lotes", "Desde 2.500 m2", "Desde $411M"],
   },
   {
     name: "El Faro",
-    description: "Proyecto nautico en El Penol, embalse de Guatape. Uno de los destinos turisticos mas importantes de Antioquia. Foco de desarrollo para 2026.",
+    location: "El Penol, Antioquia",
+    description: "Condominio nautico en peninsula de 10 cuadras sobre la represa de Guatape. Suites, villas, sede nautica con muelles, senderos y reserva natural.",
     href: "/proyectos/el-faro",
-    badge: "Proximamente",
-    status: "En estructuracion",
+    badge: "En desarrollo",
+    highlights: ["Peninsula", "Suites y Villas", "Sede nautica"],
+  },
+  {
+    name: "Remanso de Oriente",
+    location: "Oriente Antioqueno",
+    description: "Proyecto residencial en el corazon del Oriente Antioqueno. Disenado para quienes buscan tranquilidad sin alejarse de la ciudad.",
+    href: "/proyectos/remanso",
+    badge: "Comisiones pendientes",
+    highlights: ["60/66 unidades", "Oriente Antioqueno"],
+  },
+  {
+    name: "Aquaverde",
+    location: "Marinilla, Antioquia",
+    description: "Condominio campestre exclusivo con 41 lotes entre 1.500 y 1.900 m2. Lago privado, senderos ecologicos y seguridad 24/7.",
+    href: "/proyectos/aquaverde",
+    badge: "Aliado",
+    highlights: ["41 lotes", "Lago privado", "1.500-1.900 m2"],
   },
 ];
 
@@ -34,32 +52,53 @@ export default function ProyectosPage() {
       </section>
 
       <section className="py-16">
-        <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 space-y-8">
+        <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8 space-y-6">
           {PROYECTOS.map((p) => (
             <Link
               key={p.name}
               href={p.href}
               className="group block rounded-2xl border border-[var(--color-border)] overflow-hidden hover:shadow-lg transition-shadow duration-200"
             >
-              <div className="p-8 flex flex-col sm:flex-row sm:items-center gap-6">
-                <div className="flex-1">
-                  <div className="flex items-center gap-3 mb-2">
-                    <span className="px-3 py-1 rounded-full bg-[var(--color-accent)] text-xs font-semibold text-[var(--color-primary)]">
-                      {p.badge}
-                    </span>
-                    <span className="text-xs text-[var(--color-text-light)]">{p.status}</span>
-                  </div>
-                  <h2 className="text-2xl font-bold text-[var(--color-primary)] group-hover:text-[var(--color-primary-light)]">{p.name}</h2>
-                  <p className="mt-2 text-[var(--color-text-light)]">{p.description}</p>
-                </div>
-                <div className="flex-shrink-0">
-                  <span className="inline-flex items-center text-sm font-medium text-[var(--color-primary)] group-hover:text-[var(--color-primary-light)]">
-                    Ver proyecto &rarr;
+              <div className="p-8">
+                <div className="flex flex-wrap items-center gap-3 mb-3">
+                  <span className="px-3 py-1 rounded-full bg-[var(--color-accent)] text-xs font-semibold text-[var(--color-primary)]">
+                    {p.badge}
                   </span>
+                  <span className="text-sm text-[var(--color-text-light)]">{p.location}</span>
                 </div>
+                <h2 className="text-2xl font-bold text-[var(--color-primary)] group-hover:text-[var(--color-primary-light)] transition-colors">{p.name}</h2>
+                <p className="mt-2 text-[var(--color-text-light)] max-w-2xl">{p.description}</p>
+                <div className="mt-4 flex flex-wrap gap-2">
+                  {p.highlights.map((h) => (
+                    <span key={h} className="px-3 py-1 rounded-full bg-gray-100 text-xs font-medium text-[var(--color-primary)]">{h}</span>
+                  ))}
+                </div>
+                <span className="mt-4 inline-flex items-center text-sm font-medium text-[var(--color-primary)] group-hover:text-[var(--color-primary-light)]">
+                  Ver proyecto &rarr;
+                </span>
               </div>
             </Link>
           ))}
+        </div>
+      </section>
+
+      {/* Arka11 partner section */}
+      <section className="py-16 bg-gray-50/50">
+        <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8 text-center">
+          <h2 className="text-2xl font-bold text-[var(--color-primary)] mb-4">Alianza estrategica</h2>
+          <p className="text-[var(--color-text-light)]">
+            Trabajamos en alianza con <strong className="text-[var(--color-primary)]">Arka11</strong>, empresa de desarrollo inmobiliario
+            especializada en proyectos de lotes campestres en el Oriente Antioqueno. Juntos desarrollamos ALUNA Campestre
+            y exploramos nuevas oportunidades de inversion en la region.
+          </p>
+          <a
+            href="https://arka11.co"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="mt-6 inline-flex items-center text-sm font-medium text-[var(--color-primary)] hover:text-[var(--color-primary-light)]"
+          >
+            Conocer Arka11 &rarr;
+          </a>
         </div>
       </section>
     </div>
