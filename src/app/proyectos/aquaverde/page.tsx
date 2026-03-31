@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import type { Metadata } from "next";
 
@@ -18,8 +19,11 @@ const AMENIDADES = [
 export default function AquaverdePage() {
   return (
     <div>
-      <section className="bg-[var(--color-primary)] py-20">
-        <div className="mx-auto max-w-4xl text-center px-4">
+      <section className="relative bg-[var(--color-primary)] overflow-hidden">
+        <div className="absolute inset-0">
+          <Image src="/images/proyectos/aquaverde-hero.webp" alt="Aquaverde - Condominio campestre en Marinilla" fill className="object-cover opacity-30" priority />
+        </div>
+        <div className="relative mx-auto max-w-4xl text-center px-4 py-24">
           <span className="inline-block px-4 py-1 rounded-full bg-[var(--color-accent)] text-[var(--color-primary)] text-sm font-semibold mb-4">
             Proyecto aliado
           </span>
@@ -40,6 +44,21 @@ export default function AquaverdePage() {
             A pocos minutos de Medellin, Aquaverde combina seguridad, valorizacion y exclusividad
             para quienes desean invertir en un lote campestre con lago privado y senderos ecologicos.
           </p>
+        </div>
+      </section>
+
+      {/* Gallery */}
+      <section className="py-16 bg-white">
+        <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
+          <h2 className="text-2xl font-bold text-[var(--color-primary)] mb-6">Galeria del proyecto</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="relative aspect-video rounded-2xl overflow-hidden">
+              <Image src="/images/proyectos/aquaverde-hero.webp" alt="Aquaverde render 1" fill className="object-cover" sizes="(max-width: 768px) 100vw, 50vw" />
+            </div>
+            <div className="relative aspect-video rounded-2xl overflow-hidden">
+              <Image src="/images/proyectos/aquaverde-2.webp" alt="Aquaverde render 2" fill className="object-cover" sizes="(max-width: 768px) 100vw, 50vw" />
+            </div>
+          </div>
         </div>
       </section>
 

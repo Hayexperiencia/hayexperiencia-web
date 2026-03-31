@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import type { Metadata } from "next";
 
@@ -26,9 +27,12 @@ const UNIDADES = [
 export default function ElFaroPage() {
   return (
     <div>
-      {/* Hero */}
-      <section className="bg-[var(--color-primary)] py-20">
-        <div className="mx-auto max-w-4xl text-center px-4">
+      {/* Hero with image */}
+      <section className="relative bg-[var(--color-primary)] overflow-hidden">
+        <div className="absolute inset-0">
+          <Image src="/images/proyectos/el-faro-hero.jpg" alt="El Faro - Peninsula sobre la represa de Guatape" fill className="object-cover opacity-30" priority />
+        </div>
+        <div className="relative mx-auto max-w-4xl text-center px-4 py-24">
           <span className="inline-block px-4 py-1 rounded-full bg-[var(--color-accent)] text-[var(--color-primary)] text-sm font-semibold mb-4">
             En desarrollo
           </span>
