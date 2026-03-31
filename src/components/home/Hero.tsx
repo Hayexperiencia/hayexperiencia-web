@@ -1,5 +1,5 @@
 import Image from "next/image";
-import Link from "next/link";
+import SearchBar from "./SearchBar";
 
 export default function Hero() {
   return (
@@ -18,20 +18,7 @@ export default function Hero() {
               Lotes, casas, apartamentos y fincas en el Oriente Antioqueno.
               Te acompanamos a encontrar el lugar perfecto para tu proximo proyecto.
             </p>
-            <div className="mt-8 flex flex-wrap gap-4">
-              <Link
-                href="/propiedades"
-                className="inline-flex items-center px-8 py-3.5 rounded-lg bg-[var(--color-accent)] text-[var(--color-primary)] font-semibold hover:bg-[var(--color-accent-light)] transition-colors duration-200"
-              >
-                Ver propiedades
-              </Link>
-              <Link
-                href="/contacto"
-                className="inline-flex items-center px-8 py-3.5 rounded-lg border-2 border-[var(--color-primary)] text-[var(--color-primary)] font-semibold hover:bg-[var(--color-primary)] hover:text-white transition-colors duration-200"
-              >
-                Contactanos
-              </Link>
-            </div>
+            <SearchBar />
           </div>
           <div className="relative aspect-[4/3] rounded-2xl overflow-hidden">
             <Image
