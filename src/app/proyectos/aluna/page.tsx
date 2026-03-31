@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import type { Metadata } from "next";
+import ProjectGallery from "@/components/propiedades/ProjectGallery";
 
 export const metadata: Metadata = {
   title: "ALUNA Campestre",
@@ -68,6 +69,12 @@ export default function AlunaPage() {
           </div>
         </div>
       </section>
+
+      <ProjectGallery
+        images={[
+          { src: "/images/proyectos/aluna-hero.png", alt: "ALUNA Campestre - Vista panoramica de los lotes" },
+        ]}
+      />
 
       {/* Alianza */}
       <section className="py-12 bg-gray-50/50">

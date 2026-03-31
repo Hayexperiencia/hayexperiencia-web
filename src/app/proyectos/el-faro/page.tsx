@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import type { Metadata } from "next";
+import ProjectGallery from "@/components/propiedades/ProjectGallery";
 
 export const metadata: Metadata = {
   title: "El Faro - Condominio Nautico",
@@ -89,6 +90,18 @@ export default function ElFaroPage() {
           </div>
         </div>
       </section>
+
+      {/* Galeria */}
+      <ProjectGallery
+        images={[
+          { src: "/images/proyectos/el-faro-drone-hd.jpg", alt: "Vista aerea de la peninsula El Faro" },
+          { src: "/images/proyectos/el-faro-villas.jpg", alt: "Villas El Faro" },
+          { src: "/images/proyectos/el-faro-villa-1.jpg", alt: "Villa a nivel - exterior" },
+          { src: "/images/proyectos/el-faro-villa-2.jpg", alt: "Villa 3 pisos - exterior" },
+          { src: "/images/proyectos/el-faro-simplex.jpg", alt: "Suite Simplex" },
+          { src: "/images/proyectos/el-faro-duplex.jpg", alt: "Suite Duplex" },
+        ]}
+      />
 
       {/* CTA */}
       <section className="py-16 bg-[var(--color-primary)]">

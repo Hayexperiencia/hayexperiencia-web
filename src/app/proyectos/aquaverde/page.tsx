@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import type { Metadata } from "next";
+import ProjectGallery from "@/components/propiedades/ProjectGallery";
 
 export const metadata: Metadata = {
   title: "Aquaverde",
@@ -47,20 +48,14 @@ export default function AquaverdePage() {
         </div>
       </section>
 
-      {/* Gallery */}
-      <section className="py-16 bg-white">
-        <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
-          <h2 className="text-2xl font-bold text-[var(--color-primary)] mb-6">Galeria del proyecto</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="relative aspect-video rounded-2xl overflow-hidden">
-              <Image src="/images/proyectos/aquaverde-hero.webp" alt="Aquaverde render 1" fill className="object-cover" sizes="(max-width: 768px) 100vw, 50vw" />
-            </div>
-            <div className="relative aspect-video rounded-2xl overflow-hidden">
-              <Image src="/images/proyectos/aquaverde-2.webp" alt="Aquaverde render 2" fill className="object-cover" sizes="(max-width: 768px) 100vw, 50vw" />
-            </div>
-          </div>
-        </div>
-      </section>
+      <ProjectGallery
+        images={[
+          { src: "/images/proyectos/aquaverde-hero.webp", alt: "Aquaverde - Vista general del condominio" },
+          { src: "/images/proyectos/aquaverde-2.webp", alt: "Aquaverde - Render zona social" },
+          { src: "/images/proyectos/aquaverde-3.webp", alt: "Aquaverde - Render lago privado" },
+          { src: "/images/proyectos/aquaverde-4.webp", alt: "Aquaverde - Render senderos" },
+        ]}
+      />
 
       <section className="py-16 bg-gray-50/50">
         <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">

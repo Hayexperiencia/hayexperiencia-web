@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import type { Metadata } from "next";
+import ProjectGallery from "@/components/propiedades/ProjectGallery";
 
 export const metadata: Metadata = {
   title: "Remanso de Oriente",
@@ -37,6 +38,13 @@ export default function RemansoPage() {
           </p>
         </div>
       </section>
+
+      <ProjectGallery
+        images={[
+          { src: "/images/hero-oriente.jpg", alt: "Paisaje del Oriente Antioqueno" },
+        ]}
+        title="Ubicacion"
+      />
 
       <section className="py-16 bg-[var(--color-primary)]">
         <div className="mx-auto max-w-3xl text-center px-4">
