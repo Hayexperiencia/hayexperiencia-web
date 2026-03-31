@@ -1,4 +1,4 @@
-import { PROPERTY_TYPES } from "./types";
+import { PROPERTY_TYPES, WasiProperty, WasiImage, WasiGalleryImage } from "./types";
 
 export function formatPrice(price: string | number): string {
   const num = typeof price === "string" ? parseInt(price, 10) : price;
@@ -34,6 +34,37 @@ export function getWhatsAppLink(message: string): string {
 
 export function getPropertyWhatsAppMessage(title: string, id: number): string {
   return `Hola, me interesa la propiedad ${id} - ${title} en hayexperiencia.com`;
+}
+
+export function extractImages(property: WasiProperty): WasiImage[] {
+  const images: WasiImage[] = [];
+  const seen = new Set<string>();
+
+  // Main image first
+  if (property.main_image?.url) {
+    const url = property.main_image.url_big || property.main_image.url;
+    seen.add(url);
+    images.push({ url, url_big: property.main_image.url_big, url_original: property.main_image.url_original, description: property.main_image.description });
+  }
+
+  // Gallery images
+  if (property.galleries?.length) {
+    for (const gallery of property.galleries) {
+      for (const key of Object.keys(gallery)) {
+        if (key === "id") continue;
+        const img = gallery[key] as WasiGalleryImage;
+        if (img && typeof img === "object" && img.url) {
+          const url = img.url_big || img.url;
+          if (!seen.has(url)) {
+            seen.add(url);
+            images.push({ url, url_big: img.url_big, url_original: img.url_original, description: img.description });
+          }
+        }
+      }
+    }
+  }
+
+  return images;
 }
 
 export function stripHtml(html: string): string {

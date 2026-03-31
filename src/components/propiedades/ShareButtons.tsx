@@ -1,14 +1,39 @@
 "use client";
 
-import { getWhatsAppLink } from "@/lib/utils";
+import { useState } from "react";
 
 interface ShareButtonsProps {
   title: string;
-  url: string;
+  propertyId: number;
 }
 
-export default function ShareButtons({ title, url }: ShareButtonsProps) {
-  const waLink = getWhatsAppLink(`Mira esta propiedad: ${title} - ${url}`);
+export default function ShareButtons({ title, propertyId }: ShareButtonsProps) {
+  const [copied, setCopied] = useState(false);
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://hayexperiencia.com";
+  const url = `${siteUrl}/propiedades/${propertyId}`;
+  const phone = process.env.NEXT_PUBLIC_WHATSAPP || "573022343659";
+  const waMessage = encodeURIComponent(`Mira esta propiedad: ${title} - ${url}`);
+  const waLink = `https://wa.me/${phone}?text=${waMessage}`;
+
+  const handleCopy = async () => {
+    try {
+      await navigator.clipboard.writeText(url);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch {
+      // Fallback for HTTP contexts
+      const textarea = document.createElement("textarea");
+      textarea.value = url;
+      textarea.style.position = "fixed";
+      textarea.style.opacity = "0";
+      document.body.appendChild(textarea);
+      textarea.select();
+      document.execCommand("copy");
+      document.body.removeChild(textarea);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    }
+  };
 
   return (
     <div className="flex items-center gap-3">
@@ -22,11 +47,11 @@ export default function ShareButtons({ title, url }: ShareButtonsProps) {
         Compartir
       </a>
       <button
-        onClick={() => navigator.clipboard.writeText(url)}
+        onClick={handleCopy}
         className="flex items-center gap-2 px-4 py-2 rounded-lg border border-[var(--color-border)] text-sm font-medium text-[var(--color-primary)] hover:bg-gray-50 transition-colors"
       >
         <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3" /></svg>
-        Copiar link
+        {copied ? "Copiado!" : "Copiar link"}
       </button>
     </div>
   );

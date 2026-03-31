@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { WasiProperty } from "@/lib/types";
-import { formatPrice, formatArea, getPropertyType } from "@/lib/utils";
+import { formatPrice, formatArea, getPropertyType, extractImages } from "@/lib/utils";
 
 export default function PropertyCard({ property }: { property: WasiProperty }) {
   const price = property.for_sale === "true"
@@ -11,8 +11,9 @@ export default function PropertyCard({ property }: { property: WasiProperty }) {
   const badgeColor = property.for_sale === "true"
     ? "bg-[var(--color-sale)] text-white"
     : "bg-[var(--color-rent)] text-white";
-  const imageUrl = property.images?.[0]?.url || "/logos/isotipo.svg";
-  const hasImage = !!property.images?.[0]?.url;
+  const imgs = extractImages(property);
+  const imageUrl = imgs[0]?.url || "/logos/isotipo.svg";
+  const hasImage = imgs.length > 0;
 
   return (
     <Link

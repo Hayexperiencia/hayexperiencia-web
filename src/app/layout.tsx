@@ -19,6 +19,10 @@ export const metadata: Metadata = {
   description:
     "Tu sueno, nuestra experiencia. Lotes, casas, apartamentos y fincas en el Oriente Antioqueno. Marinilla, Rionegro, La Ceja, El Penol, Guatape.",
   metadataBase: new URL("https://hayexperiencia.com"),
+  icons: {
+    icon: "/logos/favicon.svg",
+    apple: "/logos/isotipo.svg",
+  },
   openGraph: {
     type: "website",
     locale: "es_CO",

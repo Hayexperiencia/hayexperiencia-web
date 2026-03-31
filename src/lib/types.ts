@@ -34,6 +34,8 @@ export interface WasiProperty {
   latitude: string;
   longitude: string;
   images?: WasiImage[];
+  main_image?: WasiMainImage | null;
+  galleries?: WasiGallery[];
   features?: Record<string, WasiFeature[]>;
   featured: number;
   unit_area_label: string;
@@ -45,7 +47,35 @@ export interface WasiProperty {
 
 export interface WasiImage {
   url: string;
+  url_big?: string;
+  url_original?: string;
   description?: string;
+}
+
+export interface WasiMainImage {
+  id_gallery: number;
+  id_image: number;
+  url: string;
+  url_big: string;
+  url_original: string;
+  description: string;
+  filename: string;
+  position: number;
+}
+
+export interface WasiGallery {
+  id: number;
+  [key: string]: WasiGalleryImage | number;
+}
+
+export interface WasiGalleryImage {
+  id: number;
+  url: string;
+  url_big: string;
+  url_original: string;
+  description: string;
+  filename: string;
+  position: number;
 }
 
 export interface WasiFeature {

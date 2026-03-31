@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 import { getProperty, getSimilarProperties } from "@/lib/wasi";
 import { getEnrichedData, getMarketAverage } from "@/lib/db";
-import { formatPrice, formatArea, getPropertyType, getPricePerM2, stripHtml, getWhatsAppLink, getPropertyWhatsAppMessage } from "@/lib/utils";
+import { formatPrice, formatArea, getPropertyType, getPricePerM2, stripHtml, getWhatsAppLink, getPropertyWhatsAppMessage, extractImages } from "@/lib/utils";
 import PropertyGallery from "@/components/propiedades/PropertyGallery";
 import PropertyKeyFacts from "@/components/propiedades/PropertyKeyFacts";
 import SimilarProperties from "@/components/propiedades/SimilarProperties";
@@ -26,7 +26,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     openGraph: {
       title: `${type} ${formatArea(property.area)} en ${property.city_label} - ${price}`,
       description: `${type} en ${property.city_label}. ${property.bedrooms} hab, ${property.bathrooms} banos.`,
-      images: property.images?.[0]?.url ? [property.images[0].url] : [],
+      images: property.main_image?.url_big ? [property.main_image.url_big] : [],
     },
   };
 }
@@ -36,7 +36,7 @@ export default async function PropertyDetailPage({ params }: PageProps) {
   const property = await getProperty(id);
   if (!property) notFound();
 
-  const images = property.images || [];
+  const images = extractImages(property);
   const isSale = property.for_sale === "true";
   const price = isSale ? formatPrice(property.sale_price) : formatPrice(property.rent_price);
   const priceM2 = isSale ? getPricePerM2(property.sale_price, property.area) : "";
@@ -52,7 +52,6 @@ export default async function PropertyDetailPage({ params }: PageProps) {
 
   const waMessage = getPropertyWhatsAppMessage(property.title || `${type} en ${property.city_label}`, property.id_property);
   const waLink = getWhatsAppLink(waMessage);
-  const pageUrl = `https://hayexperiencia.com/propiedades/${id}`;
 
   return (
     <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8">
@@ -144,14 +143,15 @@ export default async function PropertyDetailPage({ params }: PageProps) {
           )}
 
           {/* Share */}
-          <ShareButtons title={`${type} en ${property.city_label} - ${price}`} url={pageUrl} />
+          <ShareButtons title={`${type} en ${property.city_label} - ${price}`} propertyId={property.id_property} />
         </div>
 
         {/* Sidebar - Contact */}
         <div className="lg:col-span-1">
           <div className="sticky top-24 space-y-4">
             <div className="p-6 rounded-2xl border border-[var(--color-border)] bg-white">
-              <h3 className="text-lg font-semibold text-[var(--color-primary)] mb-4">Te interesa esta propiedad?</h3>
+              <h3 className="text-lg font-semibold text-[var(--color-primary)] mb-2">Te interesa esta propiedad?</h3>
+              <p className="text-xs text-[var(--color-text-light)] mb-4">Ref. Wasi: {property.id_property}</p>
               <a
                 href={waLink}
                 target="_blank"
