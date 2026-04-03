@@ -131,6 +131,12 @@ export default function AlunaPage() {
       <ProjectGallery
         images={[
           { src: "/images/proyectos/aluna-hero.png", alt: "ALUNA Campestre - Vista panoramica" },
+          { src: "/images/proyectos/aluna-drone-1.jpg", alt: "Vista aerea del proyecto ALUNA" },
+          { src: "/images/proyectos/aluna-drone-2.jpg", alt: "Lotes campestres desde el aire" },
+          { src: "/images/proyectos/aluna-drone-3.jpg", alt: "Entorno natural de ALUNA" },
+          { src: "/images/proyectos/aluna-evento-1.jpg", alt: "Visita al terreno ALUNA" },
+          { src: "/images/proyectos/aluna-evento-2.jpg", alt: "Recorrido por los lotes" },
+          { src: "/images/proyectos/aluna-evento-3.jpg", alt: "Evento Amanecer en ALUNA" },
         ]}
         title="Galeria del proyecto"
       />
