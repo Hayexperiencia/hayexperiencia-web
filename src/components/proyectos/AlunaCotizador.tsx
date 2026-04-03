@@ -4,24 +4,28 @@ import { useState, useMemo } from 'react';
 
 type Estado = 'disponible' | 'reservado' | 'vendido';
 
-// PLACEHOLDER — Gabriel debe confirmar datos reales
+// Datos reales de ALUNA — actualizado abril 2026
 const LOTES = [
-  { id: 1, area: 2500, precio: 411000000, estado: 'disponible' as Estado, esquinero: false, label: 'Lote 1' },
-  { id: 2, area: 2800, precio: 430000000, estado: 'disponible' as Estado, esquinero: false, label: 'Lote 2' },
-  { id: 3, area: 3000, precio: 450000000, estado: 'disponible' as Estado, esquinero: true, label: 'Lote 3' },
-  { id: 4, area: 2600, precio: 420000000, estado: 'disponible' as Estado, esquinero: false, label: 'Lote 4' },
-  { id: 5, area: 2700, precio: 425000000, estado: 'disponible' as Estado, esquinero: false, label: 'Lote 5' },
-  { id: 6, area: 3200, precio: 460000000, estado: 'disponible' as Estado, esquinero: true, label: 'Lote 6' },
-  { id: 7, area: 2500, precio: 411000000, estado: 'disponible' as Estado, esquinero: false, label: 'Lote 7' },
-  { id: 8, area: 2900, precio: 440000000, estado: 'disponible' as Estado, esquinero: false, label: 'Lote 8' },
-  { id: 9, area: 3100, precio: 455000000, estado: 'disponible' as Estado, esquinero: false, label: 'Lote 9' },
+  { id: 4,  area: 2500.00, precio: 498151819, estado: 'disponible' as Estado, tipo: 'Luz',    label: 'Lote 4' },
+  { id: 5,  area: 2500.00, precio: 498151819, estado: 'disponible' as Estado, tipo: 'Luz',    label: 'Lote 5' },
+  { id: 14, area: 2504.97, precio: 459340208, estado: 'disponible' as Estado, tipo: 'Luz',    label: 'Lote 14' },
+  { id: 16, area: 2547.93, precio: 507280602, estado: 'disponible' as Estado, tipo: 'Luz',    label: 'Lote 16' },
+  { id: 19, area: 2620.35, precio: 410865215, estado: 'disponible' as Estado, tipo: 'Bosque', label: 'Lote 19' },
+  { id: 20, area: 2627.30, precio: 480697680, estado: 'disponible' as Estado, tipo: 'Bosque', label: 'Lote 20' },
+  { id: 21, area: 2507.99, precio: 499673600, estado: 'disponible' as Estado, tipo: 'Bosque', label: 'Lote 21' },
+  { id: 29, area: 2500.33, precio: 498214671, estado: 'disponible' as Estado, tipo: 'Bosque', label: 'Lote 29' },
+  { id: 36, area: 2500.25, precio: 636369422, estado: 'disponible' as Estado, tipo: 'Aire',   label: 'Lote 36' },
 ];
 
+const LOTES_VENDIDOS = 30; // De 39 lotes totales
+
 const CONFIG = {
-  valorizacionAnual: 0.08,
-  descuentoContado: 0.05,
-  cuotaInicialPct: 0.30,
-  plazoCuotas: 24,
+  valorizacionAnual: 0.07,    // 7% anual
+  descuentoContado: 0.05,     // 5% descuento contado
+  separacion: 5000000,        // $5M de separacion
+  cuotaInicialPct: 0.30,      // 30% antes de noviembre
+  creditoPct: 0.70,           // 70% credito bancario en diciembre
+  plazoCredito: 'Diciembre 2026',
 };
 
 type TabPago = 'contado' | 'cuotas' | 'credito';
@@ -51,18 +55,22 @@ export default function AlunaCotizador() {
 
   const lote = selected !== null ? LOTES.find(l => l.id === selected) : null;
 
-  const cuotasMensuales = useMemo(() => {
+  const planPagos = useMemo(() => {
     if (!lote) return [];
-    const cuotaInicial = lote.precio * CONFIG.cuotaInicialPct;
-    const saldoFinanciar = lote.precio - cuotaInicial;
-    const cuotaMensual = saldoFinanciar / CONFIG.plazoCuotas;
+    const separacion = CONFIG.separacion;
+    const cuotaInicial30 = lote.precio * CONFIG.cuotaInicialPct;
+    const saldo30 = cuotaInicial30 - separacion;
+    const credito70 = lote.precio * CONFIG.creditoPct;
+    // Distribuir el 30% (menos separacion) en cuotas mensuales hasta noviembre (aprox 7 meses)
+    const mesesHastaNov = 7;
+    const cuotaMensual = saldo30 / mesesHastaNov;
     const rows = [];
-    let saldo = saldoFinanciar;
-    rows.push({ mes: 1, concepto: 'Cuota inicial', valor: cuotaInicial, saldo });
-    for (let i = 1; i <= CONFIG.plazoCuotas; i++) {
-      saldo -= cuotaMensual;
-      rows.push({ mes: i + 1, concepto: `Cuota ${i}`, valor: cuotaMensual, saldo: Math.max(0, saldo) });
+    let saldo = lote.precio;
+    rows.push({ mes: 'Hoy', concepto: 'Separacion', valor: separacion, saldo: saldo -= separacion });
+    for (let i = 1; i <= mesesHastaNov; i++) {
+      rows.push({ mes: `Mes ${i}`, concepto: `Cuota ${i}`, valor: cuotaMensual, saldo: saldo -= cuotaMensual });
     }
+    rows.push({ mes: 'Dic 2026', concepto: 'Credito bancario (70%)', valor: credito70, saldo: 0 });
     return rows;
   }, [lote]);
 
@@ -106,17 +114,8 @@ export default function AlunaCotizador() {
     <section id="cotizador" className="py-16 bg-gray-50/50">
       <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
         <h2 className="text-3xl font-bold text-[var(--color-primary)] mb-2">Cotizador</h2>
-        <p className="text-[var(--color-text-light)] mb-8">Selecciona un lote para ver la cotizacion completa</p>
-
-        {/* Leyenda */}
-        <div className="flex gap-6 mb-6 text-sm">
-          {(Object.entries(ESTADO_LABELS) as [Estado, string][]).map(([key, label]) => (
-            <div key={key} className="flex items-center gap-2">
-              <span className={`w-3 h-3 rounded-full ${ESTADO_COLORS[key]}`} />
-              <span className="text-[var(--color-text-light)]">{label}</span>
-            </div>
-          ))}
-        </div>
+        <p className="text-[var(--color-text-light)] mb-2">9 lotes disponibles de 39 — {Math.round((LOTES_VENDIDOS / 39) * 100)}% vendido</p>
+        <p className="text-sm text-[var(--color-text-light)] mb-8">Entrega inmediata. Selecciona un lote para ver la cotizacion.</p>
 
         {/* Grid de lotes */}
         <div className="grid grid-cols-3 sm:grid-cols-5 gap-3 mb-10">
@@ -135,9 +134,7 @@ export default function AlunaCotizador() {
               <div className={`text-xs mt-1 ${selected === l.id ? 'text-gray-300' : 'text-[var(--color-text-light)]'}`}>
                 {l.area.toLocaleString()} m2
               </div>
-              {l.esquinero && (
-                <span className={`text-xs ${selected === l.id ? 'text-[var(--color-accent)]' : 'text-[var(--color-accent)]'}`}>Esquinero</span>
-              )}
+              <span className={`text-xs ${selected === l.id ? 'text-[var(--color-accent)]' : 'text-[var(--color-accent)]'}`}>{l.tipo}</span>
             </button>
           ))}
         </div>
@@ -150,7 +147,7 @@ export default function AlunaCotizador() {
               <div className="flex items-center justify-between">
                 <div>
                   <h3 className="text-2xl font-bold">{lote.label} — ALUNA Campestre</h3>
-                  <p className="text-gray-300 mt-1">{lote.area.toLocaleString()} m2 {lote.esquinero ? '| Lote esquinero' : ''} | {ESTADO_LABELS[lote.estado]}</p>
+                  <p className="text-gray-300 mt-1">{lote.area.toLocaleString()} m2 | Tipo {lote.tipo} | Entrega inmediata</p>
                 </div>
                 <div className="text-right">
                   <div className="text-sm text-gray-400">Precio base</div>
@@ -190,29 +187,33 @@ export default function AlunaCotizador() {
               {/* Cuotas */}
               {tabPago === 'cuotas' && (
                 <div>
-                  <div className="grid grid-cols-2 gap-4 mb-6">
+                  <div className="grid grid-cols-3 gap-4 mb-6">
                     <div className="p-4 rounded-xl bg-blue-50">
-                      <div className="text-sm text-blue-600">Cuota inicial ({CONFIG.cuotaInicialPct * 100}%)</div>
+                      <div className="text-sm text-blue-600">Separacion</div>
+                      <div className="text-xl font-bold text-blue-800">{formatCOP(CONFIG.separacion)}</div>
+                    </div>
+                    <div className="p-4 rounded-xl bg-blue-50">
+                      <div className="text-sm text-blue-600">30% antes de noviembre</div>
                       <div className="text-xl font-bold text-blue-800">{formatCOP(lote.precio * CONFIG.cuotaInicialPct)}</div>
                     </div>
                     <div className="p-4 rounded-xl bg-blue-50">
-                      <div className="text-sm text-blue-600">Cuota mensual x {CONFIG.plazoCuotas} meses</div>
-                      <div className="text-xl font-bold text-blue-800">{formatCOP((lote.precio * (1 - CONFIG.cuotaInicialPct)) / CONFIG.plazoCuotas)}</div>
+                      <div className="text-sm text-blue-600">70% credito (dic 2026)</div>
+                      <div className="text-xl font-bold text-blue-800">{formatCOP(lote.precio * CONFIG.creditoPct)}</div>
                     </div>
                   </div>
                   <div className="max-h-64 overflow-auto rounded-xl border border-[var(--color-border)]">
                     <table className="w-full text-sm">
                       <thead className="bg-gray-50 sticky top-0">
                         <tr>
-                          <th className="text-left p-3 font-semibold text-[var(--color-primary)]">Mes</th>
+                          <th className="text-left p-3 font-semibold text-[var(--color-primary)]">Momento</th>
                           <th className="text-left p-3 font-semibold text-[var(--color-primary)]">Concepto</th>
                           <th className="text-right p-3 font-semibold text-[var(--color-primary)]">Valor</th>
                           <th className="text-right p-3 font-semibold text-[var(--color-primary)]">Saldo</th>
                         </tr>
                       </thead>
                       <tbody>
-                        {cuotasMensuales.map((row, i) => (
-                          <tr key={i} className="border-t border-gray-100">
+                        {planPagos.map((row, i) => (
+                          <tr key={i} className={`border-t border-gray-100 ${i === planPagos.length - 1 ? 'bg-blue-50/50' : ''}`}>
                             <td className="p-3 text-[var(--color-text-light)]">{row.mes}</td>
                             <td className="p-3 text-[var(--color-text-light)]">{row.concepto}</td>
                             <td className="p-3 text-right font-medium">{formatCOP(row.valor)}</td>
@@ -305,7 +306,17 @@ export default function AlunaCotizador() {
                 </div>
                 <div>
                   <h4 className="text-sm font-semibold text-[var(--color-primary)] mb-2 uppercase tracking-wide">Broker financiero</h4>
-                  <p className="text-sm text-[var(--color-text-light)]">Por definir</p>
+                  <div className="flex items-center gap-3">
+                    <div className="w-12 h-12 rounded-full bg-[var(--color-accent)] flex items-center justify-center text-[var(--color-primary)] font-bold text-lg">J</div>
+                    <div>
+                      <div className="font-semibold text-[var(--color-primary)]">Jessica — Cazatasa</div>
+                      <div className="text-sm text-[var(--color-text-light)]">
+                        <a href="https://wa.me/573166940421" target="_blank" rel="noopener noreferrer" className="hover:underline">+57 316 694 0421</a>
+                        {' | '}
+                        <a href="https://cazatasa.com" target="_blank" rel="noopener noreferrer" className="hover:underline">cazatasa.com</a>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>

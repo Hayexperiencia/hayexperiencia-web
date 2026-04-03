@@ -82,15 +82,16 @@ export default function AlunaPage() {
       {/* 2. VIDEO */}
       <section className="py-16 bg-gray-50/50">
         <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
-          <div className="aspect-video rounded-2xl overflow-hidden bg-[var(--color-primary)] flex items-center justify-center">
-            {/* Placeholder — reemplazar con video real cuando este disponible */}
-            <div className="text-center text-white">
-              <svg className="h-16 w-16 mx-auto mb-4 opacity-50" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-              </svg>
-              <p className="text-gray-400">Video del proyecto — proximamente</p>
-            </div>
+          <div className="aspect-video rounded-2xl overflow-hidden">
+            <iframe
+              src="https://www.youtube.com/embed/8IQI6uGWI2c"
+              title="ALUNA Campestre — Video del proyecto"
+              width="100%"
+              height="100%"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen
+              className="w-full h-full"
+            />
           </div>
         </div>
       </section>
@@ -205,8 +206,8 @@ export default function AlunaPage() {
           <h2 className="text-3xl font-bold text-[var(--color-primary)] mb-6">Avance de obra</h2>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-8">
             <div className="p-6 rounded-2xl bg-gray-50 text-center">
-              <div className="text-4xl font-bold text-[var(--color-accent)]">40%</div>
-              <div className="text-sm text-[var(--color-text-light)] mt-1">Avance general</div>
+              <div className="text-4xl font-bold text-[var(--color-accent)]">77%</div>
+              <div className="text-sm text-[var(--color-text-light)] mt-1">Vendido (30 de 39)</div>
             </div>
             <div className="p-6 rounded-2xl bg-gray-50 text-center">
               <div className="text-4xl font-bold text-[var(--color-primary)]">9</div>
