@@ -94,13 +94,41 @@ export default function AlunaCotizador() {
     if (!lote) return;
     setDownloading(true);
     try {
-      const res = await fetch(`/api/pdf?id=aluna-lote-${lote.id}&modo=con-marca`);
+      const pdfData = {
+        price: formatCOP(lote.precio),
+        transactionType: 'Venta',
+        code: `ALUNA-${lote.id}`,
+        area: lote.area.toLocaleString(),
+        rooms: '-',
+        baths: '-',
+        parking: '-',
+        stratum: '-',
+        propType: `Lote ${lote.tipo}`,
+        location: 'Marinilla, Oriente Antioqueno',
+        description: `<p>Lote campestre de ${lote.area.toLocaleString()} m2 en ALUNA Campestre, Marinilla. Tipo ${lote.tipo}. Entrega inmediata. Unidad cerrada con vias pavimentadas y redes subterraneas.</p><p>Plan de pagos: Separacion $5.000.000 + 30% antes de noviembre + 70% credito bancario en diciembre 2026. Descuento del 5% por pago de contado.</p>`,
+        heroImage: 'https://hayexperiencia.com/images/proyectos/aluna-drone-1.jpg',
+        gallery: [
+          'https://hayexperiencia.com/images/proyectos/aluna-drone-2.jpg',
+          'https://hayexperiencia.com/images/proyectos/aluna-drone-3.jpg',
+          'https://hayexperiencia.com/images/proyectos/aluna-evento-1.jpg',
+          'https://hayexperiencia.com/images/proyectos/aluna-evento-2.jpg',
+        ],
+        logo: 'https://hayexperiencia.com/logos/logo-invertido.svg',
+        asesorName: 'Cesar Delgado',
+        asesorContact: 'WhatsApp: 573022343659',
+      };
+      const res = await fetch('/api/pdf', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ data: pdfData, modo: 'con-marca' }),
+      });
       if (res.ok) {
         const blob = await res.blob();
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.href = url;
-        a.download = `ALUNA-Lote${lote.id}-Cotizacion.pdf`;
+        const today = new Date().toISOString().slice(0, 10);
+        a.download = `ALUNA-Lote${lote.id}-Cotizacion-${today}.pdf`;
         document.body.appendChild(a);
         a.click();
         document.body.removeChild(a);
