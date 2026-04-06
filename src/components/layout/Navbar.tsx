@@ -77,10 +77,10 @@ function MobileAccordion({ label, items }: { label: string; items: { href: strin
 export default function Navbar() {
   const [open, setOpen] = useState(false);
 
-  const municipioItems = MUNICIPIOS.map((m) => ({
-    href: `/propiedades?municipio=${encodeURIComponent(m)}`,
-    label: m,
-  }));
+  const municipioItems = MUNICIPIOS.map((m) => {
+    const cityIds: Record<string, string> = { "Marinilla": "488", "El Penol": "278", "Guatape": "358", "Rionegro": "685", "El Retiro": "677", "La Ceja": "410", "San Vicente": "773" };
+    return { href: `/propiedades?ciudad=${cityIds[m] || ""}`, label: m };
+  });
 
   return (
     <nav className="sticky top-0 z-50 bg-white border-b border-[var(--color-border)]">

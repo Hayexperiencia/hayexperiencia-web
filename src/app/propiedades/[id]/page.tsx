@@ -60,7 +60,7 @@ export default async function PropertyDetailPage({ params }: PageProps) {
       {/* Gallery */}
       <Gallery
         images={images.map((img) => ({ url: img.url, alt: img.description || undefined }))}
-        virtualTourUrl={property.video || undefined}
+        videoUrl={property.video || undefined}
       />
 
       <div className="mt-8 grid grid-cols-1 lg:grid-cols-3 gap-12">
@@ -97,21 +97,40 @@ export default async function PropertyDetailPage({ params }: PageProps) {
           )}
 
           {/* Features */}
-          {property.features && Object.keys(property.features).length > 0 && (
+          {property.features && (
+            (property.features.internal?.length || 0) > 0 ||
+            (property.features.external?.length || 0) > 0
+          ) && (
             <div>
-              <h3 className="text-xl font-semibold text-[var(--color-primary)] mb-3">Caracteristicas</h3>
-              {Object.entries(property.features).map(([category, items]) => (
-                <div key={category} className="mb-4">
-                  <h4 className="text-sm font-medium text-[var(--color-primary)] mb-2 capitalize">{category}</h4>
-                  <div className="flex flex-wrap gap-2">
-                    {items.map((f) => (
-                      <span key={f.id} className="px-3 py-1 rounded-full bg-gray-100 text-sm text-[var(--color-text-light)]">
-                        {f.name}
-                      </span>
-                    ))}
+              <h3 className="text-xl font-semibold text-[var(--color-primary)] mb-4">Caracteristicas</h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {property.features.internal && property.features.internal.length > 0 && (
+                  <div>
+                    <h4 className="text-sm font-semibold text-[var(--color-primary)] mb-3 uppercase tracking-wider">Internas</h4>
+                    <div className="space-y-2">
+                      {property.features.internal.map((f) => (
+                        <div key={f.id} className="flex items-center gap-2">
+                          <svg className="w-4 h-4 text-[var(--color-accent)] flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" /></svg>
+                          <span className="text-sm text-[var(--color-text-light)]">{f.nombre || f.name}</span>
+                        </div>
+                      ))}
+                    </div>
                   </div>
-                </div>
-              ))}
+                )}
+                {property.features.external && property.features.external.length > 0 && (
+                  <div>
+                    <h4 className="text-sm font-semibold text-[var(--color-primary)] mb-3 uppercase tracking-wider">Externas</h4>
+                    <div className="space-y-2">
+                      {property.features.external.map((f) => (
+                        <div key={f.id} className="flex items-center gap-2">
+                          <svg className="w-4 h-4 text-[var(--color-accent)] flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" /></svg>
+                          <span className="text-sm text-[var(--color-text-light)]">{f.nombre || f.name}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
             </div>
           )}
 

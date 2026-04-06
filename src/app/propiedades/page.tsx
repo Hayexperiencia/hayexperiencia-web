@@ -196,12 +196,24 @@ export default function PropiedadesPage({
 
     {/* Banner final */}
     <section className="py-16 bg-[var(--color-primary)]">
-      <div className="mx-auto max-w-xl px-4">
+      <div className="mx-auto max-w-4xl px-4 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+        <div>
+          <h2 className="text-3xl font-bold text-white">No encontraste lo que buscabas?</h2>
+          <p className="mt-4 text-gray-300 text-lg">
+            Tenemos acceso a propiedades exclusivas que no estan en el sitio. Dejanos tus datos y te ayudamos.
+          </p>
+          <a
+            href="https://wa.me/573022343659?text=Hola%2C%20busco%20una%20propiedad%20especifica"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="mt-6 inline-flex items-center gap-2 px-6 py-3 rounded-lg bg-[#25D366] text-white font-semibold hover:bg-[#20BD5A] transition-colors"
+          >
+            Escribir por WhatsApp
+          </a>
+        </div>
         <ContactForm
           source="propiedades-bottom"
-          title="No encontraste lo que buscabas?"
-          subtitle="Dejanos tus datos y te ayudamos a encontrar tu propiedad ideal"
-          showMessage={true}
+          showMessage={false}
           compact={false}
           className="bg-white rounded-2xl p-8"
         />

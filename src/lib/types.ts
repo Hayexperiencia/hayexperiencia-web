@@ -36,7 +36,7 @@ export interface WasiProperty {
   images?: WasiImage[];
   main_image?: WasiMainImage | null;
   galleries?: WasiGallery[];
-  features?: Record<string, WasiFeature[]>;
+  features?: { internal?: WasiFeature[]; external?: WasiFeature[] };
   video?: string;
   featured: number;
   unit_area_label: string;
@@ -82,6 +82,7 @@ export interface WasiGalleryImage {
 export interface WasiFeature {
   id: number;
   name: string;
+  nombre?: string;
   value?: string;
 }
 

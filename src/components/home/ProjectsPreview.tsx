@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useRef, useState, useEffect } from "react";
+import { useRef, useState, useEffect, useCallback } from "react";
 
 const PROJECTS = [
   {
@@ -10,15 +10,14 @@ const PROJECTS = [
     description: "Lotes campestres desde 2.500 m2 en Marinilla. Unidad cerrada con infraestructura de primer nivel.",
     href: "/proyectos/aluna",
     badge: "Desde $411M",
-    // TODO: Gabriel confirmar imagen principal de cada proyecto
-    image: "/images/hero-oriente.jpg",
+    image: "/images/proyectos/aluna-hero.png",
   },
   {
     name: "El Faro",
     description: "Condominio nautico en peninsula sobre la represa de Guatape. Suites, villas y sede nautica.",
     href: "/proyectos/el-faro",
     badge: "En desarrollo",
-    image: "/images/hero-oriente.jpg",
+    image: "/images/proyectos/el-faro-hero.jpg",
   },
   {
     name: "Remanso de Oriente",
@@ -32,56 +31,52 @@ const PROJECTS = [
     description: "41 lotes campestres en Marinilla. Lago privado, senderos ecologicos y seguridad 24/7.",
     href: "/proyectos/aquaverde",
     badge: "Entrega Dic 2026",
-    image: "/images/hero-oriente.jpg",
+    image: "/images/proyectos/aquaverde-hero.webp",
   },
 ];
 
 export default function ProjectsPreview() {
   const scrollRef = useRef<HTMLDivElement>(null);
-  const [canScrollLeft, setCanScrollLeft] = useState(false);
-  const [canScrollRight, setCanScrollRight] = useState(true);
+  const [activeIndex, setActiveIndex] = useState(0);
+  const [paused, setPaused] = useState(false);
 
-  const checkScroll = () => {
+  const scrollToIndex = useCallback((index: number) => {
     const el = scrollRef.current;
     if (!el) return;
-    setCanScrollLeft(el.scrollLeft > 10);
-    setCanScrollRight(el.scrollLeft < el.scrollWidth - el.clientWidth - 10);
-  };
+    const card = el.children[index] as HTMLElement;
+    if (card) {
+      el.scrollTo({ left: card.offsetLeft - el.offsetLeft, behavior: "smooth" });
+      setActiveIndex(index);
+    }
+  }, []);
 
-  useEffect(() => { checkScroll(); }, []);
-
-  const scroll = (dir: number) => {
-    const el = scrollRef.current;
-    if (!el) return;
-    const cardWidth = el.querySelector("a")?.offsetWidth || 400;
-    el.scrollBy({ left: dir * (cardWidth + 24), behavior: "smooth" });
-  };
+  // Auto-rotate every 5s
+  useEffect(() => {
+    if (paused) return;
+    const timer = setInterval(() => {
+      setActiveIndex((prev) => {
+        const next = (prev + 1) % PROJECTS.length;
+        scrollToIndex(next);
+        return next;
+      });
+    }, 5000);
+    return () => clearInterval(timer);
+  }, [paused, scrollToIndex]);
 
   return (
     <section className="py-16">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="flex items-end justify-between mb-8">
-          <div>
-            <h2 className="text-3xl font-bold text-[var(--color-primary)]">Proyectos</h2>
-            <p className="mt-2 text-[var(--color-text-light)]">Desarrollos inmobiliarios con vision integral</p>
-          </div>
-          <div className="flex items-center gap-3">
-            <button onClick={() => scroll(-1)} disabled={!canScrollLeft} className="hidden sm:flex w-10 h-10 items-center justify-center rounded-full border border-[var(--color-border)] hover:bg-gray-50 disabled:opacity-30 transition-all" aria-label="Anterior">
-              <svg className="w-5 h-5 text-[var(--color-primary)]" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" /></svg>
-            </button>
-            <button onClick={() => scroll(1)} disabled={!canScrollRight} className="hidden sm:flex w-10 h-10 items-center justify-center rounded-full border border-[var(--color-border)] hover:bg-gray-50 disabled:opacity-30 transition-all" aria-label="Siguiente">
-              <svg className="w-5 h-5 text-[var(--color-primary)]" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" /></svg>
-            </button>
-            <Link href="/proyectos" className="hidden sm:inline-flex items-center text-sm font-medium text-[var(--color-primary)] hover:text-[var(--color-primary-light)]">
-              Ver todos &rarr;
-            </Link>
-          </div>
+        <div className="text-center mb-10">
+          <h2 className="text-3xl font-bold text-[var(--color-primary)]">Proyectos</h2>
+          <p className="mt-2 text-[var(--color-text-light)]">Desarrollos inmobiliarios con vision integral</p>
         </div>
 
         <div
           ref={scrollRef}
-          onScroll={checkScroll}
-          className="flex gap-6 overflow-x-auto snap-x snap-mandatory scrollbar-hide pb-4 -mx-4 px-4"
+          onMouseEnter={() => setPaused(true)}
+          onMouseLeave={() => setPaused(false)}
+          className="flex gap-6 overflow-x-auto snap-x snap-mandatory pb-4 -mx-4 px-4"
+          style={{ scrollbarWidth: "none" }}
         >
           {PROJECTS.map((project) => (
             <Link
@@ -110,6 +105,18 @@ export default function ProjectsPreview() {
                 </div>
               </div>
             </Link>
+          ))}
+        </div>
+
+        {/* Dots */}
+        <div className="flex justify-center gap-2 mt-4">
+          {PROJECTS.map((_, i) => (
+            <button
+              key={i}
+              onClick={() => scrollToIndex(i)}
+              className={`w-2.5 h-2.5 rounded-full transition-all ${i === activeIndex ? "bg-[var(--color-primary)] w-6" : "bg-gray-300 hover:bg-gray-400"}`}
+              aria-label={`Ir a proyecto ${i + 1}`}
+            />
           ))}
         </div>
       </div>
