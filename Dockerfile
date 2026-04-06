@@ -7,6 +7,10 @@ RUN npm ci
 
 FROM base AS builder
 WORKDIR /app
+ARG NEXT_PUBLIC_SITE_URL
+ARG NEXT_PUBLIC_WHATSAPP
+ARG NEXT_PUBLIC_CONTACT_EMAIL
+ARG NEXT_PUBLIC_PHONE
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 RUN npm run build

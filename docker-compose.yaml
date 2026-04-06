@@ -3,6 +3,11 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+      args:
+        - NEXT_PUBLIC_SITE_URL=${NEXT_PUBLIC_SITE_URL}
+        - NEXT_PUBLIC_WHATSAPP=${NEXT_PUBLIC_WHATSAPP}
+        - NEXT_PUBLIC_CONTACT_EMAIL=${NEXT_PUBLIC_CONTACT_EMAIL}
+        - NEXT_PUBLIC_PHONE=${NEXT_PUBLIC_PHONE}
     container_name: hayexperiencia-web
     restart: unless-stopped
     extra_hosts:
