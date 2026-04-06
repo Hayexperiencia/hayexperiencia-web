@@ -1,32 +1,32 @@
 import Hero from "@/components/home/Hero";
+import CampaignBanner from "@/components/home/CampaignBanner";
 import FeaturedProperties from "@/components/home/FeaturedProperties";
 import ProjectsPreview from "@/components/home/ProjectsPreview";
 import WhyUs from "@/components/home/WhyUs";
-import Link from "next/link";
+import ContactForm from "@/components/ui/ContactForm";
 
-export const revalidate = 86400;
+export const revalidate = 3600;
 
 export default function Home() {
   return (
     <>
       <Hero />
+      <CampaignBanner />
       <FeaturedProperties />
       <ProjectsPreview />
       <WhyUs />
 
-      {/* CTA final */}
+      {/* CTA final con formulario */}
       <section className="py-20 bg-[var(--color-primary)]">
-        <div className="mx-auto max-w-3xl text-center px-4">
-          <h2 className="text-3xl sm:text-4xl font-bold text-white">
-            Listo para dar el paso?
-          </h2>
-          <p className="mt-4 text-gray-300 text-lg">Te acompanamos a encontrar tu proximo hogar o inversion.</p>
-          <Link
-            href="/contacto"
-            className="mt-8 inline-flex items-center px-8 py-3.5 rounded-lg bg-[var(--color-accent)] text-[var(--color-primary)] font-semibold hover:bg-[var(--color-accent-light)] transition-colors duration-200"
-          >
-            Contactanos
-          </Link>
+        <div className="mx-auto max-w-xl px-4">
+          <ContactForm
+            source="home-cta"
+            title="Listo para dar el paso?"
+            subtitle="Dejanos tus datos y te contactamos hoy"
+            showMessage={true}
+            compact={false}
+            className="bg-white rounded-2xl p-8"
+          />
         </div>
       </section>
     </>
