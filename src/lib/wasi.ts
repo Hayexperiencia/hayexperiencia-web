@@ -56,6 +56,9 @@ export async function getProperties(
   if (filters.id_property_type) body.id_property_type = String(filters.id_property_type);
   if (filters.id_city) body.id_city = String(filters.id_city);
   if (filters.bedrooms) body.bedrooms = String(filters.bedrooms);
+  if (filters.bathrooms) body.bathrooms = String(filters.bathrooms);
+  if (filters.garages) body.garages = String(filters.garages);
+  if (filters.stratum) body.stratum = String(filters.stratum);
   if (filters.min_area) body.min_area = String(filters.min_area);
   if (filters.max_area) body.max_area = String(filters.max_area);
   if (filters.min_price) body.min_price = String(filters.min_price);

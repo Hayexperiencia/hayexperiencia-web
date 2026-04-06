@@ -4,6 +4,8 @@ import { getProperties } from "@/lib/wasi";
 import { PROPERTY_TYPES } from "@/lib/types";
 import PropertyGrid from "@/components/propiedades/PropertyGrid";
 import PropertyFilters from "@/components/propiedades/PropertyFilters";
+import CampaignBanner from "@/components/home/CampaignBanner";
+import ContactForm from "@/components/ui/ContactForm";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -27,9 +29,12 @@ async function PropertiesContent({
   const ciudad = params.ciudad ? parseInt(params.ciudad) : undefined;
   const hab = params.hab ? parseInt(params.hab) : undefined;
   const banos = params.banos ? parseInt(params.banos) : undefined;
+  const parqueadero = params.parqueadero ? parseInt(params.parqueadero) : undefined;
+  const estrato = params.estrato ? parseInt(params.estrato) : undefined;
   const precioMin = params.precio_min ? parseInt(params.precio_min) : undefined;
   const precioMax = params.precio_max ? parseInt(params.precio_max) : undefined;
   const areaMin = params.area_min ? parseInt(params.area_min) : undefined;
+  const areaMax = params.area_max ? parseInt(params.area_max) : undefined;
   const page = params.page ? parseInt(params.page) : 1;
   const skip = (page - 1) * ITEMS_PER_PAGE;
 
@@ -39,9 +44,13 @@ async function PropertiesContent({
     id_property_type: tipo,
     id_city: ciudad,
     bedrooms: hab,
+    bathrooms: banos,
+    garages: parqueadero,
+    stratum: estrato,
     min_price: precioMin,
     max_price: precioMax,
     min_area: areaMin,
+    max_area: areaMax,
     skip,
     take: ITEMS_PER_PAGE,
   });
@@ -55,9 +64,12 @@ async function PropertiesContent({
   if (ciudad) baseParams.set("ciudad", String(ciudad));
   if (hab) baseParams.set("hab", String(hab));
   if (banos) baseParams.set("banos", String(banos));
+  if (parqueadero) baseParams.set("parqueadero", String(parqueadero));
+  if (estrato) baseParams.set("estrato", String(estrato));
   if (precioMin) baseParams.set("precio_min", String(precioMin));
   if (precioMax) baseParams.set("precio_max", String(precioMax));
   if (areaMin) baseParams.set("area_min", String(areaMin));
+  if (areaMax) baseParams.set("area_max", String(areaMax));
 
   const buildPageUrl = (p: number) => {
     const ps = new URLSearchParams(baseParams);
@@ -154,7 +166,14 @@ export default function PropiedadesPage({
   searchParams: Promise<{ [key: string]: string | undefined }>;
 }) {
   return (
-    <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8">
+    <>
+    <CampaignBanner
+      title="Encuentra tu propiedad ideal"
+      subtitle="Lotes, casas, apartamentos y fincas en el Oriente Antioqueno"
+      cta="Buscar ahora"
+      ctaHref="#filtros"
+    />
+    <div id="filtros" className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8">
       <h1 className="text-3xl font-bold text-[var(--color-primary)] mb-2">Propiedades</h1>
       <p className="text-[var(--color-text-light)] mb-6">
         Encuentra tu proximo hogar o inversion en el Oriente Antioqueno
@@ -174,5 +193,20 @@ export default function PropiedadesPage({
         <PropertiesContent searchParams={searchParams} />
       </Suspense>
     </div>
+
+    {/* Banner final */}
+    <section className="py-16 bg-[var(--color-primary)]">
+      <div className="mx-auto max-w-xl px-4">
+        <ContactForm
+          source="propiedades-bottom"
+          title="No encontraste lo que buscabas?"
+          subtitle="Dejanos tus datos y te ayudamos a encontrar tu propiedad ideal"
+          showMessage={true}
+          compact={false}
+          className="bg-white rounded-2xl p-8"
+        />
+      </div>
+    </section>
+    </>
   );
 }

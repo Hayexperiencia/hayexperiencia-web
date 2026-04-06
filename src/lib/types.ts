@@ -97,6 +97,9 @@ export interface PropertyFilters {
   min_price?: number;
   max_price?: number;
   bedrooms?: number;
+  bathrooms?: number;
+  garages?: number;
+  stratum?: number;
   min_area?: number;
   max_area?: number;
   skip?: number;
