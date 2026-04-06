@@ -1,0 +1,22 @@
+services:
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: hayexperiencia-web
+    restart: unless-stopped
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    expose:
+      - "3000"
+    env_file:
+      - .env
+    networks:
+      coolify:
+        aliases:
+          - hayexperiencia-web
+
+networks:
+  coolify:
+    external: true
+    name: coolify
