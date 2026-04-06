@@ -45,8 +45,8 @@ const UNIDADES = [
     ),
   },
   {
-    name: "Consultoria y tecnologia",
-    desc: "CapioLab: plataforma CRM y soluciones tecnologicas para inmobiliarias. Automatizacion, datos y herramientas digitales.",
+    name: "Consultoria y Tecnologia con AI",
+    desc: "CapioLab: plataforma CRM con inteligencia artificial y soluciones tecnologicas para inmobiliarias. Automatizacion, datos y herramientas digitales.",
     icon: (
       <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
@@ -119,8 +119,27 @@ export default function NosotrosPage() {
         </div>
       </section>
 
-      {/* Unidades de negocio */}
+      {/* Equipo */}
       <section className="py-16">
+        <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
+          <h2 className="text-2xl font-bold text-[var(--color-primary)] mb-8 text-center">Nuestro equipo</h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {EQUIPO.map((e) => (
+              <div key={e.name} className="p-6 rounded-2xl border border-[var(--color-border)] text-center">
+                <div className="w-16 h-16 mx-auto rounded-full bg-[var(--color-primary)] flex items-center justify-center text-xl font-bold text-white mb-3">
+                  {e.name.split(" ").map(n => n[0]).join("")}
+                </div>
+                <h3 className="text-base font-semibold text-[var(--color-primary)]">{e.name}</h3>
+                <p className="text-sm text-[var(--color-accent)] font-medium">{e.role}</p>
+                <p className="mt-2 text-xs text-[var(--color-text-light)]">{e.desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Unidades de negocio */}
+      <section className="py-16 bg-gray-50/50">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <h2 className="text-2xl font-bold text-[var(--color-primary)]">5 unidades de negocio</h2>
@@ -150,9 +169,9 @@ export default function NosotrosPage() {
               </span>
               <h2 className="text-3xl font-bold text-white">CapioLab</h2>
               <p className="mt-4 text-gray-300 leading-relaxed">
-                Nuestra plataforma de consultoria y tecnologia para el sector inmobiliario. Implementamos
-                soluciones CRM con GoHighLevel, automatizamos procesos de venta y marketing, y ayudamos
-                a otras inmobiliarias a escalar con herramientas digitales.
+                Nuestra plataforma de consultoria y tecnologia con inteligencia artificial para el sector
+                inmobiliario. Implementamos soluciones CRM con GoHighLevel, automatizamos procesos de venta
+                y marketing con AI, y ayudamos a otras inmobiliarias a escalar con herramientas digitales.
               </p>
               <a
                 href="https://capiolab.com"
@@ -170,25 +189,6 @@ export default function NosotrosPage() {
                 </svg>
               </div>
             </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Equipo */}
-      <section className="py-16">
-        <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
-          <h2 className="text-2xl font-bold text-[var(--color-primary)] mb-8 text-center">Nuestro equipo</h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {EQUIPO.map((e) => (
-              <div key={e.name} className="p-6 rounded-2xl border border-[var(--color-border)] text-center">
-                <div className="w-16 h-16 mx-auto rounded-full bg-[var(--color-primary)] flex items-center justify-center text-xl font-bold text-white mb-3">
-                  {e.name.split(" ").map(n => n[0]).join("")}
-                </div>
-                <h3 className="text-base font-semibold text-[var(--color-primary)]">{e.name}</h3>
-                <p className="text-sm text-[var(--color-accent)] font-medium">{e.role}</p>
-                <p className="mt-2 text-xs text-[var(--color-text-light)]">{e.desc}</p>
-              </div>
-            ))}
           </div>
         </div>
       </section>
@@ -212,7 +212,12 @@ export default function NosotrosPage() {
       <section className="py-16">
         <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-2xl font-bold text-[var(--color-primary)] mb-4">Donde operamos</h2>
-          <p className="text-[var(--color-text-light)] mb-6">Oriente Antioqueno, Colombia</p>
+          <p className="text-[var(--color-text-light)] mb-6 leading-relaxed">
+            Operamos en el Oriente Antioqueno con nuestra inmobiliaria,
+            atendiendo Marinilla, El Penol, Guatape, Rionegro y toda la region.
+            A traves de CapioLab, nuestra unidad de tecnologia, desarrollamos
+            proyectos de transformacion digital con AI para empresas en toda Latinoamerica.
+          </p>
           <div className="flex flex-wrap justify-center gap-2">
             {ZONAS.map((z) => (
               <span key={z} className="px-4 py-2 rounded-full bg-gray-100 text-sm font-medium text-[var(--color-primary)]">{z}</span>
