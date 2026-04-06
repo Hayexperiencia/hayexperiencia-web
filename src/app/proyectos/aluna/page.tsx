@@ -60,7 +60,7 @@ export default function AlunaPage() {
       {/* 1. HERO */}
       <section className="relative bg-[var(--color-primary)] overflow-hidden min-h-[70vh] flex items-center">
         <div className="absolute inset-0">
-          <Image src="/images/proyectos/aluna-hero.png" alt="ALUNA Campestre" fill className="object-cover opacity-30" priority />
+          <Image src="/images/proyectos/aluna-hero.png" alt="ALUNA Campestre" fill className="object-cover opacity-65" priority />
         </div>
         <div className="relative mx-auto max-w-4xl text-center px-4 py-24">
           <span className="inline-block px-4 py-1.5 rounded-full bg-[var(--color-accent)] text-[var(--color-primary)] text-sm font-bold mb-4">
@@ -206,11 +206,27 @@ export default function AlunaPage() {
         </div>
       </section>
 
-      {/* 7. AVANCE DE OBRA */}
+      {/* 7. ESTADO ACTUAL DEL PROYECTO */}
       <section className="py-16">
         <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
-          <h2 className="text-3xl font-bold text-[var(--color-primary)] mb-6">Avance de obra</h2>
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-8">
+          <h2 className="text-3xl font-bold text-[var(--color-primary)] mb-6">Estado Actual del Proyecto</h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8">
+            {[
+              "Lotes disponibles para entrega inmediata",
+              "9 lotes disponibles",
+              "95% de la obra terminada",
+              "En escrituracion",
+              "Plan de pagos hasta junio de 2027",
+            ].map((item) => (
+              <div key={item} className="flex items-center gap-3 p-4 rounded-xl bg-green-50 border border-green-100">
+                <svg className="h-5 w-5 text-green-600 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                </svg>
+                <span className="text-sm font-medium text-[var(--color-primary)]">{item}</span>
+              </div>
+            ))}
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
             <div className="p-6 rounded-2xl bg-gray-50 text-center">
               <div className="text-4xl font-bold text-[var(--color-accent)]">77%</div>
               <div className="text-sm text-[var(--color-text-light)] mt-1">Vendido (30 de 39)</div>
@@ -233,7 +249,7 @@ export default function AlunaPage() {
           <h2 className="text-3xl font-bold text-[var(--color-primary)] mb-6">Ubicacion</h2>
           <div className="rounded-2xl overflow-hidden">
             <iframe
-              src="https://www.google.com/maps?q=6.1759,-75.3299&z=14&output=embed"
+              src="https://www.google.com/maps?q=6.1520128,-75.3321179&z=15&output=embed"
               width="100%"
               height="400"
               style={{ border: 0 }}

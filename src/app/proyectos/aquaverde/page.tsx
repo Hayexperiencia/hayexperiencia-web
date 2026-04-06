@@ -22,7 +22,7 @@ export default function AquaverdePage() {
     <div>
       <section className="relative bg-[var(--color-primary)] overflow-hidden">
         <div className="absolute inset-0">
-          <Image src="/images/proyectos/aquaverde-hero.webp" alt="Aquaverde - Condominio campestre en Marinilla" fill className="object-cover opacity-30" priority />
+          <Image src="/images/proyectos/aquaverde-hero.webp" alt="Aquaverde - Condominio campestre en Marinilla" fill className="object-cover opacity-65" priority />
         </div>
         <div className="relative mx-auto max-w-4xl text-center px-4 py-24">
           <span className="inline-block px-4 py-1 rounded-full bg-[var(--color-accent)] text-[var(--color-primary)] text-sm font-semibold mb-4">
@@ -100,6 +100,35 @@ export default function AquaverdePage() {
             >
               Solicitar informacion
             </Link>
+          </div>
+        </div>
+      </section>
+      {/* Estado Actual */}
+      <section className="py-16">
+        <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
+          <h2 className="text-3xl font-bold text-[var(--color-primary)] mb-6">Estado Actual del Proyecto</h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            {["Entrega a diciembre de 2026", "Lotes independientes listos para escrituracion", "En proceso de urbanismo"].map((item) => (
+              <div key={item} className="flex items-center gap-3 p-4 rounded-xl bg-green-50 border border-green-100">
+                <svg className="h-5 w-5 text-green-600 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                </svg>
+                <span className="text-sm font-medium text-[var(--color-primary)]">{item}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Mapa */}
+      <section className="py-16 bg-gray-50/50">
+        <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
+          <h2 className="text-3xl font-bold text-[var(--color-primary)] mb-6">Ubicacion</h2>
+          <div className="rounded-2xl overflow-hidden">
+            <iframe
+              src="https://www.google.com/maps?q=6.1601875,-75.3110625&z=15&output=embed"
+              width="100%" height="400" style={{ border: 0 }} allowFullScreen loading="lazy" referrerPolicy="no-referrer-when-downgrade" title="Ubicacion Aquaverde"
+            />
           </div>
         </div>
       </section>

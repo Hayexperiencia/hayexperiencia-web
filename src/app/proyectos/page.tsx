@@ -85,11 +85,10 @@ export default function ProyectosPage() {
       {/* Arka11 partner section */}
       <section className="py-16 bg-gray-50/50">
         <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-2xl font-bold text-[var(--color-primary)] mb-4">Alianza estrategica</h2>
+          <h2 className="text-2xl font-bold text-[var(--color-primary)] mb-4">Nuestras alianzas</h2>
           <p className="text-[var(--color-text-light)]">
-            Trabajamos en alianza con <strong className="text-[var(--color-primary)]">Arka11</strong>, empresa de desarrollo inmobiliario
-            especializada en proyectos de lotes campestres en el Oriente Antioqueno. Juntos desarrollamos ALUNA Campestre
-            y exploramos nuevas oportunidades de inversion en la region.
+            Desarrollamos proyectos con las constructoras mas importantes del Oriente Antioqueno,
+            garantizando calidad y respaldo para tu inversion.
           </p>
           <a
             href="https://arka11.co"
