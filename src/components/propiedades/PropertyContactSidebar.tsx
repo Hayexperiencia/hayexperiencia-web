@@ -63,20 +63,28 @@ export default function PropertyContactSidebar({
             Escribir por WhatsApp
           </a>
 
-          {/* PDF placeholders */}
+          {/* PDF downloads */}
           <div className="mt-4 flex gap-2">
             <button
-              disabled
-              className="flex-1 flex items-center justify-center gap-1 px-3 py-2 rounded-lg border border-[var(--color-border)] text-xs text-[var(--color-text-light)] opacity-50 cursor-not-allowed"
-              title="Proximamente"
+              onClick={() => {
+                const a = document.createElement("a");
+                a.href = `/api/pdf?id=${propertyId}&modo=con-marca`;
+                a.download = `HE-${propertyId}-ficha.pdf`;
+                a.click();
+              }}
+              className="flex-1 flex items-center justify-center gap-1 px-3 py-2 rounded-lg border border-[var(--color-border)] text-xs text-[var(--color-primary)] hover:bg-gray-50 transition-colors"
             >
               <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>
               PDF
             </button>
             <button
-              disabled
-              className="flex-1 flex items-center justify-center gap-1 px-3 py-2 rounded-lg border border-[var(--color-border)] text-xs text-[var(--color-text-light)] opacity-50 cursor-not-allowed"
-              title="Proximamente"
+              onClick={() => {
+                const a = document.createElement("a");
+                a.href = `/api/pdf?id=${propertyId}&modo=sin-marca`;
+                a.download = `propiedad-${propertyId}-ficha.pdf`;
+                a.click();
+              }}
+              className="flex-1 flex items-center justify-center gap-1 px-3 py-2 rounded-lg border border-[var(--color-border)] text-xs text-[var(--color-primary)] hover:bg-gray-50 transition-colors"
             >
               <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>
               PDF colega

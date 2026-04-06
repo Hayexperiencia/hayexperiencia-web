@@ -2,12 +2,12 @@ import { notFound } from "next/navigation";
 import { getProperty, getSimilarProperties } from "@/lib/wasi";
 import { getEnrichedData, getMarketAverage } from "@/lib/db";
 import { formatPrice, formatArea, getPropertyType, getPricePerM2, stripHtml, getWhatsAppLink, getPropertyWhatsAppMessage, extractImages } from "@/lib/utils";
-import PropertyGallery from "@/components/propiedades/PropertyGallery";
+import Gallery from "@/components/ui/Gallery";
 import PropertyKeyFacts from "@/components/propiedades/PropertyKeyFacts";
 import SimilarProperties from "@/components/propiedades/SimilarProperties";
 import ShareButtons from "@/components/propiedades/ShareButtons";
-import DownloadPdfButtons from "@/components/propiedades/DownloadPdfButtons";
 import PropertyContactSidebar from "@/components/propiedades/PropertyContactSidebar";
+import ContactForm from "@/components/ui/ContactForm";
 import type { Metadata } from "next";
 
 export const revalidate = 21600;
@@ -58,7 +58,10 @@ export default async function PropertyDetailPage({ params }: PageProps) {
   return (
     <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8">
       {/* Gallery */}
-      <PropertyGallery images={images} />
+      <Gallery
+        images={images.map((img) => ({ url: img.url, alt: img.description || undefined }))}
+        virtualTourUrl={property.video || undefined}
+      />
 
       <div className="mt-8 grid grid-cols-1 lg:grid-cols-3 gap-12">
         {/* Main content */}
@@ -144,9 +147,6 @@ export default async function PropertyDetailPage({ params }: PageProps) {
             </div>
           )}
 
-          {/* Download PDF */}
-          <DownloadPdfButtons propertyId={property.id_property} />
-
           {/* Share */}
           <ShareButtons title={`${type} en ${property.city_label} - ${price}`} propertyId={property.id_property} />
         </div>
@@ -160,6 +160,15 @@ export default async function PropertyDetailPage({ params }: PageProps) {
             propertyId={property.id_property}
             propertyTitle={property.title || `${type} en ${property.city_label}`}
           />
+          <div className="mt-6">
+            <ContactForm
+              source={`propiedad-${property.id_property}`}
+              compact={true}
+              title="Te interesa esta propiedad?"
+              showMessage={false}
+              className="p-6 rounded-2xl border border-[var(--color-border)] bg-white"
+            />
+          </div>
         </div>
       </div>
 

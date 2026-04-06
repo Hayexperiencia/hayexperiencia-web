@@ -37,6 +37,7 @@ export interface WasiProperty {
   main_image?: WasiMainImage | null;
   galleries?: WasiGallery[];
   features?: Record<string, WasiFeature[]>;
+  video?: string;
   featured: number;
   unit_area_label: string;
   unit_built_area_label: string;
