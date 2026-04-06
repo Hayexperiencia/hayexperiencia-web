@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import Script from "next/script";
+import ContactForm from "@/components/ui/ContactForm";
 
 export const metadata: Metadata = {
   title: "Contacto",
@@ -20,29 +20,14 @@ export default function ContactoPage() {
       <section className="py-16">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
-            {/* GHL Form */}
+            {/* Contact Form */}
             <div>
               <h2 className="text-2xl font-bold text-[var(--color-primary)] mb-6">Envianos un mensaje</h2>
-              <div className="rounded-2xl overflow-hidden border border-[var(--color-border)]">
-                <iframe
-                  src="https://links.capiolab.com/widget/form/giw7Q3Kz4jQWprjZztSb"
-                  style={{ width: "100%", height: "515px", border: "none" }}
-                  id="inline-giw7Q3Kz4jQWprjZztSb"
-                  data-layout='{"id":"INLINE"}'
-                  data-trigger-type="alwaysShow"
-                  data-trigger-value=""
-                  data-activation-type="alwaysActivated"
-                  data-activation-value=""
-                  data-deactivation-type="neverDeactivate"
-                  data-deactivation-value=""
-                  data-form-name="Real Estate Consulting Lead"
-                  data-height="515"
-                  data-layout-iframe-id="inline-giw7Q3Kz4jQWprjZztSb"
-                  data-form-id="giw7Q3Kz4jQWprjZztSb"
-                  title="Real Estate Consulting Lead"
-                />
-              </div>
-              <Script src="https://links.capiolab.com/js/form_embed.js" strategy="lazyOnload" />
+              <ContactForm
+                source="contacto-page"
+                showMessage={true}
+                className="p-6 rounded-2xl border border-[var(--color-border)]"
+              />
             </div>
 
             {/* Contact info */}
@@ -116,20 +101,6 @@ export default function ContactoPage() {
                     <span>Cerrado</span>
                   </div>
                 </div>
-              </div>
-
-              {/* Mapa */}
-              <div className="rounded-2xl overflow-hidden">
-                <iframe
-                  src="https://www.google.com/maps?q=Marinilla+Antioquia+Colombia&z=14&output=embed"
-                  width="100%"
-                  height="300"
-                  style={{ border: 0 }}
-                  allowFullScreen
-                  loading="lazy"
-                  referrerPolicy="no-referrer-when-downgrade"
-                  title="Ubicacion Hay Experiencia"
-                />
               </div>
             </div>
           </div>
