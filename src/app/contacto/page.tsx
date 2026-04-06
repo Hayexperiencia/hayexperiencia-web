@@ -71,7 +71,7 @@ export default function ContactoPage() {
                     </div>
                     <div>
                       <p className="font-medium text-[var(--color-primary)]">Telefono</p>
-                      <a href="tel:+573043270606" className="text-sm text-[var(--color-text-light)] hover:text-[var(--color-primary)]">304 327 0606</a>
+                      <a href="tel:+573022343659" className="text-sm text-[var(--color-text-light)] hover:text-[var(--color-primary)]">302 234 3659</a>
                     </div>
                   </div>
 

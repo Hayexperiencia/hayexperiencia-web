@@ -35,7 +35,7 @@ export default function Footer() {
             <h3 className="text-sm font-semibold text-[var(--color-accent)] uppercase tracking-wider">Contacto</h3>
             <ul className="mt-4 space-y-2">
               <li className="text-sm text-gray-300">Marinilla, Antioquia</li>
-              <li><a href="tel:+573043270606" className="text-sm text-gray-300 hover:text-white transition-colors">304 327 0606</a></li>
+              <li><a href="tel:+573022343659" className="text-sm text-gray-300 hover:text-white transition-colors">302 234 3659</a></li>
               <li><a href="https://wa.me/573022343659" target="_blank" rel="noopener noreferrer" className="text-sm text-gray-300 hover:text-white transition-colors">WhatsApp: 302 234 3659</a></li>
               <li><a href="mailto:gerencia@hayexperiencia.com" className="text-sm text-gray-300 hover:text-white transition-colors">gerencia@hayexperiencia.com</a></li>
             </ul>
