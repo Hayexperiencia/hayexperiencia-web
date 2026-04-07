@@ -1,8 +1,5 @@
 import { NextResponse } from 'next/server'
-import { exec } from 'child_process'
-import { promisify } from 'util'
-
-const execAsync = promisify(exec)
+import { generatePaymentPlan } from '@/lib/quotation-engine'
 
 let pool: import('pg').Pool | null = null
 
@@ -49,7 +46,7 @@ export async function POST(request: Request) {
 
     const unit = rows[0]
 
-    const engineInput = {
+    const plan = generatePaymentPlan({
       list_price: Number(unit.list_price),
       separation_value: Number(unit.separation_value),
       ci_percentage: Number(unit.ci_percentage),
@@ -61,21 +58,7 @@ export async function POST(request: Request) {
       max_loan_pct: Number(unit.max_loan_pct),
       life_insurance_monthly: Number(unit.life_insurance_monthly),
       fire_insurance_rate_annual: Number(unit.fire_insurance_rate_annual),
-    }
-
-    const inputJson = JSON.stringify(engineInput)
-    const escapedInput = inputJson.replace(/'/g, "'\\''")
-
-    const { stdout, stderr } = await execAsync(
-      `echo '${escapedInput}' | python3 /root/assistant/scripts/quotation_engine.py`
-    )
-
-    if (stderr) {
-      console.error('Motor error:', stderr)
-      return NextResponse.json({ error: 'Error en el motor de calculo' }, { status: 500 })
-    }
-
-    const plan = JSON.parse(stdout)
+    })
 
     return NextResponse.json({
       unit: {

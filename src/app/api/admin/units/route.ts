@@ -9,7 +9,9 @@ async function getPool() {
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url)
   const project_id = searchParams.get('project_id')
-  const status = searchParams.get('status') // null = all
+  const status = searchParams.get('status')
+
+  if (!project_id) return NextResponse.json({ error: 'project_id requerido' }, { status: 400 })
 
   const p = await getPool()
   const conditions = ['u.project_id = $1']
@@ -31,6 +33,46 @@ export async function GET(request: Request) {
   return NextResponse.json(rows)
 }
 
+export async function POST(request: Request) {
+  const body = await request.json()
+  const { project_id, unit_code, list_price } = body
+
+  if (!project_id || !unit_code || list_price === undefined) {
+    return NextResponse.json({ error: 'project_id, unit_code y list_price son requeridos' }, { status: 400 })
+  }
+
+  const p = await getPool()
+  const { rows } = await p.query(`
+    INSERT INTO hei_inventory_units (
+      project_id, stage_id, unit_code, unit_type, list_price,
+      area_total_m2, area_private_m2, area_built_m2, area_terrace_m2,
+      bedrooms, bathrooms, has_parking, parking_type, has_storage,
+      view_description, image_url, internal_notes, unit_status
+    ) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18)
+    RETURNING id, unit_code
+  `, [
+    project_id,
+    body.stage_id || null,
+    unit_code,
+    body.unit_type || null,
+    list_price,
+    body.area_total_m2 || null,
+    body.area_private_m2 || null,
+    body.area_built_m2 || null,
+    body.area_terrace_m2 || null,
+    body.bedrooms || null,
+    body.bathrooms || null,
+    body.has_parking || false,
+    body.parking_type || null,
+    body.has_storage || false,
+    body.view_description || null,
+    body.image_url || null,
+    body.internal_notes || null,
+    body.unit_status || 'disponible',
+  ])
+  return NextResponse.json(rows[0])
+}
+
 export async function PUT(request: Request) {
   const body = await request.json()
   const { id, ...fields } = body
@@ -39,8 +81,9 @@ export async function PUT(request: Request) {
   const allowed = [
     'unit_code', 'unit_type', 'unit_status', 'list_price',
     'area_total_m2', 'area_private_m2', 'area_built_m2', 'area_terrace_m2',
-    'bedrooms', 'bathrooms', 'has_parking', 'has_storage',
-    'view_description', 'image_url', 'internal_notes', 'is_active'
+    'bedrooms', 'bathrooms', 'has_parking', 'parking_type', 'has_storage',
+    'view_description', 'image_url', 'internal_notes', 'is_active',
+    'tower', 'floor_number', 'stage_id'
   ]
 
   const sets: string[] = []
@@ -53,7 +96,7 @@ export async function PUT(request: Request) {
       idx++
     }
   }
-  if (sets.length === 0) return NextResponse.json({ error: 'No hay campos para actualizar' }, { status: 400 })
+  if (sets.length === 0) return NextResponse.json({ error: 'No hay campos' }, { status: 400 })
 
   sets.push(`updated_at = NOW()`)
   vals.push(id)
@@ -63,19 +106,10 @@ export async function PUT(request: Request) {
   return NextResponse.json({ ok: true })
 }
 
-export async function POST(request: Request) {
-  const body = await request.json()
-  const { project_id, stage_id, unit_code, unit_type, list_price, area_total_m2, area_private_m2, area_terrace_m2 } = body
-
-  if (!project_id || !unit_code || !list_price) {
-    return NextResponse.json({ error: 'project_id, unit_code y list_price son requeridos' }, { status: 400 })
-  }
-
+export async function DELETE(request: Request) {
+  const { id } = await request.json()
+  if (!id) return NextResponse.json({ error: 'id requerido' }, { status: 400 })
   const p = await getPool()
-  const { rows } = await p.query(`
-    INSERT INTO hei_inventory_units (project_id, stage_id, unit_code, unit_type, list_price, area_total_m2, area_private_m2, area_terrace_m2)
-    VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
-    RETURNING id, unit_code
-  `, [project_id, stage_id || null, unit_code, unit_type || null, list_price, area_total_m2 || null, area_private_m2 || null, area_terrace_m2 || null])
-  return NextResponse.json(rows[0])
+  await p.query('DELETE FROM hei_inventory_units WHERE id = $1', [id])
+  return NextResponse.json({ ok: true })
 }
