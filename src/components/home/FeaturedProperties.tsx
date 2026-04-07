@@ -11,7 +11,7 @@ export default async function FeaturedProperties() {
         <div className="flex items-end justify-between mb-8">
           <div>
             <h2 className="text-3xl font-bold text-[var(--color-primary)]">Propiedades destacadas</h2>
-            <p className="mt-2 text-[var(--color-text-light)]">Las mas recientes del Oriente Antioqueno</p>
+            <p className="mt-2 text-[var(--color-text-light)]">Las más recientes del Oriente Antioqueño</p>
           </div>
           <Link
             href="/propiedades"

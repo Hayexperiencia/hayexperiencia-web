@@ -12,7 +12,7 @@ export default function PropertyGallery({ images }: { images: WasiImage[] }) {
       <div className="aspect-[16/9] rounded-2xl bg-gray-100 flex items-center justify-center">
         <div className="text-center">
           <Image src="/logos/isotipo.svg" alt="" width={64} height={64} className="mx-auto opacity-20" />
-          <p className="mt-2 text-sm text-[var(--color-text-light)]">Fotos proximamente</p>
+          <p className="mt-2 text-sm text-[var(--color-text-light)]">Fotos próximamente</p>
         </div>
       </div>
     );

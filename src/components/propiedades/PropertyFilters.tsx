@@ -8,8 +8,8 @@ const CITIES: Record<string, string> = {
   "488": "Marinilla",
   "685": "Rionegro",
   "410": "La Ceja",
-  "278": "El Penol",
-  "358": "Guatape",
+  "278": "El Peñol",
+  "358": "Guatapé",
   "677": "El Retiro",
   "153": "El Carmen de Viboral",
   "773": "San Vicente",
@@ -116,14 +116,14 @@ export default function PropertyFilters() {
           <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" />
           </svg>
-          Mas filtros
+          Más filtros
         </button>
       </div>
 
       {showMore && (
         <div className="flex flex-wrap gap-3 p-4 rounded-xl bg-gray-50 border border-[var(--color-border)]">
           <select value={get("banos")} onChange={(e) => updateFilter("banos", e.target.value)} className={selectClass}>
-            <option value="">Banos</option>
+            <option value="">Baños</option>
             <option value="1">1+</option>
             <option value="2">2+</option>
             <option value="3">3+</option>
@@ -165,7 +165,7 @@ export default function PropertyFilters() {
           />
           <input
             type="number"
-            placeholder="Area min (m2)"
+            placeholder="Área min (m²)"
             value={localAreaMin}
             onChange={(e) => setLocalAreaMin(e.target.value)}
             onBlur={applyAllFilters}
@@ -174,7 +174,7 @@ export default function PropertyFilters() {
           />
           <input
             type="number"
-            placeholder="Area max (m2)"
+            placeholder="Área max (m²)"
             value={localAreaMax}
             onChange={(e) => setLocalAreaMax(e.target.value)}
             onBlur={applyAllFilters}
@@ -213,7 +213,7 @@ export default function PropertyFilters() {
           )}
           {get("banos") && (
             <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-[var(--color-primary)]/5 text-xs font-medium text-[var(--color-primary)]">
-              {get("banos")}+ banos
+              {get("banos")}+ baños
               <button onClick={() => updateFilter("banos", "")} className="hover:text-red-500">&times;</button>
             </span>
           )}

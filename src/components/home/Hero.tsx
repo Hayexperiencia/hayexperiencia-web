@@ -8,22 +8,22 @@ export default function Hero() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center py-16 lg:py-24">
           <div>
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-[var(--color-primary)] leading-tight">
-              Tu sueno,{" "}
+              Tu sueño,{" "}
               <span className="relative">
                 nuestra experiencia
                 <span className="absolute -bottom-1 left-0 w-full h-2 bg-[var(--color-accent)] opacity-40 rounded"></span>
               </span>
             </h1>
             <p className="mt-6 text-lg text-[var(--color-text-light)] max-w-lg">
-              Lotes, casas, apartamentos y fincas en el Oriente Antioqueno.
-              Te acompanamos a encontrar el lugar perfecto para tu proximo proyecto.
+              Lotes, casas, apartamentos y fincas en el Oriente Antioqueño.
+              Te acompañamos a encontrar el lugar perfecto para tu próximo proyecto.
             </p>
             <SearchBar />
           </div>
           <div className="relative aspect-[4/3] rounded-2xl overflow-hidden">
             <Image
               src="/images/hero-oriente.jpg"
-              alt="Paisaje del Oriente Antioqueno"
+              alt="Paisaje del Oriente Antioqueño"
               fill
               className="object-cover"
               priority

@@ -24,10 +24,10 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
   return {
     title: `${type} en ${property.city_label} - ${price}`,
-    description: `${type} de ${formatArea(property.area)} en ${property.city_label}, ${property.zone_label || "Oriente Antioqueno"}. ${property.bedrooms} habitaciones, ${property.bathrooms} banos.`,
+    description: `${type} de ${formatArea(property.area)} en ${property.city_label}, ${property.zone_label || "Oriente Antioqueno"}. ${property.bedrooms} habitaciones, ${property.bathrooms} baños.`,
     openGraph: {
       title: `${type} ${formatArea(property.area)} en ${property.city_label} - ${price}`,
-      description: `${type} en ${property.city_label}. ${property.bedrooms} hab, ${property.bathrooms} banos.`,
+      description: `${type} en ${property.city_label}. ${property.bedrooms} hab, ${property.bathrooms} baños.`,
       images: property.main_image?.url_big ? [property.main_image.url_big] : [],
     },
   };
@@ -91,7 +91,7 @@ export default async function PropertyDetailPage({ params }: PageProps) {
           {/* Description */}
           {description && (
             <div>
-              <h3 className="text-xl font-semibold text-[var(--color-primary)] mb-3">Descripcion</h3>
+              <h3 className="text-xl font-semibold text-[var(--color-primary)] mb-3">Descripción</h3>
               <div className="text-[var(--color-text-light)] leading-relaxed prose" dangerouslySetInnerHTML={{ __html: description }} />
             </div>
           )}
@@ -102,7 +102,7 @@ export default async function PropertyDetailPage({ params }: PageProps) {
             (property.features.external?.length || 0) > 0
           ) && (
             <div>
-              <h3 className="text-xl font-semibold text-[var(--color-primary)] mb-4">Caracteristicas</h3>
+              <h3 className="text-xl font-semibold text-[var(--color-primary)] mb-4">Características</h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {property.features.internal && property.features.internal.length > 0 && (
                   <div>
@@ -150,7 +150,7 @@ export default async function PropertyDetailPage({ params }: PageProps) {
           {/* Map */}
           {property.latitude && property.longitude && parseFloat(property.latitude) !== 0 && (
             <div>
-              <h3 className="text-xl font-semibold text-[var(--color-primary)] mb-3">Ubicacion</h3>
+              <h3 className="text-xl font-semibold text-[var(--color-primary)] mb-3">Ubicación</h3>
               <div className="rounded-2xl overflow-hidden">
                 <iframe
                   src={`https://www.google.com/maps?q=${property.latitude},${property.longitude}&z=15&output=embed`}
@@ -160,7 +160,7 @@ export default async function PropertyDetailPage({ params }: PageProps) {
                   allowFullScreen
                   loading="lazy"
                   referrerPolicy="no-referrer-when-downgrade"
-                  title="Ubicacion de la propiedad"
+                  title="Ubicación de la propiedad"
                 />
               </div>
             </div>
@@ -183,7 +183,7 @@ export default async function PropertyDetailPage({ params }: PageProps) {
             <ContactForm
               source={`propiedad-${property.id_property}`}
               compact={true}
-              title="Te interesa esta propiedad?"
+              title="¿Te interesa esta propiedad?"
               showMessage={false}
               className="p-6 rounded-2xl border border-[var(--color-border)] bg-white"
             />

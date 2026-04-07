@@ -8,8 +8,8 @@ const CITIES: Record<string, string> = {
   "488": "Marinilla",
   "685": "Rionegro",
   "410": "La Ceja",
-  "278": "El Penol",
-  "358": "Guatape",
+  "278": "El Peñol",
+  "358": "Guatapé",
   "677": "El Retiro",
   "153": "El Carmen de Viboral",
   "773": "San Vicente",
@@ -103,7 +103,7 @@ export default function SearchBar() {
           <svg className={`h-3.5 w-3.5 transition-transform ${showMore ? "rotate-180" : ""}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
           </svg>
-          {showMore ? "Menos filtros" : "Mas filtros"}
+          {showMore ? "Menos filtros" : "Más filtros"}
         </button>
       </div>
 
@@ -111,7 +111,7 @@ export default function SearchBar() {
         <div className="mt-3 flex flex-wrap gap-2 pt-3 border-t border-[var(--color-border)]">
           <input type="number" placeholder="Precio min" value={precioMin} onChange={(e) => setPrecioMin(e.target.value)} className={`${inputClass} w-36`} />
           <input type="number" placeholder="Precio max" value={precioMax} onChange={(e) => setPrecioMax(e.target.value)} className={`${inputClass} w-36`} />
-          <input type="number" placeholder="Area min (m2)" value={areaMin} onChange={(e) => setAreaMin(e.target.value)} className={`${inputClass} w-36`} />
+          <input type="number" placeholder="Área min (m²)" value={areaMin} onChange={(e) => setAreaMin(e.target.value)} className={`${inputClass} w-36`} />
         </div>
       )}
     </div>

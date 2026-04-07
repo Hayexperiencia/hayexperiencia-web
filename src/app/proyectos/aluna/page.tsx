@@ -6,10 +6,10 @@ import AlunaCotizador from "@/components/proyectos/AlunaCotizador";
 
 export const metadata: Metadata = {
   title: "ALUNA Campestre — Lotes en Marinilla",
-  description: "Lotes campestres desde 2.500 m2 en Marinilla, Oriente Antioqueno. Proyecto Hay Experiencia + Arka11. Unidad cerrada, vias pavimentadas, entorno natural.",
+  description: "Lotes campestres desde 2.500 m2 en Marinilla, Oriente Antioqueño. Proyecto Hay Experiencia + Arka11. Unidad cerrada, vías pavimentadas, entorno natural.",
   openGraph: {
     title: "ALUNA Campestre — Lotes campestres en Marinilla",
-    description: "Tu espacio para crear la casa de tus suenos rodeado de naturaleza, a 45 min de Medellin.",
+    description: "Tu espacio para crear la casa de tus sueños rodeado de naturaleza, a 45 min de Medellín.",
     images: ["/images/proyectos/aluna-hero.png"],
   },
 };
@@ -22,8 +22,8 @@ const PROPUESTA_VALOR = [
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
       </svg>
     ),
-    title: "Ubicacion estrategica",
-    desc: "A 45 minutos de Medellin, cerca de las vias a El Carmen de Viboral y Rionegro.",
+    title: "Ubicación estratégica",
+    desc: "A 45 minutos de Medellín, cerca de las vías a El Carmen de Viboral y Rionegro.",
   },
   {
     icon: (
@@ -31,8 +31,8 @@ const PROPUESTA_VALOR = [
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
       </svg>
     ),
-    title: "Alta valorizacion",
-    desc: "El Oriente Antioqueno es la zona con mayor crecimiento inmobiliario de Colombia.",
+    title: "Alta valorización",
+    desc: "El Oriente Antioqueño es la zona con mayor crecimiento inmobiliario de Colombia.",
   },
   {
     icon: (
@@ -41,17 +41,17 @@ const PROPUESTA_VALOR = [
       </svg>
     ),
     title: "Infraestructura de primer nivel",
-    desc: "Unidad cerrada con vias pavimentadas, redes subterraneas y porteria.",
+    desc: "Unidad cerrada con vías pavimentadas, redes subterráneas y portería.",
   },
 ];
 
 const CARACTERISTICAS = [
   "Lotes desde 2.500 m2",
   "Unidad cerrada",
-  "Vias pavimentadas",
-  "Redes subterraneas (acueducto, gas, alcantarillado, energia)",
-  "Cerca de vias a El Carmen de Viboral y Rionegro",
-  "45-50 minutos de Medellin",
+  "Vías pavimentadas",
+  "Redes subterráneas (acueducto, gas, alcantarillado, energía)",
+  "Cerca de vías a El Carmen de Viboral y Rionegro",
+  "45-50 minutos de Medellín",
 ];
 
 export default function AlunaPage() {
@@ -68,7 +68,7 @@ export default function AlunaPage() {
           </span>
           <h1 className="text-5xl sm:text-6xl font-bold text-white">ALUNA Campestre</h1>
           <p className="mt-4 text-xl sm:text-2xl text-gray-300 max-w-2xl mx-auto">
-            Tu espacio para crear la casa de tus suenos, rodeado de naturaleza y tranquilidad
+            Tu espacio para crear la casa de tus sueños, rodeado de naturaleza y tranquilidad
           </p>
           <a
             href="#cotizador"
@@ -101,15 +101,15 @@ export default function AlunaPage() {
         <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
           <h2 className="text-3xl font-bold text-[var(--color-primary)] mb-6">Sobre el proyecto</h2>
           <p className="text-lg text-[var(--color-text-light)] leading-relaxed mb-4">
-            ALUNA Campestre es un desarrollo exclusivo en Marinilla, Oriente Antioqueno, disenado para
-            quienes buscan construir la casa de sus suenos en un entorno natural, seguro y con toda la
-            infraestructura. Desarrollado en alianza con Arka11, el proyecto ofrece 9 lotes desde 2.500 m2
-            en una unidad cerrada con vias pavimentadas y redes subterraneas.
+            ALUNA Campestre es un desarrollo exclusivo en Marinilla, Oriente Antioqueño, diseñado para
+            quienes buscan construir la casa de sus sueños en un entorno natural, seguro y con toda la
+            infraestructura. Desarrollado en alianza con Arka11, el proyecto ofrece 9 lotes desde 2.500 m²
+            en una unidad cerrada con vías pavimentadas y redes subterráneas.
           </p>
           <p className="text-lg text-[var(--color-text-light)] leading-relaxed">
-            El nombre ALUNA proviene de la conexion con la tierra y el proposito de crear un espacio
-            donde cuerpo, mente y espiritu encuentren equilibrio. A solo 45 minutos de Medellin, es la
-            combinacion perfecta entre tranquilidad campestre y cercanias urbanas.
+            El nombre ALUNA proviene de la conexión con la tierra y el propósito de crear un espacio
+            donde cuerpo, mente y espíritu encuentren equilibrio. A solo 45 minutos de Medellín, es la
+            combinación perfecta entre tranquilidad campestre y cercanías urbanas.
           </p>
 
           {/* Iconos propuesta de valor */}
@@ -130,44 +130,44 @@ export default function AlunaPage() {
       {/* 4. GALERIA */}
       <ProjectGallery
         images={[
-          { src: "/images/proyectos/aluna-hero.png", alt: "ALUNA Campestre - Vista panoramica" },
-          { src: "/images/proyectos/aluna-drone-1.jpg", alt: "Vista aerea del proyecto ALUNA" },
+          { src: "/images/proyectos/aluna-hero.png", alt: "ALUNA Campestre - Vista panorámica" },
+          { src: "/images/proyectos/aluna-drone-1.jpg", alt: "Vista aérea del proyecto ALUNA" },
           { src: "/images/proyectos/aluna-drone-2.jpg", alt: "Lotes campestres desde el aire" },
           { src: "/images/proyectos/aluna-drone-3.jpg", alt: "Entorno natural de ALUNA" },
           { src: "/images/proyectos/aluna-evento-1.jpg", alt: "Visita al terreno ALUNA" },
           { src: "/images/proyectos/aluna-evento-2.jpg", alt: "Recorrido por los lotes" },
           { src: "/images/proyectos/aluna-evento-3.jpg", alt: "Evento Amanecer en ALUNA" },
         ]}
-        title="Galeria del proyecto"
+        title="Galería del proyecto"
       />
 
       {/* 5. HISTORIA Y VISION */}
       <section className="py-16">
         <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
-          <h2 className="text-3xl font-bold text-[var(--color-primary)] mb-6">El equipo detras de ALUNA</h2>
+          <h2 className="text-3xl font-bold text-[var(--color-primary)] mb-6">El equipo detrás de ALUNA</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             <div>
               <h3 className="text-xl font-bold text-[var(--color-primary)] mb-3">Hay Experiencia</h3>
               <p className="text-[var(--color-text-light)] leading-relaxed">
-                Somos un holding inmobiliario del Oriente Antioqueno, con experiencia en
-                estructuracion de proyectos, comercializacion y administracion de propiedades.
-                ALUNA es nuestro proyecto insignia, donde ponemos toda nuestra vision del futuro
-                de la vivienda campestre en la region.
+                Somos un holding inmobiliario del Oriente Antioqueño, con experiencia en
+                estructuración de proyectos, comercialización y administración de propiedades.
+                ALUNA es nuestro proyecto insignia, donde ponemos toda nuestra visión del futuro
+                de la vivienda campestre en la región.
               </p>
             </div>
             <div>
               <h3 className="text-xl font-bold text-[var(--color-primary)] mb-3">Arka11</h3>
               <p className="text-[var(--color-text-light)] leading-relaxed">
                 Arka11, liderado por Ludwig Zuluaga, es nuestro socio desarrollador. Con amplia
-                trayectoria en proyectos inmobiliarios en el Oriente Antioqueno, aporta la experiencia
-                tecnica y constructiva para que ALUNA sea una realidad con los mas altos estandares.
+                trayectoria en proyectos inmobiliarios en el Oriente Antioqueño, aporta la experiencia
+                técnica y constructiva para que ALUNA sea una realidad con los más altos estándares.
               </p>
             </div>
           </div>
 
           {/* Caracteristicas tecnicas */}
           <div className="mt-12">
-            <h3 className="text-xl font-bold text-[var(--color-primary)] mb-4">Caracteristicas del proyecto</h3>
+            <h3 className="text-xl font-bold text-[var(--color-primary)] mb-4">Características del proyecto</h3>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               {CARACTERISTICAS.map(c => (
                 <div key={c} className="flex items-center gap-3 p-4 rounded-xl bg-gray-50">
@@ -185,8 +185,8 @@ export default function AlunaPage() {
       {/* 6. CTA INTERMEDIO */}
       <section className="py-12 bg-[var(--color-accent)]">
         <div className="mx-auto max-w-3xl text-center px-4">
-          <h2 className="text-2xl font-bold text-[var(--color-primary)]">Te interesa ALUNA?</h2>
-          <p className="mt-2 text-[var(--color-primary)]/80">Hablemos. Sin compromiso, sin letra pequena.</p>
+          <h2 className="text-2xl font-bold text-[var(--color-primary)]">¿Te interesa ALUNA?</h2>
+          <p className="mt-2 text-[var(--color-primary)]/80">Hablemos. Sin compromiso, sin letra pequeña.</p>
           <div className="mt-6 flex flex-wrap justify-center gap-4">
             <a
               href="https://wa.me/573022343659?text=Hola%2C%20me%20interesa%20el%20proyecto%20ALUNA%20Campestre"
@@ -200,7 +200,7 @@ export default function AlunaPage() {
               href="/contacto"
               className="inline-flex items-center px-8 py-3 rounded-xl bg-[var(--color-primary)] text-white font-semibold hover:bg-[var(--color-primary)]/90 transition-colors"
             >
-              Solicitar informacion
+              Solicitar información
             </Link>
           </div>
         </div>
@@ -215,7 +215,7 @@ export default function AlunaPage() {
               "Lotes disponibles para entrega inmediata",
               "9 lotes disponibles",
               "95% de la obra terminada",
-              "En escrituracion",
+              "En escrituración",
               "Plan de pagos hasta junio de 2027",
             ].map((item) => (
               <div key={item} className="flex items-center gap-3 p-4 rounded-xl bg-green-50 border border-green-100">
@@ -236,7 +236,7 @@ export default function AlunaPage() {
               <div className="text-sm text-[var(--color-text-light)] mt-1">Lotes disponibles</div>
             </div>
             <div className="p-6 rounded-2xl bg-gray-50 text-center">
-              <div className="text-sm font-semibold text-[var(--color-primary)]">Ultima actualizacion</div>
+              <div className="text-sm font-semibold text-[var(--color-primary)]">Última actualización</div>
               <div className="text-sm text-[var(--color-text-light)] mt-1">Abril 2026</div>
             </div>
           </div>
@@ -246,7 +246,7 @@ export default function AlunaPage() {
       {/* 8. MAPA */}
       <section className="py-16 bg-gray-50/50">
         <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
-          <h2 className="text-3xl font-bold text-[var(--color-primary)] mb-6">Ubicacion</h2>
+          <h2 className="text-3xl font-bold text-[var(--color-primary)] mb-6">Ubicación</h2>
           <div className="rounded-2xl overflow-hidden">
             <iframe
               src="https://www.google.com/maps?q=6.1520128,-75.3321179&z=15&output=embed"
@@ -256,17 +256,17 @@ export default function AlunaPage() {
               allowFullScreen
               loading="lazy"
               referrerPolicy="no-referrer-when-downgrade"
-              title="Ubicacion ALUNA Campestre - Marinilla"
+              title="Ubicación ALUNA Campestre — Marinilla"
             />
           </div>
           <div className="mt-4 grid grid-cols-2 sm:grid-cols-4 gap-4 text-sm">
             <div className="p-3 rounded-xl bg-white text-center">
               <div className="font-semibold text-[var(--color-primary)]">Marinilla</div>
-              <div className="text-[var(--color-text-light)]">Ubicacion</div>
+              <div className="text-[var(--color-text-light)]">Ubicación</div>
             </div>
             <div className="p-3 rounded-xl bg-white text-center">
               <div className="font-semibold text-[var(--color-primary)]">45 min</div>
-              <div className="text-[var(--color-text-light)]">Desde Medellin</div>
+              <div className="text-[var(--color-text-light)]">Desde Medellín</div>
             </div>
             <div className="p-3 rounded-xl bg-white text-center">
               <div className="font-semibold text-[var(--color-primary)]">15 min</div>

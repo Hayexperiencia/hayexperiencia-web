@@ -4,14 +4,14 @@ import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Proyectos",
-  description: "Proyectos inmobiliarios de Hay Experiencia en el Oriente Antioqueno: ALUNA Campestre, El Faro, Remanso de Oriente, Aquaverde.",
+  description: "Proyectos inmobiliarios de Hay Experiencia en el Oriente Antioqueño: ALUNA Campestre, El Faro, Remanso de Oriente, Aquaverde.",
 };
 
 const PROYECTOS = [
   {
     name: "ALUNA Campestre",
     location: "Marinilla, Antioquia",
-    description: "Lotes campestres desde 2.500 m2 en Marinilla. Unidad cerrada con vias pavimentadas, redes subterraneas y entorno natural privilegiado.",
+    description: "Lotes campestres desde 2.500 m2 en Marinilla. Unidad cerrada con vías pavimentadas, redes subterráneas y entorno natural privilegiado.",
     href: "/proyectos/aluna",
     badge: "En venta",
     highlights: ["9 lotes", "Desde 2.500 m2", "Desde $411M"],
@@ -19,26 +19,26 @@ const PROYECTOS = [
   },
   {
     name: "El Faro",
-    location: "El Penol, Antioquia",
-    description: "Condominio nautico en peninsula de 10 cuadras sobre la represa de Guatape. Suites, villas, sede nautica con muelles, senderos y reserva natural.",
+    location: "El Peñol, Antioquia",
+    description: "Condominio náutico en península de 10 cuadras sobre la represa de Guatapé. Suites, villas, sede náutica con muelles, senderos y reserva natural.",
     href: "/proyectos/el-faro",
     badge: "En desarrollo",
-    highlights: ["Peninsula", "Suites y Villas", "Sede nautica"],
+    highlights: ["Península", "Suites y Villas", "Sede náutica"],
     image: "/images/proyectos/el-faro-hero.jpg",
   },
   {
     name: "Remanso de Oriente",
-    location: "Oriente Antioqueno",
-    description: "Proyecto residencial en el corazon del Oriente Antioqueno. Disenado para quienes buscan tranquilidad sin alejarse de la ciudad.",
+    location: "Oriente Antioqueño",
+    description: "Proyecto residencial en el corazón del Oriente Antioqueño. Diseñado para quienes buscan tranquilidad sin alejarse de la ciudad.",
     href: "/proyectos/remanso",
-    badge: "Ultimas unidades",
-    highlights: ["60/66 unidades", "Oriente Antioqueno"],
+    badge: "Últimas unidades",
+    highlights: ["60/66 unidades", "Oriente Antioqueño"],
     image: "/images/hero-oriente.jpg",
   },
   {
     name: "Aquaverde",
     location: "Marinilla, Antioquia",
-    description: "Condominio campestre exclusivo con 41 lotes entre 1.500 y 1.900 m2. Lago privado, senderos ecologicos y seguridad 24/7.",
+    description: "Condominio campestre exclusivo con 41 lotes entre 1.500 y 1.900 m2. Lago privado, senderos ecológicos y seguridad 24/7.",
     href: "/proyectos/aquaverde",
     badge: "Entrega Dic 2026",
     highlights: ["41 lotes", "Lago privado", "1.500-1.900 m2"],
@@ -52,7 +52,7 @@ export default function ProyectosPage() {
       <section className="bg-[var(--color-primary)] py-20">
         <div className="mx-auto max-w-4xl text-center px-4">
           <h1 className="text-4xl sm:text-5xl font-bold text-white">Proyectos</h1>
-          <p className="mt-4 text-xl text-gray-300">Desarrollos inmobiliarios con vision integral en el Oriente Antioqueno</p>
+          <p className="mt-4 text-xl text-gray-300">Desarrollos inmobiliarios con visión integral en el Oriente Antioqueño</p>
         </div>
       </section>
 
@@ -94,10 +94,10 @@ export default function ProyectosPage() {
       {/* Arka11 partner section */}
       <section className="py-16 bg-gray-50/50">
         <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-2xl font-bold text-[var(--color-primary)] mb-4">Alianzas estrategicas</h2>
+          <h2 className="text-2xl font-bold text-[var(--color-primary)] mb-4">Alianzas estratégicas</h2>
           <p className="text-[var(--color-text-light)]">
-            Trabajamos en alianza con las mejores constructoras del pais en el Oriente Antioqueno,
-            garantizando calidad y respaldo para tu inversion.
+            Trabajamos en alianza con las mejores constructoras del país en el Oriente Antioqueño,
+            garantizando calidad y respaldo para tu inversión.
           </p>
           <a
             href="https://arka11.co"

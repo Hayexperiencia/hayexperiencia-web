@@ -3,7 +3,7 @@ import ContactForm from "@/components/ui/ContactForm";
 
 export const metadata: Metadata = {
   title: "Contacto",
-  description: "Contacta a Hay Experiencia Inmobiliaria. Marinilla, Antioquia. WhatsApp, telefono, email y formulario.",
+  description: "Contacta a Hay Experiencia Inmobiliaria. Marinilla, Antioquia. WhatsApp, teléfono, email y formulario.",
 };
 
 export default function ContactoPage() {
@@ -12,8 +12,8 @@ export default function ContactoPage() {
       {/* Hero */}
       <section className="bg-[var(--color-primary)] py-16">
         <div className="mx-auto max-w-4xl text-center px-4">
-          <h1 className="text-4xl sm:text-5xl font-bold text-white">Contactanos</h1>
-          <p className="mt-4 text-xl text-gray-300">Estamos listos para ayudarte con tu proximo proyecto inmobiliario</p>
+          <h1 className="text-4xl sm:text-5xl font-bold text-white">Contáctanos</h1>
+          <p className="mt-4 text-xl text-gray-300">Estamos listos para ayudarte con tu próximo proyecto inmobiliario</p>
         </div>
       </section>
 
@@ -22,7 +22,7 @@ export default function ContactoPage() {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
             {/* Contact Form */}
             <div>
-              <h2 className="text-2xl font-bold text-[var(--color-primary)] mb-6">Envianos un mensaje</h2>
+              <h2 className="text-2xl font-bold text-[var(--color-primary)] mb-6">Envíanos un mensaje</h2>
               <ContactForm
                 source="contacto-page"
                 showMessage={true}
@@ -43,7 +43,7 @@ export default function ContactoPage() {
                       </svg>
                     </div>
                     <div>
-                      <p className="font-medium text-[var(--color-primary)]">Direccion</p>
+                      <p className="font-medium text-[var(--color-primary)]">Dirección</p>
                       <p className="text-sm text-[var(--color-text-light)]">Marinilla, Antioquia, Colombia</p>
                     </div>
                   </div>
@@ -55,7 +55,7 @@ export default function ContactoPage() {
                       </svg>
                     </div>
                     <div>
-                      <p className="font-medium text-[var(--color-primary)]">Telefono</p>
+                      <p className="font-medium text-[var(--color-primary)]">Teléfono</p>
                       <a href="tel:+573022343659" className="text-sm text-[var(--color-text-light)] hover:text-[var(--color-primary)]">302 234 3659</a>
                     </div>
                   </div>
@@ -86,14 +86,14 @@ export default function ContactoPage() {
 
               {/* Horario */}
               <div className="p-6 rounded-2xl bg-gray-50">
-                <h3 className="font-semibold text-[var(--color-primary)] mb-3">Horario de atencion</h3>
+                <h3 className="font-semibold text-[var(--color-primary)] mb-3">Horario de atención</h3>
                 <div className="space-y-2 text-sm text-[var(--color-text-light)]">
                   <div className="flex justify-between">
                     <span>Lunes a Viernes</span>
                     <span className="font-medium text-[var(--color-primary)]">8:00 am - 6:00 pm</span>
                   </div>
                   <div className="flex justify-between">
-                    <span>Sabado</span>
+                    <span>Sábado</span>
                     <span className="font-medium text-[var(--color-primary)]">9:00 am - 1:00 pm</span>
                   </div>
                   <div className="flex justify-between">

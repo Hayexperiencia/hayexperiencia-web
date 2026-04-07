@@ -42,7 +42,7 @@ export default function ContactForm({
     };
 
     if (!GHL_WEBHOOK_URL) {
-      console.warn("[ContactForm] GHL_WEBHOOK_URL no configurado. Simulando envio en desarrollo.");
+      console.warn("[ContactForm] GHL_WEBHOOK_URL no configurado. Simulando envío en desarrollo.");
       console.log("[ContactForm] Payload:", payload);
       await new Promise((r) => setTimeout(r, 800));
       setStatus("success");
@@ -107,7 +107,7 @@ export default function ContactForm({
         <div>
           <input
             type="tel"
-            placeholder="Telefono *"
+            placeholder="Teléfono *"
             required
             value={form.phone}
             onChange={(e) => setForm({ ...form, phone: e.target.value })}
@@ -138,7 +138,7 @@ export default function ContactForm({
           ) : "Enviar mensaje"}
         </button>
         {status === "error" && (
-          <p className="text-sm text-red-600 text-center">Hubo un error. Intenta de nuevo o escribenos por WhatsApp.</p>
+          <p className="text-sm text-red-600 text-center">Hubo un error. Intenta de nuevo o escríbenos por WhatsApp.</p>
         )}
       </form>
     </div>

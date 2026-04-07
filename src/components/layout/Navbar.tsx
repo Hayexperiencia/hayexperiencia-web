@@ -12,7 +12,7 @@ const PROJECTS = [
 ];
 
 const MUNICIPIOS = [
-  "Marinilla", "El Penol", "Guatape", "Rionegro", "El Retiro", "La Ceja", "San Vicente",
+  "Marinilla", "El Peñol", "Guatapé", "Rionegro", "El Retiro", "La Ceja", "San Vicente",
 ];
 
 function Dropdown({ label, href, items, type }: { label: string; href: string; items: { href: string; label: string }[]; type: "link" | "filter" }) {
@@ -78,7 +78,7 @@ export default function Navbar() {
   const [open, setOpen] = useState(false);
 
   const municipioItems = MUNICIPIOS.map((m) => {
-    const cityIds: Record<string, string> = { "Marinilla": "488", "El Penol": "278", "Guatape": "358", "Rionegro": "685", "El Retiro": "677", "La Ceja": "410", "San Vicente": "773" };
+    const cityIds: Record<string, string> = { "Marinilla": "488", "El Peñol": "278", "Guatapé": "358", "Rionegro": "685", "El Retiro": "677", "La Ceja": "410", "San Vicente": "773" };
     return { href: `/propiedades?ciudad=${cityIds[m] || ""}`, label: m };
   });
 
@@ -107,7 +107,7 @@ export default function Navbar() {
               href="/contacto"
               className="rounded-lg bg-[var(--color-accent)] px-5 py-2.5 text-sm font-semibold text-[var(--color-primary)] hover:bg-[var(--color-accent-light)] transition-colors duration-200"
             >
-              Contactanos
+              Contáctanos
             </Link>
           </div>
 
@@ -132,7 +132,7 @@ export default function Navbar() {
               Nosotros
             </Link>
             <Link href="/contacto" className="block mx-3 text-center rounded-lg bg-[var(--color-accent)] px-5 py-2.5 text-sm font-semibold text-[var(--color-primary)]" onClick={() => setOpen(false)}>
-              Contactanos
+              Contáctanos
             </Link>
           </div>
         )}

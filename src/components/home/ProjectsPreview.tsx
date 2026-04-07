@@ -14,21 +14,21 @@ const PROJECTS = [
   },
   {
     name: "El Faro",
-    description: "Condominio nautico en peninsula sobre la represa de Guatape. Suites, villas y sede nautica.",
+    description: "Condominio náutico en península sobre la represa de Guatapé. Suites, villas y sede náutica.",
     href: "/proyectos/el-faro",
     badge: "En desarrollo",
     image: "/images/proyectos/el-faro-hero.jpg",
   },
   {
     name: "Remanso de Oriente",
-    description: "Proyecto residencial en Marinilla. Terminando la 1ra etapa, ultimas unidades disponibles.",
+    description: "Proyecto residencial en Marinilla. Terminando la 1ra etapa, últimas unidades disponibles.",
     href: "/proyectos/remanso",
-    badge: "Ultimas unidades",
+    badge: "Últimas unidades",
     image: "/images/hero-oriente.jpg",
   },
   {
     name: "Aquaverde",
-    description: "41 lotes campestres en Marinilla. Lago privado, senderos ecologicos y seguridad 24/7.",
+    description: "41 lotes campestres en Marinilla. Lago privado, senderos ecológicos y seguridad 24/7.",
     href: "/proyectos/aquaverde",
     badge: "Entrega Dic 2026",
     image: "/images/proyectos/aquaverde-hero.webp",
@@ -68,7 +68,7 @@ export default function ProjectsPreview() {
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-10">
           <h2 className="text-3xl font-bold text-[var(--color-primary)]">Proyectos</h2>
-          <p className="mt-2 text-[var(--color-text-light)]">Desarrollos inmobiliarios con vision integral</p>
+          <p className="mt-2 text-[var(--color-text-light)]">Desarrollos inmobiliarios con visión integral</p>
         </div>
 
         <div

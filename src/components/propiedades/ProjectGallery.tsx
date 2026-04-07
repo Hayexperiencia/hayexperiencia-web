@@ -8,7 +8,7 @@ interface ProjectGalleryProps {
   title?: string;
 }
 
-export default function ProjectGallery({ images, title = "Galeria del proyecto" }: ProjectGalleryProps) {
+export default function ProjectGallery({ images, title = "Galería del proyecto" }: ProjectGalleryProps) {
   const [lightbox, setLightbox] = useState<number | null>(null);
 
   if (!images.length) return null;

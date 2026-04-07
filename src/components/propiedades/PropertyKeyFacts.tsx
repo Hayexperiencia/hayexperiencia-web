@@ -10,16 +10,16 @@ export default function PropertyKeyFacts({ property }: { property: WasiProperty 
   const facts: Fact[] = [];
 
   if (property.area && parseFloat(property.area) > 0) {
-    facts.push({ label: "Area total", value: formatArea(property.area) });
+    facts.push({ label: "Área total", value: formatArea(property.area) });
   }
   if (property.built_area && parseFloat(property.built_area) > 0) {
-    facts.push({ label: "Area construida", value: formatArea(property.built_area) });
+    facts.push({ label: "Área construida", value: formatArea(property.built_area) });
   }
   if (property.bedrooms && parseInt(property.bedrooms) > 0) {
     facts.push({ label: "Habitaciones", value: property.bedrooms });
   }
   if (property.bathrooms && parseInt(property.bathrooms) > 0) {
-    facts.push({ label: "Banos", value: property.bathrooms });
+    facts.push({ label: "Baños", value: property.bathrooms });
   }
   if (property.garages && parseInt(property.garages) > 0) {
     facts.push({ label: "Parqueaderos", value: property.garages });

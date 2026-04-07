@@ -11,7 +11,7 @@ import type { Metadata } from "next";
 export const metadata: Metadata = {
   title: "Propiedades",
   description:
-    "Encuentra lotes, casas, apartamentos, fincas y locales en el Oriente Antioqueno. Marinilla, Rionegro, La Ceja, El Penol, Guatape.",
+    "Encuentra lotes, casas, apartamentos, fincas y locales en el Oriente Antioqueño. Marinilla, Rionegro, La Ceja, El Peñol, Guatapé.",
 };
 
 export const revalidate = 3600;
@@ -154,7 +154,7 @@ async function PropertiesContent({
 
       <p className="mt-4 text-center text-sm text-[var(--color-text-light)]">
         {total} propiedades encontradas
-        {totalPages > 1 && ` — Pagina ${page} de ${totalPages}`}
+        {totalPages > 1 && ` — Página ${page} de ${totalPages}`}
       </p>
     </>
   );
@@ -169,14 +169,14 @@ export default function PropiedadesPage({
     <>
     <CampaignBanner
       title="Encuentra tu propiedad ideal"
-      subtitle="Lotes, casas, apartamentos y fincas en el Oriente Antioqueno"
+      subtitle="Lotes, casas, apartamentos y fincas en el Oriente Antioqueño"
       cta="Buscar ahora"
       ctaHref="#filtros"
     />
     <div id="filtros" className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8">
       <h1 className="text-3xl font-bold text-[var(--color-primary)] mb-2">Propiedades</h1>
       <p className="text-[var(--color-text-light)] mb-6">
-        Encuentra tu proximo hogar o inversion en el Oriente Antioqueno
+        Encuentra tu próximo hogar o inversión en el Oriente Antioqueño
       </p>
       <Suspense fallback={<div className="h-10" />}>
         <PropertyFilters />
@@ -198,9 +198,9 @@ export default function PropiedadesPage({
     <section className="py-16 bg-[var(--color-primary)]">
       <div className="mx-auto max-w-4xl px-4 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
         <div>
-          <h2 className="text-3xl font-bold text-white">No encontraste lo que buscabas?</h2>
+          <h2 className="text-3xl font-bold text-white">¿No encontraste lo que buscabas?</h2>
           <p className="mt-4 text-gray-300 text-lg">
-            Tenemos acceso a propiedades exclusivas que no estan en el sitio. Dejanos tus datos y te ayudamos.
+            Tenemos acceso a propiedades exclusivas que no están en el sitio. Déjanos tus datos y te ayudamos.
           </p>
           <a
             href="https://wa.me/573022343659?text=Hola%2C%20busco%20una%20propiedad%20especifica"

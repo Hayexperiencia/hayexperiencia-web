@@ -15,13 +15,13 @@ export default function Footer() {
               height={45}
             />
             <p className="mt-4 text-sm text-gray-300">
-              Tu sueno, nuestra experiencia. Lotes, casas, apartamentos y fincas en el Oriente Antioqueno.
+              Tu sueño, nuestra experiencia. Lotes, casas, apartamentos y fincas en el Oriente Antioqueño.
             </p>
           </div>
 
           {/* Navegacion */}
           <div>
-            <h3 className="text-sm font-semibold text-[var(--color-accent)] uppercase tracking-wider">Navegacion</h3>
+            <h3 className="text-sm font-semibold text-[var(--color-accent)] uppercase tracking-wider">Navegación</h3>
             <ul className="mt-4 space-y-2">
               <li><Link href="/propiedades" className="text-sm text-gray-300 hover:text-white transition-colors">Propiedades</Link></li>
               <li><Link href="/proyectos" className="text-sm text-gray-300 hover:text-white transition-colors">Proyectos</Link></li>
@@ -52,11 +52,11 @@ export default function Footer() {
               </li>
               <li>
                 <a href="https://capiolab.com" target="_blank" rel="noopener noreferrer" className="text-sm text-gray-300 hover:text-white transition-colors">
-                  capiolab.com — Tecnologia y CRM
+                  capiolab.com — Tecnología y CRM
                 </a>
               </li>
               <li className="text-sm text-gray-500">
-                hayexperiencia.co — Corporativa (proximamente)
+                hayexperiencia.co — Corporativa (próximamente)
               </li>
             </ul>
             <div className="mt-4">

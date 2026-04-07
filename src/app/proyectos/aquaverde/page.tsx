@@ -5,16 +5,16 @@ import ProjectGallery from "@/components/propiedades/ProjectGallery";
 
 export const metadata: Metadata = {
   title: "Aquaverde",
-  description: "Condominio campestre Aquaverde en Marinilla. 41 lotes entre 1.500 y 1.900 m2. Lago privado, senderos ecologicos, seguridad 24/7.",
+  description: "Condominio campestre Aquaverde en Marinilla. 41 lotes entre 1.500 y 1.900 m2. Lago privado, senderos ecológicos, seguridad 24/7.",
 };
 
 const AMENIDADES = [
   "Lago privado",
-  "Senderos ecologicos",
+  "Senderos ecológicos",
   "Seguridad 24/7",
   "Urbanismo de primer nivel",
-  "Vias en excelente estado",
-  "Cercania a Marinilla y Medellin",
+  "Vías en excelente estado",
+  "Cercanía a Marinilla y Medellín",
 ];
 
 export default function AquaverdePage() {
@@ -39,11 +39,11 @@ export default function AquaverdePage() {
           <p className="text-[var(--color-text-light)] leading-relaxed">
             Aquaverde es un condominio campestre exclusivo en Marinilla, Antioquia, que ofrece
             una experiencia de vida inigualable. El proyecto comprende 41 lotes campestres con
-            tamanos entre 1.500 y 1.900 m2, rodeados de naturaleza y con amenidades de primer nivel.
+            tamaños entre 1.500 y 1.900 m², rodeados de naturaleza y con amenidades de primer nivel.
           </p>
           <p className="mt-4 text-[var(--color-text-light)] leading-relaxed">
-            A pocos minutos de Medellin, Aquaverde combina seguridad, valorizacion y exclusividad
-            para quienes desean invertir en un lote campestre con lago privado y senderos ecologicos.
+            A pocos minutos de Medellín, Aquaverde combina seguridad, valorización y exclusividad
+            para quienes desean invertir en un lote campestre con lago privado y senderos ecológicos.
           </p>
         </div>
       </section>
@@ -83,8 +83,8 @@ export default function AquaverdePage() {
 
       <section className="py-16 bg-[var(--color-primary)]">
         <div className="mx-auto max-w-3xl text-center px-4">
-          <h2 className="text-3xl font-bold text-white">Te interesa Aquaverde?</h2>
-          <p className="mt-4 text-gray-300">Contactanos para conocer disponibilidad y agendar una visita.</p>
+          <h2 className="text-3xl font-bold text-white">¿Te interesa Aquaverde?</h2>
+          <p className="mt-4 text-gray-300">Contáctanos para conocer disponibilidad y agendar una visita.</p>
           <div className="mt-8 flex flex-wrap justify-center gap-4">
             <a
               href="https://wa.me/573022343659?text=Hola%2C%20me%20interesa%20el%20proyecto%20Aquaverde%20en%20Marinilla"
@@ -98,7 +98,7 @@ export default function AquaverdePage() {
               href="/contacto"
               className="inline-flex items-center px-8 py-3.5 rounded-lg bg-[var(--color-accent)] text-[var(--color-primary)] font-semibold hover:bg-[var(--color-accent-light)] transition-colors"
             >
-              Solicitar informacion
+              Solicitar información
             </Link>
           </div>
         </div>
@@ -108,7 +108,7 @@ export default function AquaverdePage() {
         <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
           <h2 className="text-3xl font-bold text-[var(--color-primary)] mb-6">Estado Actual del Proyecto</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            {["Entrega a diciembre de 2026", "Lotes independientes listos para escrituracion", "En proceso de urbanismo"].map((item) => (
+            {["Entrega a diciembre de 2026", "Lotes independientes listos para escrituración", "En proceso de urbanismo"].map((item) => (
               <div key={item} className="flex items-center gap-3 p-4 rounded-xl bg-green-50 border border-green-100">
                 <svg className="h-5 w-5 text-green-600 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
@@ -123,11 +123,11 @@ export default function AquaverdePage() {
       {/* Mapa */}
       <section className="py-16 bg-gray-50/50">
         <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
-          <h2 className="text-3xl font-bold text-[var(--color-primary)] mb-6">Ubicacion</h2>
+          <h2 className="text-3xl font-bold text-[var(--color-primary)] mb-6">Ubicación</h2>
           <div className="rounded-2xl overflow-hidden">
             <iframe
               src="https://www.google.com/maps?q=6.1601875,-75.3110625&z=15&output=embed"
-              width="100%" height="400" style={{ border: 0 }} allowFullScreen loading="lazy" referrerPolicy="no-referrer-when-downgrade" title="Ubicacion Aquaverde"
+              width="100%" height="400" style={{ border: 0 }} allowFullScreen loading="lazy" referrerPolicy="no-referrer-when-downgrade" title="Ubicación Aquaverde — Marinilla"
             />
           </div>
         </div>

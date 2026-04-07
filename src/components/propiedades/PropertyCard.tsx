@@ -51,7 +51,7 @@ export default function PropertyCard({ property }: { property: WasiProperty }) {
               <span>{property.bedrooms} hab.</span>
             )}
             {property.bathrooms && parseInt(property.bathrooms) > 0 && (
-              <span>{property.bathrooms} banos</span>
+              <span>{property.bathrooms} baños</span>
             )}
           </div>
         </div>
@@ -73,7 +73,7 @@ export default function PropertyCard({ property }: { property: WasiProperty }) {
             <span>{property.bedrooms} hab.</span>
           )}
           {property.bathrooms && parseInt(property.bathrooms) > 0 && (
-            <span>{property.bathrooms} banos</span>
+            <span>{property.bathrooms} baños</span>
           )}
           {property.garages && parseInt(property.garages) > 0 && (
             <span>{property.garages} parq.</span>

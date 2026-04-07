@@ -21,14 +21,14 @@ export default function Home() {
         <div className="mx-auto max-w-4xl px-4 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
           <div>
             <h2 className="text-3xl sm:text-4xl font-bold text-white leading-tight">
-              Listo para dar el paso?
+              ¿Listo para dar el paso?
             </h2>
             <p className="mt-4 text-gray-300 text-lg">
-              Dejanos tus datos y un asesor te contactara hoy. Sin compromiso.
+              Déjanos tus datos y un asesor te contactará hoy. Sin compromiso.
             </p>
             <div className="mt-6 flex items-center gap-4">
               <a
-                href="https://wa.me/573022343659?text=Hola%2C%20quiero%20informacion%20sobre%20propiedades"
+                href="https://wa.me/573022343659?text=Hola%2C%20quiero%20información%20sobre%20propiedades"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-2 px-6 py-3 rounded-lg bg-[#25D366] text-white font-semibold hover:bg-[#20BD5A] transition-colors"
@@ -51,10 +51,10 @@ export default function Home() {
       <section className="py-16 bg-[var(--color-accent)]">
         <div className="mx-auto max-w-3xl text-center px-4">
           <h2 className="text-2xl sm:text-3xl font-bold text-[var(--color-primary)]">
-            Mas de 10 anos transformando suenos en hogares
+            Más de 10 años transformando sueños en hogares
           </h2>
           <p className="mt-3 text-[var(--color-primary)]/80">
-            93+ propiedades en inventario | 4 proyectos activos | 10 municipios del Oriente Antioqueno
+            93+ propiedades en inventario | 4 proyectos activos | 10 municipios del Oriente Antioqueño
           </p>
         </div>
       </section>

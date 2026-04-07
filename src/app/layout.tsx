@@ -13,11 +13,11 @@ const montserrat = Montserrat({
 
 export const metadata: Metadata = {
   title: {
-    default: "Hay Experiencia Inmobiliaria | Oriente Antioqueno",
+    default: "Hay Experiencia Inmobiliaria | Oriente Antioqueño",
     template: "%s | Hay Experiencia Inmobiliaria",
   },
   description:
-    "Tu sueno, nuestra experiencia. Lotes, casas, apartamentos y fincas en el Oriente Antioqueno. Marinilla, Rionegro, La Ceja, El Penol, Guatape.",
+    "Tu sueño, nuestra experiencia. Lotes, casas, apartamentos y fincas en el Oriente Antioqueño. Marinilla, Rionegro, La Ceja, El Peñol, Guatapé.",
   metadataBase: new URL("https://hayexperiencia.com"),
   icons: {
     icon: "/logos/favicon.svg",

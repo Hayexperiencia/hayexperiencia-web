@@ -1,9 +1,9 @@
 import Link from "next/link";
 
-// Editar estos valores para cambiar el banner de campana
+// Editar estos valores para cambiar el banner de campaña
 const CAMPAIGN = {
-  title: "Descubre el Oriente Antioqueno",
-  subtitle: "Propiedades unicas en los municipios mas hermosos de Colombia",
+  title: "Descubre el Oriente Antioqueño",
+  subtitle: "Propiedades únicas en los municipios más hermosos de Colombia",
   cta: "Ver propiedades",
   ctaHref: "/propiedades",
   backgroundImage: "/images/hero-oriente.jpg",

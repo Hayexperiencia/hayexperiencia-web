@@ -22,13 +22,13 @@ const LOTES_VENDIDOS = 30; // De 39 lotes totales
 const CONFIG = {
   valorizacionAnual: 0.07,    // 7% anual
   descuentoContado: 0.05,     // 5% descuento contado
-  separacion: 5000000,        // $5M de separacion
+  separación: 5000000,        // $5M de separación
   cuotaInicialPct: 0.30,      // 30% antes de noviembre
-  creditoPct: 0.70,           // 70% credito bancario en diciembre
+  créditoPct: 0.70,           // 70% crédito bancario en diciembre
   plazoCredito: 'Diciembre 2026',
 };
 
-type TabPago = 'contado' | 'cuotas' | 'credito';
+type TabPago = 'contado' | 'cuotas' | 'crédito';
 
 const ESTADO_COLORS: Record<Estado, string> = {
   disponible: 'bg-green-500',
@@ -57,20 +57,20 @@ export default function AlunaCotizador() {
 
   const planPagos = useMemo(() => {
     if (!lote) return [];
-    const separacion = CONFIG.separacion;
+    const separación = CONFIG.separación;
     const cuotaInicial30 = lote.precio * CONFIG.cuotaInicialPct;
-    const saldo30 = cuotaInicial30 - separacion;
-    const credito70 = lote.precio * CONFIG.creditoPct;
-    // Distribuir el 30% (menos separacion) en cuotas mensuales hasta noviembre (aprox 7 meses)
+    const saldo30 = cuotaInicial30 - separación;
+    const crédito70 = lote.precio * CONFIG.créditoPct;
+    // Distribuir el 30% (menos separación) en cuotas mensuales hasta noviembre (aprox 7 meses)
     const mesesHastaNov = 7;
     const cuotaMensual = saldo30 / mesesHastaNov;
     const rows = [];
     let saldo = lote.precio;
-    rows.push({ mes: 'Hoy', concepto: 'Separacion', valor: separacion, saldo: saldo -= separacion });
+    rows.push({ mes: 'Hoy', concepto: 'Separacion', valor: separación, saldo: saldo -= separación });
     for (let i = 1; i <= mesesHastaNov; i++) {
       rows.push({ mes: `Mes ${i}`, concepto: `Cuota ${i}`, valor: cuotaMensual, saldo: saldo -= cuotaMensual });
     }
-    rows.push({ mes: 'Dic 2026', concepto: 'Credito bancario (70%)', valor: credito70, saldo: 0 });
+    rows.push({ mes: 'Dic 2026', concepto: 'Credito bancario (70%)', valor: crédito70, saldo: 0 });
     return rows;
   }, [lote]);
 
@@ -104,8 +104,8 @@ export default function AlunaCotizador() {
         parking: '-',
         stratum: '-',
         propType: `Lote ${lote.tipo}`,
-        location: 'Marinilla, Oriente Antioqueno',
-        description: `<p>Lote campestre de ${lote.area.toLocaleString()} m2 en ALUNA Campestre, Marinilla. Tipo ${lote.tipo}. Entrega inmediata. Unidad cerrada con vias pavimentadas y redes subterraneas.</p><p>Plan de pagos: Separacion $5.000.000 + 30% antes de noviembre + 70% credito bancario en diciembre 2026. Descuento del 5% por pago de contado.</p>`,
+        location: 'Marinilla, Oriente Antioqueño',
+        description: `<p>Lote campestre de ${lote.area.toLocaleString()} m2 en ALUNA Campestre, Marinilla. Tipo ${lote.tipo}. Entrega inmediata. Unidad cerrada con vías pavimentadas y redes subterráneas.</p><p>Plan de pagos: Separación $5.000.000 + 30% antes de noviembre + 70% crédito bancario en diciembre 2026. Descuento del 5% por pago de contado.</p>`,
         heroImage: 'https://hayexperiencia.com/images/proyectos/aluna-drone-1.jpg',
         gallery: [
           'https://hayexperiencia.com/images/proyectos/aluna-drone-2.jpg',
@@ -114,7 +114,7 @@ export default function AlunaCotizador() {
           'https://hayexperiencia.com/images/proyectos/aluna-evento-2.jpg',
         ],
         logo: 'https://hayexperiencia.com/logos/logo-invertido.svg',
-        asesorName: 'Cesar Delgado',
+        asesorName: 'César Delgado',
         asesorContact: 'WhatsApp: 573022343659',
       };
       const res = await fetch('/api/pdf', {
@@ -128,7 +128,7 @@ export default function AlunaCotizador() {
         const a = document.createElement('a');
         a.href = url;
         const today = new Date().toISOString().slice(0, 10);
-        a.download = `ALUNA-Lote${lote.id}-Cotizacion-${today}.pdf`;
+        a.download = `ALUNA-Lote${lote.id}-Cotización-${today}.pdf`;
         document.body.appendChild(a);
         a.click();
         document.body.removeChild(a);
@@ -143,7 +143,7 @@ export default function AlunaCotizador() {
       <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
         <h2 className="text-3xl font-bold text-[var(--color-primary)] mb-2">Cotizador</h2>
         <p className="text-[var(--color-text-light)] mb-2">9 lotes disponibles de 39 — {Math.round((LOTES_VENDIDOS / 39) * 100)}% vendido</p>
-        <p className="text-sm text-[var(--color-text-light)] mb-8">Entrega inmediata. Selecciona un lote para ver la cotizacion.</p>
+        <p className="text-sm text-[var(--color-text-light)] mb-8">Entrega inmediata. Selecciona un lote para ver la cotización.</p>
 
         {/* Grid de lotes */}
         <div className="grid grid-cols-3 sm:grid-cols-5 gap-3 mb-10">
@@ -187,7 +187,7 @@ export default function AlunaCotizador() {
             {/* Tabs de pago */}
             <div className="border-b border-[var(--color-border)]">
               <div className="flex">
-                {(['contado', 'cuotas', 'credito'] as TabPago[]).map(tab => (
+                {(['contado', 'cuotas', 'crédito'] as TabPago[]).map(tab => (
                   <button
                     key={tab}
                     onClick={() => setTabPago(tab)}
@@ -218,15 +218,15 @@ export default function AlunaCotizador() {
                   <div className="grid grid-cols-3 gap-4 mb-6">
                     <div className="p-4 rounded-xl bg-blue-50">
                       <div className="text-sm text-blue-600">Separacion</div>
-                      <div className="text-xl font-bold text-blue-800">{formatCOP(CONFIG.separacion)}</div>
+                      <div className="text-xl font-bold text-blue-800">{formatCOP(CONFIG.separación)}</div>
                     </div>
                     <div className="p-4 rounded-xl bg-blue-50">
                       <div className="text-sm text-blue-600">30% antes de noviembre</div>
                       <div className="text-xl font-bold text-blue-800">{formatCOP(lote.precio * CONFIG.cuotaInicialPct)}</div>
                     </div>
                     <div className="p-4 rounded-xl bg-blue-50">
-                      <div className="text-sm text-blue-600">70% credito (dic 2026)</div>
-                      <div className="text-xl font-bold text-blue-800">{formatCOP(lote.precio * CONFIG.creditoPct)}</div>
+                      <div className="text-sm text-blue-600">70% crédito (dic 2026)</div>
+                      <div className="text-xl font-bold text-blue-800">{formatCOP(lote.precio * CONFIG.créditoPct)}</div>
                     </div>
                   </div>
                   <div className="max-h-64 overflow-auto rounded-xl border border-[var(--color-border)]">
@@ -255,11 +255,11 @@ export default function AlunaCotizador() {
               )}
 
               {/* Credito */}
-              {tabPago === 'credito' && (
+              {tabPago === 'crédito' && (
                 <div className="space-y-6">
                   <div>
                     <label className="block text-sm font-medium text-[var(--color-primary)] mb-2">
-                      Tasa de interes (EA): {tasaEA}%
+                      Tasa de interés (EA): {tasaEA}%
                     </label>
                     <input
                       type="range" min="8" max="20" step="0.5" value={tasaEA}
@@ -269,7 +269,7 @@ export default function AlunaCotizador() {
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-[var(--color-primary)] mb-2">
-                      Plazo: {plazoCredito} anos
+                      Plazo: {plazoCredito} años
                     </label>
                     <input
                       type="range" min="5" max="30" step="1" value={plazoCredito}
@@ -288,7 +288,7 @@ export default function AlunaCotizador() {
                     </div>
                   </div>
                   <p className="text-xs text-[var(--color-text-light)]">
-                    * Simulacion con tasa {tasaEA}% EA a {plazoCredito} anos. Sujeta a aprobacion crediticia.
+                    * Simulación con tasa {tasaEA}% EA a {plazoCredito} años. Sujeta a aprobación crediticia.
                   </p>
                 </div>
               )}
@@ -296,7 +296,7 @@ export default function AlunaCotizador() {
 
             {/* Valorizacion */}
             <div className="border-t border-[var(--color-border)] p-6">
-              <h4 className="text-lg font-bold text-[var(--color-primary)] mb-4">Proyeccion de valorizacion</h4>
+              <h4 className="text-lg font-bold text-[var(--color-primary)] mb-4">Proyección de valorización</h4>
               <div className="flex items-end gap-2 h-40">
                 {valorizacion.map((v, i) => {
                   const maxVal = valorizacion[valorizacion.length - 1].valor;
@@ -308,14 +308,14 @@ export default function AlunaCotizador() {
                         className="w-full rounded-t-lg bg-[var(--color-accent)]"
                         style={{ height: `${height}%` }}
                       />
-                      <span className="text-xs text-[var(--color-text-light)] mt-1">Ano {v.year}</span>
+                      <span className="text-xs text-[var(--color-text-light)] mt-1">Año {v.year}</span>
                     </div>
                   );
                 })}
               </div>
               <p className="text-xs text-[var(--color-text-light)] mt-3">
-                Supuesto: {CONFIG.valorizacionAnual * 100}% de valorizacion anual en la zona del Oriente Antioqueno.
-                Valor esperado en 5 anos: {formatCOP(valorizacion[4]?.valor || 0)}.
+                Supuesto: {CONFIG.valorizacionAnual * 100}% de valorización anual en la zona del Oriente Antioqueño.
+                Valor esperado en 5 años: {formatCOP(valorizacion[4]?.valor || 0)}.
               </p>
             </div>
 
@@ -327,7 +327,7 @@ export default function AlunaCotizador() {
                   <div className="flex items-center gap-3">
                     <div className="w-12 h-12 rounded-full bg-[var(--color-primary)] flex items-center justify-center text-[var(--color-accent)] font-bold text-lg">C</div>
                     <div>
-                      <div className="font-semibold text-[var(--color-primary)]">Cesar Delgado</div>
+                      <div className="font-semibold text-[var(--color-primary)]">César Delgado</div>
                       <div className="text-sm text-[var(--color-text-light)]">Asesor Comercial</div>
                     </div>
                   </div>
@@ -365,7 +365,7 @@ export default function AlunaCotizador() {
                   disabled={downloading}
                   className="flex-1 text-center px-6 py-3 rounded-xl bg-[var(--color-primary)] text-white font-semibold hover:bg-[var(--color-primary)]/90 transition-colors disabled:opacity-50"
                 >
-                  {downloading ? 'Generando...' : 'Descargar cotizacion PDF'}
+                  {downloading ? 'Generando...' : 'Descargar cotización PDF'}
                 </button>
               </div>
             </div>

@@ -67,7 +67,7 @@ export default function Gallery({ images, virtualTourUrl, videoUrl, className = 
   if (!images.length) {
     return (
       <div className="aspect-[16/9] rounded-2xl bg-gray-100 flex items-center justify-center">
-        <p className="text-sm text-[var(--color-text-light)]">Fotos proximamente</p>
+        <p className="text-sm text-[var(--color-text-light)]">Fotos próximamente</p>
       </div>
     );
   }

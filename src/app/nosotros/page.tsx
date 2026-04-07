@@ -4,13 +4,13 @@ import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Nosotros",
-  description: "Hay Experiencia SAS: holding inmobiliario con 5 unidades de negocio en el Oriente Antioqueno. Estructuracion, marketing, comercializacion, administracion y tecnologia.",
+  description: "Hay Experiencia SAS: holding inmobiliario con 5 unidades de negocio en el Oriente Antioqueño. Estructuración, marketing, comercialización, administración y tecnología.",
 };
 
 const UNIDADES = [
   {
-    name: "Estructuracion de proyectos",
-    desc: "Joint ventures y desarrollo inmobiliario. Alianzas estrategicas con socios como Arka11 para crear proyectos con vision a largo plazo.",
+    name: "Estructuración de proyectos",
+    desc: "Joint ventures y desarrollo inmobiliario. Alianzas estratégicas con socios como Arka11 para crear proyectos con visión a largo plazo.",
     icon: (
       <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
@@ -27,8 +27,8 @@ const UNIDADES = [
     ),
   },
   {
-    name: "Comercializacion y corretaje",
-    desc: "Nuestro core. Compra, venta y arriendo de propiedades en todo el Oriente Antioqueno. Te acompanamos en cada paso.",
+    name: "Comercialización y corretaje",
+    desc: "Nuestro core. Compra, venta y arriendo de propiedades en todo el Oriente Antioqueño. Te acompañamos en cada paso.",
     icon: (
       <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
@@ -36,8 +36,8 @@ const UNIDADES = [
     ),
   },
   {
-    name: "Administracion de propiedades",
-    desc: "Gestion integral de inmuebles comerciales y residenciales. Sendero del Rio: centro comercial de 4.000 m2 con 24+ locales.",
+    name: "Administración de propiedades",
+    desc: "Gestión integral de inmuebles comerciales y residenciales. Sendero del Río: centro comercial de 4.000 m² con 24+ locales.",
     icon: (
       <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z" />
@@ -45,8 +45,8 @@ const UNIDADES = [
     ),
   },
   {
-    name: "Consultoria y Tecnologia con AI",
-    desc: "CapioLab: plataforma CRM con inteligencia artificial y soluciones tecnologicas para inmobiliarias. Automatizacion, datos y herramientas digitales.",
+    name: "Consultoría y Tecnología con AI",
+    desc: "CapioLab: plataforma CRM con inteligencia artificial y soluciones tecnológicas para inmobiliarias. Automatización, datos y herramientas digitales.",
     icon: (
       <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
@@ -56,22 +56,22 @@ const UNIDADES = [
 ];
 
 const EQUIPO = [
-  { name: "Gabriel Ramirez", role: "CEO y Fundador", desc: "Visionario del holding. Lidera la estrategia y las alianzas." },
-  { name: "Yoko Giraldo", role: "Socia — Arriendos", desc: "Gestiona arriendos y la relacion directa con propietarios e inquilinos." },
-  { name: "Cesar Delgado", role: "Ventas", desc: "Asesor comercial. Acompana a los clientes desde la primera visita hasta el cierre." },
-  { name: "Laura Hoyos", role: "Contabilidad y Finanzas", desc: "Administracion financiera, contabilidad y reportes." },
-  { name: "Yesica Vergara", role: "Contenido y CRM", desc: "Produccion de video, contenido digital e implementacion de CapioLab." },
+  { name: "Gabriel Ramírez", role: "CEO y Fundador", desc: "Visionario del holding. Lidera la estrategia y las alianzas." },
+  { name: "Yoko Giraldo", role: "Socia — Arriendos", desc: "Gestiona arriendos y la relación directa con propietarios e inquilinos." },
+  { name: "César Delgado", role: "Ventas", desc: "Asesor comercial. Acompaña a los clientes desde la primera visita hasta el cierre." },
+  { name: "Laura Hoyos", role: "Contabilidad y Finanzas", desc: "Administración financiera, contabilidad y reportes." },
+  { name: "Yesica Vergara", role: "Contenido y CRM", desc: "Producción de video, contenido digital e implementación de CapioLab." },
 ];
 
 const VALORES = [
-  { name: "Transparencia", desc: "Sin letra pequena. Informacion clara en cada paso del proceso." },
-  { name: "Pasion", desc: "Cada sueno nos importa. Tu proyecto es nuestro proyecto." },
-  { name: "Tecnologia", desc: "Herramientas digitales que facilitan tu experiencia." },
-  { name: "Empatia", desc: "Entendemos lo que significa este momento para ti y tu familia." },
+  { name: "Transparencia", desc: "Sin letra pequeña. Información clara en cada paso del proceso." },
+  { name: "Pasión", desc: "Cada sueño nos importa. Tu proyecto es nuestro proyecto." },
+  { name: "Tecnología", desc: "Herramientas digitales que facilitan tu experiencia." },
+  { name: "Empatía", desc: "Entendemos lo que significa este momento para ti y tu familia." },
 ];
 
 const ZONAS = [
-  "Marinilla", "Rionegro", "La Ceja", "El Penol", "Guatape",
+  "Marinilla", "Rionegro", "La Ceja", "El Peñol", "Guatapé",
   "El Retiro", "El Carmen de Viboral", "San Vicente Ferrer", "Guarne", "Santuario",
 ];
 
@@ -81,12 +81,12 @@ export default function NosotrosPage() {
       {/* Hero */}
       <section className="relative bg-[var(--color-primary)] overflow-hidden">
         <div className="absolute inset-0">
-          <Image src="/images/hero-oriente.jpg" alt="Oriente Antioqueno" fill className="object-cover opacity-20" priority />
+          <Image src="/images/hero-oriente.jpg" alt="Oriente Antioqueño" fill className="object-cover opacity-20" priority />
         </div>
         <div className="relative mx-auto max-w-4xl text-center px-4 py-24">
           <h1 className="text-4xl sm:text-5xl font-bold text-white">Hay Experiencia</h1>
-          <p className="mt-4 text-xl text-gray-300">Un holding inmobiliario con vision integral</p>
-          <p className="mt-2 text-gray-400">Marinilla, Antioquia — Oriente Antioqueno</p>
+          <p className="mt-4 text-xl text-gray-300">Un holding inmobiliario con visión integral</p>
+          <p className="mt-2 text-gray-400">Marinilla, Antioquia — Oriente Antioqueño</p>
         </div>
       </section>
 
@@ -94,9 +94,9 @@ export default function NosotrosPage() {
       <section className="py-16">
         <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8 text-center">
           <p className="text-2xl font-medium text-[var(--color-primary)] leading-relaxed italic">
-            &ldquo;Hacemos que cada sueno cobre vida. Acompanamos a las personas en el camino de comprar,
-            vender, emprender o invertir — con la cercania de quien entiende lo que significa cada sueno,
-            y la solidez de quien sabe como lograrlo.&rdquo;
+            &ldquo;Hacemos que cada sueño cobre vida. Acompañamos a las personas en el camino de comprar,
+            vender, emprender o invertir — con la cercanía de quien entiende lo que significa cada sueño,
+            y la solidez de quien sabe cómo lograrlo.&rdquo;
           </p>
         </div>
       </section>
@@ -106,15 +106,15 @@ export default function NosotrosPage() {
         <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
           <h2 className="text-2xl font-bold text-[var(--color-primary)] mb-4">Nuestra historia</h2>
           <p className="text-[var(--color-text-light)] leading-relaxed">
-            Hay Experiencia nacio en Marinilla, Antioquia, de la mano de Gabriel Ramirez y Yoko Giraldo.
-            Lo que comenzo como una pasion por el sector inmobiliario se convirtio en un holding con cinco
-            unidades de negocio que cubren todo el ciclo: desde la estructuracion de proyectos
-            hasta la administracion de propiedades, pasando por la comercializacion, el marketing y la tecnologia.
+            Hay Experiencia nació en Marinilla, Antioquia, de la mano de Gabriel Ramírez y Yoko Giraldo.
+            Lo que comenzó como una pasión por el sector inmobiliario se convirtió en un holding con cinco
+            unidades de negocio que cubren todo el ciclo: desde la estructuración de proyectos
+            hasta la administración de propiedades, pasando por la comercialización, el marketing y la tecnología.
           </p>
           <p className="mt-4 text-[var(--color-text-light)] leading-relaxed">
-            Hoy operamos en mas de 10 municipios del Oriente Antioqueno, una de las regiones con mayor
+            Hoy operamos en más de 10 municipios del Oriente Antioqueño, una de las regiones con mayor
             dinamismo inmobiliario de Colombia. Trabajamos con aliados como Arka11 en el desarrollo de
-            proyectos campestres, y con CapioLab llevamos tecnologia CRM al sector inmobiliario.
+            proyectos campestres, y con CapioLab llevamos tecnología CRM al sector inmobiliario.
           </p>
         </div>
       </section>
@@ -165,11 +165,11 @@ export default function NosotrosPage() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
             <div>
               <span className="inline-block px-3 py-1 rounded-full bg-[var(--color-accent)] text-[var(--color-primary)] text-xs font-semibold mb-4">
-                Unidad de tecnologia
+                Unidad de tecnología
               </span>
               <h2 className="text-3xl font-bold text-white">CapioLab</h2>
               <p className="mt-4 text-gray-300 leading-relaxed">
-                Nuestra plataforma de consultoria y tecnologia con inteligencia artificial para el sector
+                Nuestra plataforma de consultoría y tecnología con inteligencia artificial para el sector
                 inmobiliario. Implementamos soluciones CRM con GoHighLevel, automatizamos procesos de venta
                 y marketing con AI, y ayudamos a otras inmobiliarias a escalar con herramientas digitales.
               </p>
@@ -211,12 +211,12 @@ export default function NosotrosPage() {
       {/* Zona de cobertura */}
       <section className="py-16">
         <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-2xl font-bold text-[var(--color-primary)] mb-4">Donde operamos</h2>
+          <h2 className="text-2xl font-bold text-[var(--color-primary)] mb-4">Dónde operamos</h2>
           <p className="text-[var(--color-text-light)] mb-6 leading-relaxed">
-            Operamos en el Oriente Antioqueno con nuestra inmobiliaria,
-            atendiendo Marinilla, El Penol, Guatape, Rionegro y toda la region.
-            A traves de CapioLab, nuestra unidad de tecnologia, desarrollamos
-            proyectos de transformacion digital con AI para empresas en toda Latinoamerica.
+            Operamos en el Oriente Antioqueño con nuestra inmobiliaria,
+            atendiendo Marinilla, El Peñol, Guatapé, Rionegro y toda la región.
+            A través de CapioLab, nuestra unidad de tecnología, desarrollamos
+            proyectos de transformación digital con AI para empresas en toda Latinoamérica.
           </p>
           <div className="flex flex-wrap justify-center gap-2">
             {ZONAS.map((z) => (
@@ -229,13 +229,13 @@ export default function NosotrosPage() {
       {/* CTA */}
       <section className="py-16 bg-[var(--color-primary)]">
         <div className="mx-auto max-w-3xl text-center px-4">
-          <h2 className="text-3xl font-bold text-white">Quieres trabajar con nosotros?</h2>
-          <p className="mt-4 text-gray-300">Estamos siempre buscando aliados y oportunidades en el Oriente Antioqueno.</p>
+          <h2 className="text-3xl font-bold text-white">¿Quieres trabajar con nosotros?</h2>
+          <p className="mt-4 text-gray-300">Estamos siempre buscando aliados y oportunidades en el Oriente Antioqueño.</p>
           <Link
             href="/contacto"
             className="mt-8 inline-flex items-center px-8 py-3.5 rounded-lg bg-[var(--color-accent)] text-[var(--color-primary)] font-semibold hover:bg-[var(--color-accent-light)] transition-colors"
           >
-            Contactanos
+            Contáctanos
           </Link>
         </div>
       </section>
