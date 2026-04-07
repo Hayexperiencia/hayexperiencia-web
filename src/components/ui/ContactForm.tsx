@@ -11,7 +11,7 @@ interface ContactFormProps {
   className?: string;
 }
 
-const GHL_WEBHOOK_URL = process.env.NEXT_PUBLIC_GHL_WEBHOOK_URL || "";
+const GHL_WEBHOOK_URL = process.env.NEXT_PUBLIC_GHL_WEBHOOK_URL || "https://services.leadconnectorhq.com/hooks/Qctj5UJ29CGgZIVOIBhB/webhook-trigger/d6c80795-43ee-45e0-8e13-7b23cd34e6a8";
 
 export default function ContactForm({
   source,
