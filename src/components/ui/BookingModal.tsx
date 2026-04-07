@@ -30,7 +30,7 @@ export default function BookingModal({ trigger }: BookingModalProps) {
           className="fixed inset-0 z-[200] flex items-center justify-center bg-black/60 backdrop-blur-sm"
           onClick={(e) => { if (e.target === e.currentTarget) setOpen(false); }}
         >
-          <div className="relative w-full max-w-2xl mx-4 bg-white rounded-2xl overflow-hidden shadow-2xl" style={{ maxHeight: "90vh" }}>
+          <div className="relative w-full max-w-2xl mx-4 bg-white rounded-2xl shadow-2xl flex flex-col" style={{ height: "92vh", maxHeight: "92vh" }}>
             <button
               onClick={() => setOpen(false)}
               className="absolute top-3 right-3 z-10 w-8 h-8 flex items-center justify-center rounded-full bg-gray-100 hover:bg-gray-200 transition-colors text-gray-600"
@@ -42,8 +42,8 @@ export default function BookingModal({ trigger }: BookingModalProps) {
             </button>
             <iframe
               src="https://links.capiolab.com/widget/booking/GQr99p4CGYyV7BQpnPMX"
-              style={{ width: "100%", height: "80vh", border: "none" }}
-              scrolling="no"
+              className="flex-1 w-full rounded-2xl"
+              style={{ border: "none", minHeight: 0 }}
               id="GQr99p4CGYyV7BQpnPMX_booking"
             />
           </div>
