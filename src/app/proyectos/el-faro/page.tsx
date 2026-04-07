@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import type { Metadata } from "next";
 import ProjectGallery from "@/components/propiedades/ProjectGallery";
+import ProjectSidebar from "@/components/proyectos/ProjectSidebar";
 
 export const metadata: Metadata = {
   title: "El Faro — Condominio Náutico en El Peñol",
@@ -87,52 +88,61 @@ export default function ElFaroPage() {
         </div>
       </section>
 
-      {/* 2. VIDEO */}
-      <section className="py-16 bg-gray-50/50">
-        <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
-          <div className="aspect-video rounded-2xl overflow-hidden">
-            <iframe
-              src="https://www.youtube.com/embed/iJzwlJbupcs"
-              title="El Faro — Condominio Náutico"
-              width="100%"
-              height="100%"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-              allowFullScreen
-              className="w-full h-full"
+      {/* 2. VIDEO + SOBRE EL PROYECTO + SIDEBAR */}
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-16">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
+          <div className="lg:col-span-2 space-y-16">
+            {/* Video */}
+            <div className="aspect-video rounded-2xl overflow-hidden">
+              <iframe
+                src="https://www.youtube.com/embed/iJzwlJbupcs"
+                title="El Faro — Condominio Náutico"
+                width="100%"
+                height="100%"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+                className="w-full h-full"
+              />
+            </div>
+
+            {/* Sobre el proyecto */}
+            <div>
+              <h2 className="text-3xl font-bold text-[var(--color-primary)] mb-6">Sobre el proyecto</h2>
+              <p className="text-lg text-[var(--color-text-light)] leading-relaxed mb-4">
+                Condominio Náutico El Faro se levanta en una península privilegiada de 10 cuadras con
+                1.5 km de perímetro costero sobre la represa de Guatapé, en El Peñol, Antioquia.
+                A solo 1 hora y 30 minutos de Medellín, ofrece vistas de 360 grados y acceso directo al agua.
+              </p>
+              <p className="text-lg text-[var(--color-text-light)] leading-relaxed">
+                El proyecto ya está en dos terceras partes completado y combina lo mejor de la vida campestre
+                con las comodidades de un condominio moderno: sede náutica con muelles, senderos ecológicos,
+                zona de reserva natural y vigilancia permanente. Todo sin los costos de mantener una
+                propiedad campestre individual.
+              </p>
+
+              <div className="mt-12 grid grid-cols-1 sm:grid-cols-3 gap-8">
+                {PROPUESTA_VALOR.map((pv, i) => (
+                  <div key={i} className="text-center">
+                    <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-[var(--color-accent)]/10 text-[var(--color-accent)] mb-4">
+                      {pv.icon}
+                    </div>
+                    <h3 className="font-bold text-[var(--color-primary)] mb-2">{pv.title}</h3>
+                    <p className="text-sm text-[var(--color-text-light)]">{pv.desc}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+          <div className="lg:col-span-1">
+            <ProjectSidebar
+              projectName="El Faro"
+              location="El Peñol, Antioquia"
+              waLink="https://wa.me/573022343659?text=Hola%2C%20me%20interesa%20el%20proyecto%20El%20Faro%20en%20El%20Pe%C3%B1ol"
+              highlights={["Península exclusiva", "1.5 km de costa", "Sede náutica", "60% completado"]}
             />
           </div>
         </div>
-      </section>
-
-      {/* 3. TEXTO + PROPUESTA DE VALOR */}
-      <section className="py-16">
-        <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
-          <h2 className="text-3xl font-bold text-[var(--color-primary)] mb-6">Sobre el proyecto</h2>
-          <p className="text-lg text-[var(--color-text-light)] leading-relaxed mb-4">
-            Condominio Náutico El Faro se levanta en una península privilegiada de 10 cuadras con
-            1.5 km de perímetro costero sobre la represa de Guatapé, en El Peñol, Antioquia.
-            A solo 1 hora y 30 minutos de Medellín, ofrece vistas de 360 grados y acceso directo al agua.
-          </p>
-          <p className="text-lg text-[var(--color-text-light)] leading-relaxed">
-            El proyecto ya está en dos terceras partes completado y combina lo mejor de la vida campestre
-            con las comodidades de un condominio moderno: sede náutica con muelles, senderos ecológicos,
-            zona de reserva natural y vigilancia permanente. Todo sin los costos de mantener una
-            propiedad campestre individual.
-          </p>
-
-          <div className="mt-12 grid grid-cols-1 sm:grid-cols-3 gap-8">
-            {PROPUESTA_VALOR.map((pv, i) => (
-              <div key={i} className="text-center">
-                <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-[var(--color-accent)]/10 text-[var(--color-accent)] mb-4">
-                  {pv.icon}
-                </div>
-                <h3 className="font-bold text-[var(--color-primary)] mb-2">{pv.title}</h3>
-                <p className="text-sm text-[var(--color-text-light)]">{pv.desc}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
+      </div>
 
       {/* 4. GALERIA */}
       <ProjectGallery

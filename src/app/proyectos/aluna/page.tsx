@@ -3,6 +3,7 @@ import Link from "next/link";
 import type { Metadata } from "next";
 import ProjectGallery from "@/components/propiedades/ProjectGallery";
 import AlunaCotizador from "@/components/proyectos/AlunaCotizador";
+import ProjectSidebar from "@/components/proyectos/ProjectSidebar";
 
 export const metadata: Metadata = {
   title: "ALUNA Campestre — Lotes en Marinilla",
@@ -79,55 +80,102 @@ export default function AlunaPage() {
         </div>
       </section>
 
-      {/* 2. VIDEO */}
-      <section className="py-16 bg-gray-50/50">
-        <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
-          <div className="aspect-video rounded-2xl overflow-hidden">
-            <iframe
-              src="https://www.youtube.com/embed/8IQI6uGWI2c"
-              title="ALUNA Campestre — Video del proyecto"
-              width="100%"
-              height="100%"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-              allowFullScreen
-              className="w-full h-full"
+      {/* Contenido principal + Sidebar */}
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-16">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
+          <div className="lg:col-span-2 space-y-16">
+            {/* Video */}
+            <div className="aspect-video rounded-2xl overflow-hidden">
+              <iframe
+                src="https://www.youtube.com/embed/8IQI6uGWI2c"
+                title="ALUNA Campestre — Video del proyecto"
+                width="100%"
+                height="100%"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+                className="w-full h-full"
+              />
+            </div>
+
+            {/* Sobre el proyecto */}
+            <div>
+              <h2 className="text-3xl font-bold text-[var(--color-primary)] mb-6">Sobre el proyecto</h2>
+              <p className="text-lg text-[var(--color-text-light)] leading-relaxed mb-4">
+                ALUNA Campestre es un desarrollo exclusivo en Marinilla, Oriente Antioqueño, diseñado para
+                quienes buscan construir la casa de sus sueños en un entorno natural, seguro y con toda la
+                infraestructura. Desarrollado en alianza con Arka11, el proyecto ofrece 9 lotes desde 2.500 m²
+                en una unidad cerrada con vías pavimentadas y redes subterráneas.
+              </p>
+              <p className="text-lg text-[var(--color-text-light)] leading-relaxed">
+                El nombre ALUNA proviene de la conexión con la tierra y el propósito de crear un espacio
+                donde cuerpo, mente y espíritu encuentren equilibrio. A solo 45 minutos de Medellín, es la
+                combinación perfecta entre tranquilidad campestre y cercanías urbanas.
+              </p>
+              <div className="mt-12 grid grid-cols-1 sm:grid-cols-3 gap-8">
+                {PROPUESTA_VALOR.map((pv, i) => (
+                  <div key={i} className="text-center">
+                    <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-[var(--color-accent)]/10 text-[var(--color-accent)] mb-4">
+                      {pv.icon}
+                    </div>
+                    <h3 className="font-bold text-[var(--color-primary)] mb-2">{pv.title}</h3>
+                    <p className="text-sm text-[var(--color-text-light)]">{pv.desc}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Equipo */}
+            <div>
+              <h2 className="text-3xl font-bold text-[var(--color-primary)] mb-6">El equipo detrás de ALUNA</h2>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div>
+                  <h3 className="text-xl font-bold text-[var(--color-primary)] mb-3">Hay Experiencia</h3>
+                  <p className="text-[var(--color-text-light)] leading-relaxed">
+                    Somos un holding inmobiliario del Oriente Antioqueño, con experiencia en
+                    estructuración de proyectos, comercialización y administración de propiedades.
+                    ALUNA es nuestro proyecto insignia, donde ponemos toda nuestra visión del futuro
+                    de la vivienda campestre en la región.
+                  </p>
+                </div>
+                <div>
+                  <h3 className="text-xl font-bold text-[var(--color-primary)] mb-3">Arka11</h3>
+                  <p className="text-[var(--color-text-light)] leading-relaxed">
+                    Arka11, liderado por Ludwig Zuluaga, es nuestro socio desarrollador. Con amplia
+                    trayectoria en proyectos inmobiliarios en el Oriente Antioqueño, aporta la experiencia
+                    técnica y constructiva para que ALUNA sea una realidad con los más altos estándares.
+                  </p>
+                </div>
+              </div>
+              <div className="mt-12">
+                <h3 className="text-xl font-bold text-[var(--color-primary)] mb-4">Características del proyecto</h3>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  {CARACTERISTICAS.map(c => (
+                    <div key={c} className="flex items-center gap-3 p-4 rounded-xl bg-gray-50">
+                      <svg className="h-5 w-5 text-[var(--color-accent)] flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                      </svg>
+                      <span className="text-sm text-[var(--color-primary)]">{c}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Sidebar */}
+          <div className="lg:col-span-1">
+            <ProjectSidebar
+              projectName="ALUNA Campestre"
+              price="$411M"
+              location="Marinilla, Antioquia"
+              waLink="https://wa.me/573022343659?text=Hola%2C%20me%20interesa%20el%20proyecto%20ALUNA%20Campestre"
+              highlights={["9 lotes disponibles", "Desde 2.500 m²", "Entrega inmediata", "77% vendido"]}
             />
           </div>
         </div>
-      </section>
+      </div>
 
-      {/* 3. TEXTO DE PRESENTACION + PROPUESTA DE VALOR */}
-      <section className="py-16">
-        <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
-          <h2 className="text-3xl font-bold text-[var(--color-primary)] mb-6">Sobre el proyecto</h2>
-          <p className="text-lg text-[var(--color-text-light)] leading-relaxed mb-4">
-            ALUNA Campestre es un desarrollo exclusivo en Marinilla, Oriente Antioqueño, diseñado para
-            quienes buscan construir la casa de sus sueños en un entorno natural, seguro y con toda la
-            infraestructura. Desarrollado en alianza con Arka11, el proyecto ofrece 9 lotes desde 2.500 m²
-            en una unidad cerrada con vías pavimentadas y redes subterráneas.
-          </p>
-          <p className="text-lg text-[var(--color-text-light)] leading-relaxed">
-            El nombre ALUNA proviene de la conexión con la tierra y el propósito de crear un espacio
-            donde cuerpo, mente y espíritu encuentren equilibrio. A solo 45 minutos de Medellín, es la
-            combinación perfecta entre tranquilidad campestre y cercanías urbanas.
-          </p>
-
-          {/* Iconos propuesta de valor */}
-          <div className="mt-12 grid grid-cols-1 sm:grid-cols-3 gap-8">
-            {PROPUESTA_VALOR.map((pv, i) => (
-              <div key={i} className="text-center">
-                <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-[var(--color-accent)]/10 text-[var(--color-accent)] mb-4">
-                  {pv.icon}
-                </div>
-                <h3 className="font-bold text-[var(--color-primary)] mb-2">{pv.title}</h3>
-                <p className="text-sm text-[var(--color-text-light)]">{pv.desc}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* 4. GALERIA */}
+      {/* Galería (full-width) */}
       <ProjectGallery
         images={[
           { src: "/images/proyectos/aluna-hero.png", alt: "ALUNA Campestre - Vista panorámica" },
@@ -141,48 +189,7 @@ export default function AlunaPage() {
         title="Galería del proyecto"
       />
 
-      {/* 5. HISTORIA Y VISION */}
-      <section className="py-16">
-        <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
-          <h2 className="text-3xl font-bold text-[var(--color-primary)] mb-6">El equipo detrás de ALUNA</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <div>
-              <h3 className="text-xl font-bold text-[var(--color-primary)] mb-3">Hay Experiencia</h3>
-              <p className="text-[var(--color-text-light)] leading-relaxed">
-                Somos un holding inmobiliario del Oriente Antioqueño, con experiencia en
-                estructuración de proyectos, comercialización y administración de propiedades.
-                ALUNA es nuestro proyecto insignia, donde ponemos toda nuestra visión del futuro
-                de la vivienda campestre en la región.
-              </p>
-            </div>
-            <div>
-              <h3 className="text-xl font-bold text-[var(--color-primary)] mb-3">Arka11</h3>
-              <p className="text-[var(--color-text-light)] leading-relaxed">
-                Arka11, liderado por Ludwig Zuluaga, es nuestro socio desarrollador. Con amplia
-                trayectoria en proyectos inmobiliarios en el Oriente Antioqueño, aporta la experiencia
-                técnica y constructiva para que ALUNA sea una realidad con los más altos estándares.
-              </p>
-            </div>
-          </div>
-
-          {/* Caracteristicas tecnicas */}
-          <div className="mt-12">
-            <h3 className="text-xl font-bold text-[var(--color-primary)] mb-4">Características del proyecto</h3>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              {CARACTERISTICAS.map(c => (
-                <div key={c} className="flex items-center gap-3 p-4 rounded-xl bg-gray-50">
-                  <svg className="h-5 w-5 text-[var(--color-accent)] flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                  </svg>
-                  <span className="text-sm text-[var(--color-primary)]">{c}</span>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* 6. CTA INTERMEDIO */}
+      {/* CTA intermedio */}
       <section className="py-12 bg-[var(--color-accent)]">
         <div className="mx-auto max-w-3xl text-center px-4">
           <h2 className="text-2xl font-bold text-[var(--color-primary)]">¿Te interesa ALUNA?</h2>
@@ -206,7 +213,7 @@ export default function AlunaPage() {
         </div>
       </section>
 
-      {/* 7. ESTADO ACTUAL DEL PROYECTO */}
+      {/* Estado actual */}
       <section className="py-16">
         <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
           <h2 className="text-3xl font-bold text-[var(--color-primary)] mb-6">Estado Actual del Proyecto</h2>
@@ -243,7 +250,7 @@ export default function AlunaPage() {
         </div>
       </section>
 
-      {/* 8. MAPA */}
+      {/* Mapa */}
       <section className="py-16 bg-gray-50/50">
         <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
           <h2 className="text-3xl font-bold text-[var(--color-primary)] mb-6">Ubicación</h2>
@@ -280,7 +287,7 @@ export default function AlunaPage() {
         </div>
       </section>
 
-      {/* 9. COTIZADOR */}
+      {/* Cotizador */}
       <AlunaCotizador />
 
       {/* Alianza */}

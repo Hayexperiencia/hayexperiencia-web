@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import Script from "next/script";
 import MobileBottomBar from "./MobileBottomBar";
+import BookingModal from "@/components/ui/BookingModal";
 
 interface PropertyContactSidebarProps {
   price: string;
@@ -41,16 +42,17 @@ export default function PropertyContactSidebar({
           <h3 className="text-lg font-semibold text-[var(--color-primary)] mb-2">Te interesa esta propiedad?</h3>
           <p className="text-xs text-[var(--color-text-light)] mb-4">Ref. Wasi: {propertyId}</p>
 
-          {/* CTA Solicitar visita */}
-          <button
-            onClick={() => setShowForm(true)}
-            className="flex items-center justify-center gap-2 w-full px-6 py-3 rounded-lg bg-[var(--color-accent)] text-[var(--color-primary)] font-semibold hover:bg-[var(--color-accent-light)] transition-colors"
-          >
-            <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-            </svg>
-            Solicitar visita
-          </button>
+          {/* CTA Agendar asesoría */}
+          <BookingModal
+            trigger={
+              <span className="flex items-center justify-center gap-2 w-full px-6 py-3 rounded-lg bg-[var(--color-accent)] text-[var(--color-primary)] font-semibold hover:bg-[var(--color-accent-light)] transition-colors">
+                <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                </svg>
+                Agendar asesoría
+              </span>
+            }
+          />
 
           {/* WhatsApp */}
           <a

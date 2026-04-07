@@ -3,6 +3,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { useState, useRef } from "react";
+import BookingModal from "@/components/ui/BookingModal";
 
 const PROJECTS = [
   { href: "/proyectos/aluna", label: "ALUNA Campestre" },
@@ -103,6 +104,13 @@ export default function Navbar() {
             <Link href="/nosotros" className="text-sm font-medium text-[var(--color-primary)] hover:text-[var(--color-primary-light)] transition-colors duration-200">
               Nosotros
             </Link>
+            <BookingModal
+              trigger={
+                <span className="rounded-lg border-2 border-[var(--color-primary)] px-5 py-2.5 text-sm font-semibold text-[var(--color-primary)] hover:bg-[var(--color-primary)] hover:text-white transition-colors duration-200">
+                  Agendar asesoría
+                </span>
+              }
+            />
             <Link
               href="/contacto"
               className="rounded-lg bg-[var(--color-accent)] px-5 py-2.5 text-sm font-semibold text-[var(--color-primary)] hover:bg-[var(--color-accent-light)] transition-colors duration-200"
@@ -131,6 +139,13 @@ export default function Navbar() {
             <Link href="/nosotros" className="block px-3 py-2 rounded-lg text-sm font-medium text-[var(--color-primary)] hover:bg-gray-50" onClick={() => setOpen(false)}>
               Nosotros
             </Link>
+            <BookingModal
+              trigger={
+                <span className="block mx-3 text-center rounded-lg border-2 border-[var(--color-primary)] px-5 py-2.5 text-sm font-semibold text-[var(--color-primary)]">
+                  Agendar asesoría
+                </span>
+              }
+            />
             <Link href="/contacto" className="block mx-3 text-center rounded-lg bg-[var(--color-accent)] px-5 py-2.5 text-sm font-semibold text-[var(--color-primary)]" onClick={() => setOpen(false)}>
               Contáctanos
             </Link>

@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import type { Metadata } from "next";
 import ProjectGallery from "@/components/propiedades/ProjectGallery";
+import ProjectSidebar from "@/components/proyectos/ProjectSidebar";
 
 export const metadata: Metadata = {
   title: "Remanso de Oriente",
@@ -24,20 +25,30 @@ export default function RemansoPage() {
         </div>
       </section>
 
-      <section className="py-16">
-        <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
-          <h2 className="text-2xl font-bold text-[var(--color-primary)] mb-4">Sobre el proyecto</h2>
-          <p className="text-[var(--color-text-light)] leading-relaxed">
-            Remanso de Oriente es un proyecto residencial de 66 unidades ubicado en el Oriente Antioqueño,
-            diseñado para quienes buscan tranquilidad sin alejarse de la ciudad. Con 60 unidades ya vendidas,
-            el proyecto demuestra la confianza del mercado en esta zona de alto crecimiento.
-          </p>
-          <p className="mt-4 text-[var(--color-text-light)] leading-relaxed">
-            Hay Experiencia participa como comercializador de este proyecto. Si te interesa alguna de
-            las unidades disponibles, contáctanos para conocer opciones y precios actualizados.
-          </p>
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-16">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
+          <div className="lg:col-span-2">
+            <h2 className="text-2xl font-bold text-[var(--color-primary)] mb-4">Sobre el proyecto</h2>
+            <p className="text-[var(--color-text-light)] leading-relaxed">
+              Remanso de Oriente es un proyecto residencial de 66 unidades ubicado en el Oriente Antioqueño,
+              diseñado para quienes buscan tranquilidad sin alejarse de la ciudad. Con 60 unidades ya vendidas,
+              el proyecto demuestra la confianza del mercado en esta zona de alto crecimiento.
+            </p>
+            <p className="mt-4 text-[var(--color-text-light)] leading-relaxed">
+              Hay Experiencia participa como comercializador de este proyecto. Si te interesa alguna de
+              las unidades disponibles, contáctanos para conocer opciones y precios actualizados.
+            </p>
+          </div>
+          <div className="lg:col-span-1">
+            <ProjectSidebar
+              projectName="Remanso de Oriente"
+              location="Oriente Antioqueño"
+              waLink="https://wa.me/573022343659?text=Hola%2C%20me%20interesa%20Remanso%20de%20Oriente"
+              highlights={["60/66 vendidas", "Últimas unidades", "1ra etapa terminando"]}
+            />
+          </div>
         </div>
-      </section>
+      </div>
 
       <ProjectGallery
         images={[
