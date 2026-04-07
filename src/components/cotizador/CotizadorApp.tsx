@@ -128,6 +128,7 @@ export default function CotizadorApp({ initialSlug }: { initialSlug?: string }) 
   const [activeTab, setActiveTab] = useState<'plan' | 'credito'>('plan');
   const [savingQuote, setSavingQuote] = useState(false);
   const [savedCode, setSavedCode] = useState<string | null>(null);
+  const [downloadingPdf, setDownloadingPdf] = useState(false);
 
   // Client form
   const [clientName, setClientName] = useState('');
@@ -225,6 +226,7 @@ export default function CotizadorApp({ initialSlug }: { initialSlug?: string }) 
   }, [units]);
 
   const isParcelacion = selectedProject?.project_type === 'parcelacion';
+  const isEmbedded = !!initialSlug;
 
   // ============================================================
   // RENDER
@@ -233,76 +235,80 @@ export default function CotizadorApp({ initialSlug }: { initialSlug?: string }) 
     <section className="py-12 md:py-16">
       <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
 
-        {/* ---- Header ---- */}
-        <div className="mb-10">
-          <h1 className="text-3xl md:text-4xl font-bold text-[var(--color-primary)]">
-            Cotizador
-          </h1>
-          <p className="mt-2 text-[var(--color-text-light)]">
-            Selecciona un proyecto y una unidad para ver tu plan de pagos personalizado.
-          </p>
-        </div>
-
-        {/* ---- Step 1: Project selector ---- */}
-        {loading.projects ? (
-          <div className="text-center py-12 text-[var(--color-text-light)]">Cargando proyectos...</div>
-        ) : (
+        {/* ---- Header (solo en modo completo) ---- */}
+        {!isEmbedded && (
           <div className="mb-10">
-            <h2 className="text-sm font-semibold text-[var(--color-text-light)] uppercase tracking-wide mb-4">
-              1. Elige tu proyecto
-            </h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-              {projects.map(p => {
-                const avail = parseInt(p.units_available);
-                const isSelected = selectedProject?.id === p.id;
-                return (
-                  <button
-                    key={p.id}
-                    onClick={() => setSelectedProject(p)}
-                    disabled={avail === 0}
-                    className={`relative text-left p-5 rounded-2xl border-2 transition-all
-                      ${isSelected
-                        ? 'border-[var(--color-accent)] bg-[var(--color-primary)] text-white shadow-lg'
-                        : avail === 0
-                          ? 'border-gray-200 bg-gray-50 opacity-60 cursor-not-allowed'
-                          : 'border-[var(--color-border)] bg-white hover:border-[var(--color-accent)] hover:shadow-md'
-                      }`}
-                  >
-                    {p.cover_image_url && (
-                      <div className="mb-3 rounded-xl overflow-hidden aspect-[16/9]">
-                        <img
-                          src={p.cover_image_url}
-                          alt={p.name}
-                          className="w-full h-full object-cover"
-                        />
-                      </div>
-                    )}
-                    <h3 className="font-bold text-lg leading-tight">{p.name}</h3>
-                    <p className={`text-sm mt-1 ${isSelected ? 'text-gray-300' : 'text-[var(--color-text-light)]'}`}>
-                      {p.location}
-                    </p>
-                    <div className="flex items-center gap-2 mt-3">
-                      <span className={`inline-block px-2.5 py-0.5 rounded-full text-xs font-semibold ${
-                        isSelected ? 'bg-[var(--color-accent)] text-[var(--color-primary)]' : 'bg-[var(--color-accent)]/10 text-[var(--color-accent)]'
-                      }`}>
-                        {PROJECT_TYPE_LABELS[p.project_type] || p.project_type}
-                      </span>
-                      <span className={`text-xs ${isSelected ? 'text-gray-400' : 'text-[var(--color-text-light)]'}`}>
-                        {avail > 0 ? `${avail} disponibles` : 'Sin disponibilidad'}
-                      </span>
-                    </div>
-                  </button>
-                );
-              })}
-            </div>
+            <h1 className="text-3xl md:text-4xl font-bold text-[var(--color-primary)]">
+              Cotizador
+            </h1>
+            <p className="mt-2 text-[var(--color-text-light)]">
+              Selecciona un proyecto y una unidad para ver tu plan de pagos personalizado.
+            </p>
           </div>
+        )}
+
+        {/* ---- Step 1: Project selector (oculto en modo embedded) ---- */}
+        {!isEmbedded && (
+          loading.projects ? (
+            <div className="text-center py-12 text-[var(--color-text-light)]">Cargando proyectos...</div>
+          ) : (
+            <div className="mb-10">
+              <h2 className="text-sm font-semibold text-[var(--color-text-light)] uppercase tracking-wide mb-4">
+                1. Elige tu proyecto
+              </h2>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                {projects.map(p => {
+                  const avail = parseInt(p.units_available);
+                  const isSelected = selectedProject?.id === p.id;
+                  return (
+                    <button
+                      key={p.id}
+                      onClick={() => setSelectedProject(p)}
+                      disabled={avail === 0}
+                      className={`relative text-left p-5 rounded-2xl border-2 transition-all
+                        ${isSelected
+                          ? 'border-[var(--color-accent)] bg-[var(--color-primary)] text-white shadow-lg'
+                          : avail === 0
+                            ? 'border-gray-200 bg-gray-50 opacity-60 cursor-not-allowed'
+                            : 'border-[var(--color-border)] bg-white hover:border-[var(--color-accent)] hover:shadow-md'
+                        }`}
+                    >
+                      {p.cover_image_url && (
+                        <div className="mb-3 rounded-xl overflow-hidden aspect-[16/9]">
+                          <img
+                            src={p.cover_image_url}
+                            alt={p.name}
+                            className="w-full h-full object-cover"
+                          />
+                        </div>
+                      )}
+                      <h3 className="font-bold text-lg leading-tight">{p.name}</h3>
+                      <p className={`text-sm mt-1 ${isSelected ? 'text-gray-300' : 'text-[var(--color-text-light)]'}`}>
+                        {p.location}
+                      </p>
+                      <div className="flex items-center gap-2 mt-3">
+                        <span className={`inline-block px-2.5 py-0.5 rounded-full text-xs font-semibold ${
+                          isSelected ? 'bg-[var(--color-accent)] text-[var(--color-primary)]' : 'bg-[var(--color-accent)]/10 text-[var(--color-accent)]'
+                        }`}>
+                          {PROJECT_TYPE_LABELS[p.project_type] || p.project_type}
+                        </span>
+                        <span className={`text-xs ${isSelected ? 'text-gray-400' : 'text-[var(--color-text-light)]'}`}>
+                          {avail > 0 ? `${avail} disponibles` : 'Sin disponibilidad'}
+                        </span>
+                      </div>
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+          )
         )}
 
         {/* ---- Step 2: Unit selector ---- */}
         {selectedProject && (
           <div className="mb-10">
             <h2 className="text-sm font-semibold text-[var(--color-text-light)] uppercase tracking-wide mb-4">
-              2. Elige tu {isParcelacion ? 'lote' : 'unidad'}
+              {isEmbedded ? '1' : '2'}. Elige tu {isParcelacion ? 'lote' : 'unidad'}
             </h2>
 
             {loading.units ? (
@@ -376,7 +382,7 @@ export default function CotizadorApp({ initialSlug }: { initialSlug?: string }) 
         {calcResult && selectedUnit && selectedProject && (
           <div className="mb-10">
             <h2 className="text-sm font-semibold text-[var(--color-text-light)] uppercase tracking-wide mb-4">
-              3. Tu plan de pagos
+              {isEmbedded ? '2' : '3'}. Tu plan de pagos
             </h2>
 
             <div className="bg-white rounded-2xl border border-[var(--color-border)] overflow-hidden shadow-sm">
@@ -585,6 +591,41 @@ export default function CotizadorApp({ initialSlug }: { initialSlug?: string }) 
                     className="flex-1 text-center px-6 py-3 rounded-xl bg-[var(--color-primary)] text-white font-semibold hover:bg-[var(--color-primary)]/90 transition-colors disabled:opacity-50"
                   >
                     {savedCode ? `Guardada: ${savedCode}` : savingQuote ? 'Guardando...' : 'Guardar cotización'}
+                  </button>
+                  <button
+                    onClick={async () => {
+                      if (!calcResult) return;
+                      setDownloadingPdf(true);
+                      try {
+                        const res = await fetch('/api/quotation/pdf', {
+                          method: 'POST',
+                          headers: { 'Content-Type': 'application/json' },
+                          body: JSON.stringify({
+                            unit: calcResult.unit,
+                            project: calcResult.project,
+                            payment_plan: calcResult.payment_plan,
+                            quotation_code: savedCode || undefined,
+                            client_name: clientName || undefined,
+                          }),
+                        });
+                        if (res.ok) {
+                          const blob = await res.blob();
+                          const url = URL.createObjectURL(blob);
+                          const a = document.createElement('a');
+                          a.href = url;
+                          a.download = `${savedCode || 'HEI'}-${calcResult.unit.unit_code.replace(/\s+/g, '')}.pdf`;
+                          document.body.appendChild(a);
+                          a.click();
+                          document.body.removeChild(a);
+                          URL.revokeObjectURL(url);
+                        }
+                      } catch { /* ignore */ }
+                      setDownloadingPdf(false);
+                    }}
+                    disabled={downloadingPdf}
+                    className="flex-1 text-center px-6 py-3 rounded-xl border-2 border-[var(--color-primary)] text-[var(--color-primary)] font-semibold hover:bg-[var(--color-primary)] hover:text-white transition-colors disabled:opacity-50"
+                  >
+                    {downloadingPdf ? 'Generando PDF...' : 'Descargar PDF'}
                   </button>
                 </div>
                 {savedCode && (
