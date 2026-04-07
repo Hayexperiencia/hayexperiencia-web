@@ -34,9 +34,15 @@ export async function POST(request: Request) {
         p.life_insurance_monthly,
         p.fire_insurance_rate_annual,
         p.logo_url as project_logo_url,
-        p.delivery_date_text
+        p.delivery_date_text,
+        p.description as project_description,
+        p.cover_image_url as project_cover_image_url,
+        p.location as project_location,
+        u.description as unit_description
+        ,COALESCE(u.image_url, ti.image_url, p.cover_image_url) as resolved_image_url
       FROM hei_inventory_units u
       JOIN hei_projects p ON p.id = u.project_id
+      LEFT JOIN hei_unit_type_images ti ON ti.project_id = u.project_id AND ti.unit_type = u.unit_type AND ti.sort_order = 0
       WHERE u.id = $1 AND u.is_active = true
     `, [unit_id])
 
@@ -73,12 +79,17 @@ export async function POST(request: Request) {
         bathrooms: unit.bathrooms,
         has_parking: unit.has_parking,
         has_storage: unit.has_storage,
+        description: unit.unit_description,
+        resolved_image_url: unit.resolved_image_url,
       },
       project: {
         slug: unit.project_slug,
         name: unit.project_name,
         logo_url: unit.project_logo_url,
         delivery_date_text: unit.delivery_date_text,
+        description: unit.project_description,
+        cover_image_url: unit.project_cover_image_url,
+        location: unit.project_location,
       },
       payment_plan: plan,
     })

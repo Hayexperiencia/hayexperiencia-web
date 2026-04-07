@@ -5,7 +5,7 @@ const PDF_SERVICE_URL = process.env.PDF_SERVICE_URL || 'http://host.docker.inter
 export async function POST(request: Request) {
   try {
     const body = await request.json()
-    const { unit, project, payment_plan, quotation_code, client_name } = body
+    const { unit, project, payment_plan, quotation_code, client_name, client_phone, client_email } = body
 
     if (!unit || !payment_plan) {
       return NextResponse.json({ error: 'unit y payment_plan son requeridos' }, { status: 400 })
@@ -14,7 +14,7 @@ export async function POST(request: Request) {
     const res = await fetch(`${PDF_SERVICE_URL}/pdf/cotizacion`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ unit, project, payment_plan, quotation_code, client_name }),
+      body: JSON.stringify({ unit, project, payment_plan, quotation_code, client_name, client_phone, client_email }),
       signal: AbortSignal.timeout(30000),
     })
 

@@ -28,7 +28,6 @@ async function createGHLContact(
     lastName: parts[1] || '',
     tags: [`cotizador-${projectName}`, 'cotizador-web'],
     source: 'Cotizador Web',
-    customFields: [{ key: 'ultima_cotizacion', value: quotationCode }],
   }
   if (phone) body.phone = phone
   if (email) body.email = email

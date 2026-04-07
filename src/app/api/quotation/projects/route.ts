@@ -17,7 +17,7 @@ export async function GET() {
     const { rows } = await client.query(`
       SELECT
         p.id, p.slug, p.name, p.project_type, p.status,
-        p.location, p.delivery_date_text, p.cover_image_url,
+        p.location, p.delivery_date_text, p.cover_image_url, p.logo_url, p.description,
         p.separation_value, p.ci_percentage,
         p.ci_target_date, p.ci_date_mode, p.ci_dynamic_months,
         p.reference_rate_ea, p.loan_term_years, p.max_loan_pct,
