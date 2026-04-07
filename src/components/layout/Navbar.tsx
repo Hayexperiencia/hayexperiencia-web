@@ -101,6 +101,9 @@ export default function Navbar() {
           <div className="hidden md:flex items-center gap-8">
             <Dropdown label="Propiedades" href="/propiedades" items={municipioItems} type="filter" />
             <Dropdown label="Proyectos" href="/proyectos" items={PROJECTS} type="link" />
+            <Link href="/cotizador" className="text-sm font-medium text-[var(--color-primary)] hover:text-[var(--color-primary-light)] transition-colors duration-200">
+              Cotizador
+            </Link>
             <Link href="/nosotros" className="text-sm font-medium text-[var(--color-primary)] hover:text-[var(--color-primary-light)] transition-colors duration-200">
               Nosotros
             </Link>
@@ -136,6 +139,9 @@ export default function Navbar() {
           <div className="md:hidden pb-4 space-y-1">
             <MobileAccordion label="Propiedades" items={[{ href: "/propiedades", label: "Ver todas" }, ...municipioItems]} onClose={() => setOpen(false)} />
             <MobileAccordion label="Proyectos" items={PROJECTS} onClose={() => setOpen(false)} />
+            <Link href="/cotizador" className="block px-3 py-2 rounded-lg text-sm font-medium text-[var(--color-primary)] hover:bg-gray-50" onClick={() => setOpen(false)}>
+              Cotizador
+            </Link>
             <Link href="/nosotros" className="block px-3 py-2 rounded-lg text-sm font-medium text-[var(--color-primary)] hover:bg-gray-50" onClick={() => setOpen(false)}>
               Nosotros
             </Link>
