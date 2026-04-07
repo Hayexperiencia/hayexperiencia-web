@@ -10,43 +10,64 @@ async function getPool() {
   return pool
 }
 
-async function createGHLContact(
+async function upsertGHLContact(
   name: string,
   phone: string | null,
   email: string | null,
-  projectName: string,
+  projectSlug: string,
   quotationCode: string
 ): Promise<string | null> {
   const apiKey = process.env.GHL_API_KEY
   const locationId = process.env.GHL_LOCATION_ID
   if (!apiKey || !locationId) return null
 
+  const headers = {
+    'Authorization': `Bearer ${apiKey}`,
+    'Version': process.env.GHL_API_VERSION || '2021-07-28',
+    'Content-Type': 'application/json',
+    'Accept': 'application/json',
+  }
+
+  const tags = [`cotizador-${projectSlug}`, 'cotizador-web']
+  const customFields = [{ id: '6JJ6kHV9NwmLL6OWtJCL', value: quotationCode }]
+
   const parts = name.split(' ', 2)
-  const body: Record<string, unknown> = {
+  const createBody: Record<string, unknown> = {
     locationId,
     firstName: parts[0],
     lastName: parts[1] || '',
-    tags: [`cotizador-${projectName}`, 'cotizador-web'],
+    tags,
     source: 'Cotizador Web',
+    customFields,
   }
-  if (phone) body.phone = phone
-  if (email) body.email = email
+  if (phone) createBody.phone = phone
+  if (email) createBody.email = email
 
   try {
+    // Try create first
     const res = await fetch('https://services.leadconnectorhq.com/contacts/', {
       method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${apiKey}`,
-        'Version': process.env.GHL_API_VERSION || '2021-07-28',
-        'Content-Type': 'application/json',
-        'Accept': 'application/json',
-      },
-      body: JSON.stringify(body),
+      headers,
+      body: JSON.stringify(createBody),
     })
     const data = await res.json()
-    return data?.contact?.id || null
+
+    if (data?.contact?.id) return data.contact.id
+
+    // If duplicate, update the existing contact
+    if (data?.statusCode === 400 && data?.meta?.contactId) {
+      const contactId = data.meta.contactId
+      await fetch(`https://services.leadconnectorhq.com/contacts/${contactId}`, {
+        method: 'PUT',
+        headers,
+        body: JSON.stringify({ tags, customFields, source: 'Cotizador Web' }),
+      })
+      return contactId
+    }
+
+    return null
   } catch (e) {
-    console.error('GHL create contact error:', e)
+    console.error('GHL contact error:', e)
     return null
   }
 }
@@ -83,7 +104,7 @@ export async function POST(request: Request) {
     // Create GHL contact if client data provided
     let ghl_contact_id: string | null = null
     if (client_data?.name) {
-      ghl_contact_id = await createGHLContact(
+      ghl_contact_id = await upsertGHLContact(
         client_data.name,
         client_data.phone || null,
         client_data.email || null,
