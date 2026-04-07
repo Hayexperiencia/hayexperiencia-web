@@ -1,5 +1,6 @@
 import Hero from "@/components/home/Hero";
 import CampaignBanner from "@/components/home/CampaignBanner";
+import SearchBar from "@/components/home/SearchBar";
 import FeaturedProperties from "@/components/home/FeaturedProperties";
 import ProjectsPreview from "@/components/home/ProjectsPreview";
 import WhyUs from "@/components/home/WhyUs";
@@ -12,6 +13,11 @@ export default function Home() {
     <>
       <Hero />
       <CampaignBanner />
+      <section className="py-10 bg-white">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <SearchBar />
+        </div>
+      </section>
       <FeaturedProperties />
       <ProjectsPreview />
       <WhyUs />

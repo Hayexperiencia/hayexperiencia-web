@@ -1,5 +1,4 @@
 import Image from "next/image";
-import SearchBar from "./SearchBar";
 
 export default function Hero() {
   return (
@@ -18,7 +17,6 @@ export default function Hero() {
               Lotes, casas, apartamentos y fincas en el Oriente Antioqueño.
               Te acompañamos a encontrar el lugar perfecto para tu próximo proyecto.
             </p>
-            <SearchBar />
           </div>
           <div className="relative aspect-[4/3] rounded-2xl overflow-hidden">
             <Image

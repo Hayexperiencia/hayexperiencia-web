@@ -43,7 +43,7 @@ export default function SearchBar() {
   const inputClass = "rounded-lg border border-[var(--color-border)] px-3 py-2.5 text-sm text-[var(--color-primary)] bg-white w-full";
 
   return (
-    <div className="mt-8 p-4 bg-white rounded-2xl shadow-lg border border-[var(--color-border)]">
+    <div className="p-4 bg-white rounded-2xl shadow-lg border border-[var(--color-border)]">
       {/* Row 1: transaction toggle + type + city + search */}
       <div className="flex flex-col sm:flex-row items-stretch gap-2">
         <div className="flex rounded-lg overflow-hidden border border-[var(--color-border)] flex-shrink-0">
