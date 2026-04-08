@@ -1,11 +1,13 @@
 import { NextResponse } from 'next/server'
+import { writeFile, mkdir } from 'fs/promises'
+import path from 'path'
 
 const PDF_SERVICE_URL = process.env.PDF_SERVICE_URL || 'http://host.docker.internal:3001'
 
 export async function POST(request: Request) {
   try {
     const body = await request.json()
-    const { unit, project, payment_plan, quotation_code, client_name, client_phone, client_email } = body
+    const { unit, project, payment_plan, quotation_code, client_name, client_phone, client_email, return_url } = body
 
     if (!unit || !payment_plan) {
       return NextResponse.json({ error: 'unit y payment_plan son requeridos' }, { status: 400 })
@@ -23,9 +25,25 @@ export async function POST(request: Request) {
       return NextResponse.json(err, { status: res.status })
     }
 
-    const pdf = await res.arrayBuffer()
-    const filename = `${quotation_code || 'HEI'}-${(unit.unit_code || 'unidad').replace(/\s+/g, '')}.pdf`
+    const pdf = Buffer.from(await res.arrayBuffer())
+    const code = quotation_code || `HEI-${Date.now()}`
+    const safeCode = code.replace(/[^a-zA-Z0-9-]/g, '')
+    const unitCode = (unit.unit_code || 'unidad').replace(/\s+/g, '')
+    const filename = `${safeCode}-${unitCode}.pdf`
 
+    // Save to public/pdfs/ so it's accessible by URL
+    const pdfDir = path.join(process.cwd(), 'public', 'pdfs')
+    await mkdir(pdfDir, { recursive: true })
+    await writeFile(path.join(pdfDir, filename), pdf)
+
+    const pdfUrl = `/pdfs/${filename}`
+
+    // If caller wants URL instead of binary (Harry, API clients)
+    if (return_url) {
+      return NextResponse.json({ url: pdfUrl, filename })
+    }
+
+    // Default: return binary PDF (web browser download)
     return new Response(pdf, {
       headers: {
         'Content-Type': 'application/pdf',
