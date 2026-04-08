@@ -569,6 +569,7 @@ export default function AdminCotizador() {
                   <th className="text-left p-3 font-semibold text-[var(--color-primary)]">Tel.</th>
                   <th className="text-center p-3 font-semibold text-[var(--color-primary)]">Canal</th>
                   <th className="text-center p-3 font-semibold text-[var(--color-primary)]">GHL</th>
+                  <th className="text-center p-3 font-semibold text-[var(--color-primary)]">PDF</th>
                   <th className="text-left p-3 font-semibold text-[var(--color-primary)]">Fecha</th>
                 </tr>
               </thead>
@@ -589,13 +590,21 @@ export default function AdminCotizador() {
                     <td className="p-3 text-center">
                       {q.ghl_contact_id ? <span className="text-xs px-2 py-1 rounded-full bg-green-100 text-green-700 font-semibold">Si</span> : <span className="text-gray-400">—</span>}
                     </td>
+                    <td className="p-3 text-center">
+                      {q.pdf_url ? (
+                        <a href={String(q.pdf_url)} target="_blank" rel="noopener noreferrer"
+                          className="inline-flex items-center gap-1 text-xs px-3 py-1.5 rounded-lg bg-[var(--color-primary)] text-white font-semibold hover:bg-[var(--color-primary)]/90 transition-colors">
+                          Ver PDF
+                        </a>
+                      ) : <span className="text-gray-400 text-xs">—</span>}
+                    </td>
                     <td className="p-3 text-[var(--color-text-light)] text-xs">
                       {new Date(q.created_at as string).toLocaleDateString('es-CO', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' })}
                     </td>
                   </tr>
                 ))}
                 {quotations.length === 0 && (
-                  <tr><td colSpan={9} className="p-8 text-center text-[var(--color-text-light)]">No hay cotizaciones.</td></tr>
+                  <tr><td colSpan={10} className="p-8 text-center text-[var(--color-text-light)]">No hay cotizaciones.</td></tr>
                 )}
               </tbody>
             </table>
