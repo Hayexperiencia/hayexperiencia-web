@@ -1,4 +1,7 @@
 import { NextResponse } from 'next/server'
+import { writeFile, mkdir } from 'fs/promises'
+import path from 'path'
+import { generatePaymentPlan } from '@/lib/quotation-engine'
 
 let pool: import('pg').Pool | null = null
 
@@ -10,12 +13,55 @@ async function getPool() {
   return pool
 }
 
+const PDF_SERVICE_URL = process.env.PDF_SERVICE_URL || 'http://host.docker.internal:3001'
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://hayexperiencia.com'
+
+async function generateAndSavePdf(
+  unit: Record<string, unknown>,
+  project: Record<string, unknown>,
+  paymentPlan: Record<string, unknown>,
+  quotationCode: string,
+  clientName?: string,
+  clientPhone?: string,
+  clientEmail?: string
+): Promise<string | null> {
+  try {
+    const res = await fetch(`${PDF_SERVICE_URL}/pdf/cotizacion`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        unit, project, payment_plan: paymentPlan,
+        quotation_code: quotationCode,
+        client_name: clientName, client_phone: clientPhone, client_email: clientEmail,
+      }),
+      signal: AbortSignal.timeout(30000),
+    })
+    if (!res.ok) return null
+
+    const pdf = Buffer.from(await res.arrayBuffer())
+    const safeCode = quotationCode.replace(/[^a-zA-Z0-9-]/g, '')
+    const unitCode = String(unit.unit_code || 'unidad').replace(/\s+/g, '')
+    const filename = `${safeCode}-${unitCode}.pdf`
+
+    const pdfDir = path.join(process.cwd(), 'public', 'pdfs')
+    await mkdir(pdfDir, { recursive: true })
+    await writeFile(path.join(pdfDir, filename), pdf)
+
+    return `/pdfs/${filename}`
+  } catch (e) {
+    console.error('PDF generation error:', e)
+    return null
+  }
+}
+
 async function upsertGHLContact(
   name: string,
   phone: string | null,
   email: string | null,
   projectSlug: string,
-  quotationCode: string
+  quotationCode: string,
+  pdfUrl: string | null,
+  channel: string
 ): Promise<string | null> {
   const apiKey = process.env.GHL_API_KEY
   const locationId = process.env.GHL_LOCATION_ID
@@ -28,8 +74,9 @@ async function upsertGHLContact(
     'Accept': 'application/json',
   }
 
-  const tags = [`cotizador-${projectSlug}`, 'cotizador-web']
-  const customFields = [{ id: '6JJ6kHV9NwmLL6OWtJCL', value: quotationCode }]
+  const tags = [`cotizador-${projectSlug}`, `cotizador-${channel}`]
+  const cfValue = pdfUrl ? `${quotationCode} — ${SITE_URL}${pdfUrl}` : quotationCode
+  const customFields = [{ id: '6JJ6kHV9NwmLL6OWtJCL', value: cfValue }]
 
   const parts = name.split(' ', 2)
   const createBody: Record<string, unknown> = {
@@ -37,14 +84,13 @@ async function upsertGHLContact(
     firstName: parts[0],
     lastName: parts[1] || '',
     tags,
-    source: 'Cotizador Web',
+    source: channel === 'harry' ? 'Harry (Telegram)' : 'Cotizador Web',
     customFields,
   }
   if (phone) createBody.phone = phone
   if (email) createBody.email = email
 
   try {
-    // Try create first
     const res = await fetch('https://services.leadconnectorhq.com/contacts/', {
       method: 'POST',
       headers,
@@ -54,13 +100,12 @@ async function upsertGHLContact(
 
     if (data?.contact?.id) return data.contact.id
 
-    // If duplicate, update the existing contact
     if (data?.statusCode === 400 && data?.meta?.contactId) {
       const contactId = data.meta.contactId
       await fetch(`https://services.leadconnectorhq.com/contacts/${contactId}`, {
         method: 'PUT',
         headers,
-        body: JSON.stringify({ tags, customFields, source: 'Cotizador Web' }),
+        body: JSON.stringify({ tags, customFields }),
       })
       return contactId
     }
@@ -83,12 +128,24 @@ export async function POST(request: Request) {
   const p = await getPool()
   const client = await p.connect()
   try {
-    // Get project slug for GHL tag
+    // Get project + unit data for PDF
     const projectResult = await client.query(
-      'SELECT slug, name FROM hei_projects WHERE id = $1', [project_id]
+      'SELECT slug, name, logo_url, cover_image_url, description, location, delivery_date_text FROM hei_projects WHERE id = $1',
+      [project_id]
     )
-    const projectSlug = projectResult.rows[0]?.slug || 'unknown'
-    const projectName = projectResult.rows[0]?.name || ''
+    const proj = projectResult.rows[0]
+    if (!proj) return NextResponse.json({ error: 'Proyecto no encontrado' }, { status: 404 })
+
+    const unitResult = await client.query(`
+      SELECT u.unit_code, u.unit_type, u.area_total_m2, u.area_private_m2,
+             u.area_terrace_m2, u.bedrooms, u.bathrooms, u.has_parking, u.has_storage,
+             u.description, COALESCE(u.image_url, ti.image_url, p.cover_image_url) as resolved_image_url
+      FROM hei_inventory_units u
+      JOIN hei_projects p ON p.id = u.project_id
+      LEFT JOIN hei_unit_type_images ti ON ti.project_id = u.project_id AND ti.unit_type = u.unit_type AND ti.sort_order = 0
+      WHERE u.id = $1
+    `, [unit_id])
+    const unitData = unitResult.rows[0]
 
     // Generate quotation code
     const counterResult = await client.query(`
@@ -101,19 +158,30 @@ export async function POST(request: Request) {
     const year = new Date().getFullYear()
     const quotation_code = `HEI-${year}-${counter}`
 
-    // Create GHL contact if client data provided
+    // Generate PDF
+    const pdfUrl = await generateAndSavePdf(
+      unitData,
+      { slug: proj.slug, name: proj.name, logo_url: proj.logo_url, cover_image_url: proj.cover_image_url, description: proj.description, location: proj.location, delivery_date_text: proj.delivery_date_text },
+      payment_plan,
+      quotation_code,
+      client_data?.name, client_data?.phone, client_data?.email
+    )
+
+    // Create/update GHL contact
     let ghl_contact_id: string | null = null
     if (client_data?.name) {
       ghl_contact_id = await upsertGHLContact(
         client_data.name,
         client_data.phone || null,
         client_data.email || null,
-        projectSlug,
-        quotation_code
+        proj.slug,
+        quotation_code,
+        pdfUrl,
+        channel || 'web'
       )
     }
 
-    // Save quotation
+    // Save quotation with PDF URL
     const { rows } = await client.query(`
       INSERT INTO hei_quotations (
         quotation_code, unit_id, project_id,
@@ -122,8 +190,8 @@ export async function POST(request: Request) {
         financing_amount, reference_rate_ea, loan_term_months,
         monthly_payment_est, income_required_est,
         client_name, client_phone, client_email, client_city,
-        ghl_contact_id, channel
-      ) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$20,$21)
+        ghl_contact_id, channel, pdf_url
+      ) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$20,$21,$22)
       RETURNING id, quotation_code
     `, [
       quotation_code, unit_id, project_id,
@@ -137,13 +205,14 @@ export async function POST(request: Request) {
       payment_plan.income_required,
       client_data?.name || null, client_data?.phone || null,
       client_data?.email || null, client_data?.city || null,
-      ghl_contact_id, channel || 'web'
+      ghl_contact_id, channel || 'web', pdfUrl
     ])
 
     return NextResponse.json({
       quotation_code: rows[0].quotation_code,
       quotation_id: rows[0].id,
       ghl_contact_id,
+      pdf_url: pdfUrl ? `${SITE_URL}${pdfUrl}` : null,
     })
 
   } finally {
