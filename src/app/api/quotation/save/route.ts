@@ -15,6 +15,8 @@ async function getPool() {
 
 const PDF_SERVICE_URL = process.env.PDF_SERVICE_URL || 'http://host.docker.internal:3001'
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://hayexperiencia.com'
+const GHL_SERVICE_URL = process.env.GHL_SERVICE_URL || 'http://host.docker.internal:3002'
+const GHL_SERVICE_API_KEY = process.env.GHL_SERVICE_API_KEY || ''
 
 async function generateAndSavePdf(
   unit: Record<string, unknown>,
@@ -54,65 +56,55 @@ async function generateAndSavePdf(
   }
 }
 
-async function upsertGHLContact(
-  name: string,
-  phone: string | null,
-  email: string | null,
-  projectSlug: string,
-  quotationCode: string,
-  pdfUrl: string | null,
+async function upsertCotizadorContact(args: {
+  name: string
+  phone: string | null
+  email: string | null
+  projectSlug: string
+  quotationCode: string
+  pdfUrl: string | null
   channel: string
-): Promise<string | null> {
-  const apiKey = process.env.GHL_API_KEY
-  const locationId = process.env.GHL_LOCATION_ID
-  if (!apiKey || !locationId) return null
+  codigoInmueble?: string | null
+  ghlAccount?: string | null
+}): Promise<string | null> {
+  if (!GHL_SERVICE_API_KEY) {
+    console.warn('GHL_SERVICE_API_KEY no configurado, skipping ghl upsert')
+    return null
+  }
 
-  const headers = {
-    'Authorization': `Bearer ${apiKey}`,
-    'Version': process.env.GHL_API_VERSION || '2021-07-28',
+  const headers: Record<string, string> = {
+    'Authorization': `Bearer ${GHL_SERVICE_API_KEY}`,
     'Content-Type': 'application/json',
-    'Accept': 'application/json',
   }
+  if (args.ghlAccount) headers['X-GHL-Account'] = args.ghlAccount
 
-  const tags = [`cotizador-${projectSlug}`, `cotizador-${channel}`]
-  const cfValue = pdfUrl ? `${quotationCode} — ${SITE_URL}${pdfUrl}` : quotationCode
-  const customFields = [{ id: '6JJ6kHV9NwmLL6OWtJCL', value: cfValue }]
-
-  const parts = name.split(' ', 2)
-  const createBody: Record<string, unknown> = {
-    locationId,
-    firstName: parts[0],
-    lastName: parts[1] || '',
-    tags,
-    source: channel === 'harry' ? 'Harry (Telegram)' : 'Cotizador Web',
-    customFields,
+  const body = {
+    name: args.name,
+    phone: args.phone,
+    email: args.email,
+    project_slug: args.projectSlug,
+    quotation_code: args.quotationCode,
+    pdf_url: args.pdfUrl ? `${SITE_URL}${args.pdfUrl}` : null,
+    channel: args.channel || 'web',
+    codigo_inmueble: args.codigoInmueble || null,
   }
-  if (phone) createBody.phone = phone
-  if (email) createBody.email = email
 
   try {
-    const res = await fetch('https://services.leadconnectorhq.com/contacts/', {
+    const res = await fetch(`${GHL_SERVICE_URL}/cotizador/upsert-contact`, {
       method: 'POST',
       headers,
-      body: JSON.stringify(createBody),
+      body: JSON.stringify(body),
+      signal: AbortSignal.timeout(20000),
     })
-    const data = await res.json()
-
-    if (data?.contact?.id) return data.contact.id
-
-    if (data?.statusCode === 400 && data?.meta?.contactId) {
-      const contactId = data.meta.contactId
-      await fetch(`https://services.leadconnectorhq.com/contacts/${contactId}`, {
-        method: 'PUT',
-        headers,
-        body: JSON.stringify({ tags, customFields }),
-      })
-      return contactId
+    if (!res.ok) {
+      const text = await res.text()
+      console.error(`ghl-service upsert ${res.status}: ${text}`)
+      return null
     }
-
-    return null
+    const data = await res.json()
+    return data.contact_id || null
   } catch (e) {
-    console.error('GHL contact error:', e)
+    console.error('ghl-service upsert error:', e)
     return null
   }
 }
@@ -167,18 +159,19 @@ export async function POST(request: Request) {
       client_data?.name, client_data?.phone, client_data?.email
     )
 
-    // Create/update GHL contact
+    // Upsert contacto en GHL via ghl-service (dedup nativo phone-first)
     let ghl_contact_id: string | null = null
     if (client_data?.name) {
-      ghl_contact_id = await upsertGHLContact(
-        client_data.name,
-        client_data.phone || null,
-        client_data.email || null,
-        proj.slug,
-        quotation_code,
+      ghl_contact_id = await upsertCotizadorContact({
+        name: client_data.name,
+        phone: client_data.phone || null,
+        email: client_data.email || null,
+        projectSlug: proj.slug,
+        quotationCode: quotation_code,
         pdfUrl,
-        channel || 'web'
-      )
+        channel: channel || 'web',
+        codigoInmueble: unitData?.unit_code || null,
+      })
     }
 
     // Save quotation with PDF URL
