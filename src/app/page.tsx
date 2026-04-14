@@ -60,7 +60,7 @@ export default function Home() {
             Más de 10 años transformando sueños en hogares
           </h2>
           <p className="mt-3 text-[var(--color-primary)]/80">
-            93+ propiedades en inventario | 4 proyectos activos | 10 municipios del Oriente Antioqueño
+            4 proyectos activos | 10 municipios del Oriente Antioqueño
           </p>
         </div>
       </section>
