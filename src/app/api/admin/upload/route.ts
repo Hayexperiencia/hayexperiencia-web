@@ -2,6 +2,8 @@ import { NextResponse } from 'next/server'
 import { writeFile, mkdir } from 'fs/promises'
 import path from 'path'
 
+const MEDIA_ROOT = process.env.MEDIA_ROOT || path.join(process.cwd(), 'media')
+
 export async function POST(request: Request) {
   const formData = await request.formData()
   const file = formData.get('file') as File | null
@@ -17,18 +19,22 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: 'Tipo de archivo no permitido' }, { status: 400 })
   }
 
-  // Sanitize filename
+  const safeFolder = folder.replace(/[^a-zA-Z0-9/_-]/g, '-')
+  if (safeFolder.includes('..')) {
+    return NextResponse.json({ error: 'Carpeta invalida' }, { status: 400 })
+  }
+
   const safeName = file.name.replace(/[^a-zA-Z0-9._-]/g, '-').toLowerCase()
   const timestamp = Date.now()
   const filename = `${timestamp}-${safeName}`
 
-  const dir = path.join(process.cwd(), 'public', 'images', 'uploads', folder)
+  const dir = path.join(MEDIA_ROOT, safeFolder)
   await mkdir(dir, { recursive: true })
 
   const buffer = Buffer.from(await file.arrayBuffer())
   const filePath = path.join(dir, filename)
   await writeFile(filePath, buffer)
 
-  const publicUrl = `/images/uploads/${folder}/${filename}`
+  const publicUrl = `/media/${safeFolder}/${filename}`
   return NextResponse.json({ url: publicUrl, filename })
 }
