@@ -20,6 +20,8 @@ services:
       coolify:
         aliases:
           - hayexperiencia-web
+    volumes:
+      - /data/coolify/applications/hhc1afp29any1kulfucplz13/media:/app/media
     labels:
       - traefik.enable=true
       - traefik.http.middlewares.gzip.compress=true
