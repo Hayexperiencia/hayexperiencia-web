@@ -1,12 +1,37 @@
 import type { Metadata } from "next";
 import ContactForm from "@/components/ui/ContactForm";
+import { getPage, getSiteSettings } from "@/lib/strapi";
 
-export const metadata: Metadata = {
-  title: "Contacto",
-  description: "Contacta a Hay Experiencia Inmobiliaria. Marinilla, Antioquia. WhatsApp, teléfono, email y formulario.",
-};
+export const revalidate = 3600;
 
-export default function ContactoPage() {
+export async function generateMetadata(): Promise<Metadata> {
+  const page = await getPage("contacto");
+  return {
+    title: page?.seo?.metaTitle ?? "Contacto",
+    description:
+      page?.seo?.metaDescription ??
+      "Contacta a Hay Experiencia Inmobiliaria. Marinilla, Antioquia. WhatsApp, teléfono, email y formulario.",
+  };
+}
+
+function formatPhone(raw: string | null | undefined): string {
+  if (!raw) return "";
+  const digits = raw.replace(/\D/g, "").replace(/^57/, "");
+  if (digits.length !== 10) return raw;
+  return `${digits.slice(0, 3)} ${digits.slice(3, 6)} ${digits.slice(6)}`;
+}
+
+export default async function ContactoPage() {
+  const settings = await getSiteSettings();
+  const phone = settings?.contactPhone ?? "+573022343659";
+  const phoneDisplay = formatPhone(phone);
+  const whatsapp = settings?.whatsapp ?? "573022343659";
+  const whatsappDisplay = formatPhone(whatsapp);
+  const email = settings?.contactEmail ?? "gerencia@hayexperiencia.com";
+  const cityLabel = settings?.address?.city
+    ? `${settings.address.city}, ${settings.address.department ?? "Antioquia"}, ${settings.address.country ?? "Colombia"}`
+    : "Marinilla, Antioquia, Colombia";
+
   return (
     <div>
       {/* Hero */}
@@ -44,7 +69,7 @@ export default function ContactoPage() {
                     </div>
                     <div>
                       <p className="font-medium text-[var(--color-primary)]">Dirección</p>
-                      <p className="text-sm text-[var(--color-text-light)]">Marinilla, Antioquia, Colombia</p>
+                      <p className="text-sm text-[var(--color-text-light)]">{cityLabel}</p>
                     </div>
                   </div>
 
@@ -56,7 +81,7 @@ export default function ContactoPage() {
                     </div>
                     <div>
                       <p className="font-medium text-[var(--color-primary)]">Teléfono</p>
-                      <a href="tel:+573022343659" className="text-sm text-[var(--color-text-light)] hover:text-[var(--color-primary)]">302 234 3659</a>
+                      <a href={`tel:${phone}`} className="text-sm text-[var(--color-text-light)] hover:text-[var(--color-primary)]">{phoneDisplay}</a>
                     </div>
                   </div>
 
@@ -66,7 +91,7 @@ export default function ContactoPage() {
                     </div>
                     <div>
                       <p className="font-medium text-[var(--color-primary)]">WhatsApp</p>
-                      <a href="https://wa.me/573022343659" target="_blank" rel="noopener noreferrer" className="text-sm text-[var(--color-text-light)] hover:text-[var(--color-primary)]">302 234 3659</a>
+                      <a href={`https://wa.me/${whatsapp}`} target="_blank" rel="noopener noreferrer" className="text-sm text-[var(--color-text-light)] hover:text-[var(--color-primary)]">{whatsappDisplay}</a>
                     </div>
                   </div>
 
@@ -78,7 +103,7 @@ export default function ContactoPage() {
                     </div>
                     <div>
                       <p className="font-medium text-[var(--color-primary)]">Email</p>
-                      <a href="mailto:gerencia@hayexperiencia.com" className="text-sm text-[var(--color-text-light)] hover:text-[var(--color-primary)]">gerencia@hayexperiencia.com</a>
+                      <a href={`mailto:${email}`} className="text-sm text-[var(--color-text-light)] hover:text-[var(--color-primary)]">{email}</a>
                     </div>
                   </div>
                 </div>

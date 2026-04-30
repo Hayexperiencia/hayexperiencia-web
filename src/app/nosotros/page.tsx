@@ -1,11 +1,19 @@
 import Image from "next/image";
 import Link from "next/link";
 import type { Metadata } from "next";
+import { getPage, getTeamMembers, getZones } from "@/lib/strapi";
 
-export const metadata: Metadata = {
-  title: "Nosotros",
-  description: "Hay Experiencia SAS: holding inmobiliario con 5 unidades de negocio en el Oriente Antioqueño. Estructuración, marketing, comercialización, administración y tecnología.",
-};
+export const revalidate = 3600;
+
+export async function generateMetadata(): Promise<Metadata> {
+  const page = await getPage("nosotros");
+  return {
+    title: page?.seo?.metaTitle ?? "Nosotros",
+    description:
+      page?.seo?.metaDescription ??
+      "Hay Experiencia SAS: holding inmobiliario con 5 unidades de negocio en el Oriente Antioqueño. Estructuración, marketing, comercialización, administración y tecnología.",
+  };
+}
 
 const UNIDADES = [
   {
@@ -55,14 +63,6 @@ const UNIDADES = [
   },
 ];
 
-const EQUIPO = [
-  { name: "Gabriel Ramírez", role: "CEO y Fundador", desc: "Visionario del holding. Lidera la estrategia y las alianzas." },
-  { name: "Yoko Giraldo", role: "Socia — Arriendos", desc: "Gestiona arriendos y la relación directa con propietarios e inquilinos." },
-  { name: "César Delgado", role: "Ventas", desc: "Asesor comercial. Acompaña a los clientes desde la primera visita hasta el cierre." },
-  { name: "Laura Hoyos", role: "Contabilidad y Finanzas", desc: "Administración financiera, contabilidad y reportes." },
-  { name: "Yesica Vergara", role: "Contenido y CRM", desc: "Producción de video, contenido digital e implementación de CapioLab." },
-];
-
 const VALORES = [
   { name: "Transparencia", desc: "Sin letra pequeña. Información clara en cada paso del proceso." },
   { name: "Pasión", desc: "Cada sueño nos importa. Tu proyecto es nuestro proyecto." },
@@ -70,12 +70,26 @@ const VALORES = [
   { name: "Empatía", desc: "Entendemos lo que significa este momento para ti y tu familia." },
 ];
 
-const ZONAS = [
+const FALLBACK_EQUIPO = [
+  { name: "Gabriel Ramírez", role: "CEO y Fundador", bio: "Visionario del holding. Lidera la estrategia y las alianzas." },
+  { name: "Yoko Giraldo", role: "Socia — Arriendos", bio: "Gestiona arriendos y la relación directa con propietarios e inquilinos." },
+  { name: "César Delgado", role: "Ventas", bio: "Asesor comercial. Acompaña a los clientes desde la primera visita hasta el cierre." },
+  { name: "Laura Hoyos", role: "Contabilidad y Finanzas", bio: "Administración financiera, contabilidad y reportes." },
+  { name: "Yesica Vergara", role: "Contenido y CRM", bio: "Producción de video, contenido digital e implementación de CapioLab." },
+];
+
+const FALLBACK_ZONAS = [
   "Marinilla", "Rionegro", "La Ceja", "El Peñol", "Guatapé",
   "El Retiro", "El Carmen de Viboral", "San Vicente Ferrer", "Guarne", "Santuario",
 ];
 
-export default function NosotrosPage() {
+export default async function NosotrosPage() {
+  const [team, zones] = await Promise.all([getTeamMembers(), getZones()]);
+  const equipo = team && team.length > 0
+    ? team.map((m) => ({ name: m.name, role: m.role ?? "", bio: m.bio ?? "" }))
+    : FALLBACK_EQUIPO;
+  const zonas = zones && zones.length > 0 ? zones.map((z) => z.name) : FALLBACK_ZONAS;
+
   return (
     <div>
       {/* Hero */}
@@ -124,14 +138,14 @@ export default function NosotrosPage() {
         <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
           <h2 className="text-2xl font-bold text-[var(--color-primary)] mb-8 text-center">Nuestro equipo</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {EQUIPO.map((e) => (
+            {equipo.map((e) => (
               <div key={e.name} className="p-6 rounded-2xl border border-[var(--color-border)] text-center">
                 <div className="w-16 h-16 mx-auto rounded-full bg-[var(--color-primary)] flex items-center justify-center text-xl font-bold text-white mb-3">
-                  {e.name.split(" ").map(n => n[0]).join("")}
+                  {e.name.split(" ").map((n) => n[0]).join("")}
                 </div>
                 <h3 className="text-base font-semibold text-[var(--color-primary)]">{e.name}</h3>
                 <p className="text-sm text-[var(--color-accent)] font-medium">{e.role}</p>
-                <p className="mt-2 text-xs text-[var(--color-text-light)]">{e.desc}</p>
+                <p className="mt-2 text-xs text-[var(--color-text-light)]">{e.bio}</p>
               </div>
             ))}
           </div>
@@ -219,7 +233,7 @@ export default function NosotrosPage() {
             proyectos de transformación digital con AI para empresas en toda Latinoamérica.
           </p>
           <div className="flex flex-wrap justify-center gap-2">
-            {ZONAS.map((z) => (
+            {zonas.map((z) => (
               <span key={z} className="px-4 py-2 rounded-full bg-gray-100 text-sm font-medium text-[var(--color-primary)]">{z}</span>
             ))}
           </div>

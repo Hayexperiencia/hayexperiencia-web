@@ -4,7 +4,15 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRef, useState, useEffect, useCallback } from "react";
 
-const PROJECTS = [
+type ProjectCard = {
+  name: string;
+  description: string;
+  href: string;
+  badge: string;
+  image: string;
+};
+
+const FALLBACK_PROJECTS: ProjectCard[] = [
   {
     name: "ALUNA Campestre",
     description: "Lotes campestres desde 2.500 m2 en Marinilla. Unidad cerrada con infraestructura de primer nivel.",
@@ -35,7 +43,12 @@ const PROJECTS = [
   },
 ];
 
-export default function ProjectsPreview() {
+type Props = {
+  projects?: ProjectCard[];
+};
+
+export default function ProjectsPreview({ projects }: Props = {}) {
+  const items = projects && projects.length > 0 ? projects : FALLBACK_PROJECTS;
   const scrollRef = useRef<HTMLDivElement>(null);
   const [activeIndex, setActiveIndex] = useState(0);
   const [paused, setPaused] = useState(false);
@@ -50,18 +63,17 @@ export default function ProjectsPreview() {
     }
   }, []);
 
-  // Auto-rotate every 5s
   useEffect(() => {
     if (paused) return;
     const timer = setInterval(() => {
       setActiveIndex((prev) => {
-        const next = (prev + 1) % PROJECTS.length;
+        const next = (prev + 1) % items.length;
         scrollToIndex(next);
         return next;
       });
     }, 5000);
     return () => clearInterval(timer);
-  }, [paused, scrollToIndex]);
+  }, [paused, scrollToIndex, items.length]);
 
   return (
     <section className="py-16">
@@ -78,7 +90,7 @@ export default function ProjectsPreview() {
           className="flex gap-6 overflow-x-auto snap-x snap-mandatory pb-4 -mx-4 px-4"
           style={{ scrollbarWidth: "none" }}
         >
-          {PROJECTS.map((project) => (
+          {items.map((project) => (
             <Link
               key={project.name}
               href={project.href}
@@ -108,9 +120,8 @@ export default function ProjectsPreview() {
           ))}
         </div>
 
-        {/* Dots */}
         <div className="flex justify-center gap-2 mt-4">
-          {PROJECTS.map((_, i) => (
+          {items.map((_, i) => (
             <button
               key={i}
               onClick={() => scrollToIndex(i)}

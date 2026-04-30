@@ -5,13 +5,45 @@ import FeaturedProperties from "@/components/home/FeaturedProperties";
 import ProjectsPreview from "@/components/home/ProjectsPreview";
 import WhyUs from "@/components/home/WhyUs";
 import ContactForm from "@/components/ui/ContactForm";
+import { getHomepage, getProjects } from "@/lib/strapi";
 
 export const revalidate = 3600;
 
-export default function Home() {
+const PROJECT_IMAGES: Record<string, string> = {
+  aluna: "/images/proyectos/aluna-hero.png",
+  "el-faro": "/images/proyectos/el-faro-hero.jpg",
+  remanso: "/images/hero-oriente.jpg",
+  aquaverde: "/images/proyectos/aquaverde-hero.webp",
+};
+
+const PROJECT_BADGES: Record<string, (p: { priceFrom?: string | null; availableUnits?: number | null; totalUnits?: number | null; status?: string | null }) => string> = {
+  aluna: (p) => (p.priceFrom ? `Desde $${Math.round(Number(p.priceFrom) / 1_000_000)}M` : "Preventa"),
+  "el-faro": () => "En desarrollo",
+  remanso: () => "Últimas unidades",
+  aquaverde: () => "Entrega Dic 2026",
+};
+
+function buildProjectCards(projects: Awaited<ReturnType<typeof getProjects>>) {
+  if (!projects) return undefined;
+  return projects.map((p) => ({
+    name: p.name,
+    description: p.tagline ?? "",
+    href: `/proyectos/${p.slug}`,
+    badge: (PROJECT_BADGES[p.slug] ?? (() => p.status ?? "Disponible"))(p),
+    image: PROJECT_IMAGES[p.slug] ?? "/images/hero-oriente.jpg",
+  }));
+}
+
+export default async function Home() {
+  const [homepage, projects] = await Promise.all([getHomepage(), getProjects()]);
+  const projectCards = buildProjectCards(projects);
+
   return (
     <>
-      <Hero />
+      <Hero
+        headline={homepage?.hero?.headline}
+        subhead={homepage?.hero?.subhead}
+      />
       <CampaignBanner />
       <section className="py-10 bg-white">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -19,7 +51,7 @@ export default function Home() {
         </div>
       </section>
       <FeaturedProperties />
-      <ProjectsPreview />
+      <ProjectsPreview projects={projectCards} />
       <WhyUs />
 
       {/* CTA final con formulario */}
@@ -60,7 +92,9 @@ export default function Home() {
             Más de 10 años transformando sueños en hogares
           </h2>
           <p className="mt-3 text-[var(--color-primary)]/80">
-            4 proyectos activos | 10 municipios del Oriente Antioqueño
+            {homepage?.intro
+              ? homepage.intro.replace(/\*\*/g, "")
+              : "4 proyectos activos | 10 municipios del Oriente Antioqueño"}
           </p>
         </div>
       </section>

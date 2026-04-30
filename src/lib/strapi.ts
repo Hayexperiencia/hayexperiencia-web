@@ -171,15 +171,20 @@ export type SiteSettings = {
   documentId: string;
   siteName?: string | null;
   tagline?: string | null;
-  email?: string | null;
-  phone?: string | null;
+  contactEmail?: string | null;
+  contactPhone?: string | null;
   whatsapp?: string | null;
-  address?: string | null;
+  instagram?: string | null;
+  facebook?: string | null;
+  youtube?: string | null;
+  linkedin?: string | null;
+  tiktok?: string | null;
+  footerText?: string | null;
   logo?: StrapiMedia | null;
-  logoInverted?: StrapiMedia | null;
+  logoLight?: StrapiMedia | null;
   favicon?: StrapiMedia | null;
-  defaultSEO?: StrapiSEO | null;
-  footer?: string | null;
+  address?: Address | null;
+  defaultSeo?: StrapiSEO | null;
 };
 
 export type Homepage = {
@@ -201,7 +206,7 @@ export type Page = {
   documentId: string;
   title: string;
   slug: string;
-  body?: string | null;
+  richBody?: string | null;
   seo?: StrapiSEO | null;
 };
 
@@ -238,7 +243,7 @@ export async function getPage(slug: string) {
 }
 
 export async function getTeamMembers() {
-  return strapiFetch<TeamMember[]>("team-members?sort=order:asc", {
+  return strapiFetch<TeamMember[]>("team-members", {
     tags: ["team-members"],
   });
 }
