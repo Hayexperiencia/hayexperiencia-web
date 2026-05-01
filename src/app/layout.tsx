@@ -4,6 +4,7 @@ import "./globals.css";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import WhatsAppButton from "@/components/layout/WhatsAppButton";
+import { getNavigation, getSiteSettings } from "@/lib/strapi";
 
 const montserrat = Montserrat({
   subsets: ["latin"],
@@ -31,18 +32,23 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const [navigation, settings] = await Promise.all([
+    getNavigation(),
+    getSiteSettings(),
+  ]);
+
   return (
     <html lang="es" className={`${montserrat.variable} h-full antialiased`}>
       <body className="min-h-full flex flex-col font-[var(--font-montserrat)]">
-        <Navbar />
+        <Navbar primary={navigation?.primary ?? null} />
         <main className="flex-1">{children}</main>
-        <Footer />
-        <WhatsAppButton />
+        <Footer groups={navigation?.footer ?? null} settings={settings} />
+        <WhatsAppButton phone={settings?.whatsapp ?? null} />
       </body>
     </html>
   );

@@ -4,8 +4,9 @@ import Link from "next/link";
 import Image from "next/image";
 import { useState, useRef } from "react";
 import BookingModal from "@/components/ui/BookingModal";
+import type { NavItem } from "@/lib/strapi";
 
-const PROJECTS = [
+const FALLBACK_PROJECTS: { href: string; label: string }[] = [
   { href: "/proyectos/aluna", label: "ALUNA Campestre" },
   { href: "/proyectos/el-faro", label: "El Faro" },
   { href: "/proyectos/remanso", label: "Remanso de Oriente" },
@@ -15,6 +16,10 @@ const PROJECTS = [
 const MUNICIPIOS = [
   "Marinilla", "El Peñol", "Guatapé", "Rionegro", "El Retiro", "La Ceja", "San Vicente",
 ];
+const CITY_IDS: Record<string, string> = {
+  "Marinilla": "488", "El Peñol": "278", "Guatapé": "358", "Rionegro": "685",
+  "El Retiro": "677", "La Ceja": "410", "San Vicente": "773",
+};
 
 function Dropdown({ label, href, items, type }: { label: string; href: string; items: { href: string; label: string }[]; type: "link" | "filter" }) {
   const [open, setOpen] = useState(false);
@@ -75,13 +80,22 @@ function MobileAccordion({ label, items }: { label: string; items: { href: strin
   );
 }
 
-export default function Navbar() {
+export type NavbarProps = {
+  primary?: NavItem[] | null;
+};
+
+export default function Navbar({ primary }: NavbarProps) {
   const [open, setOpen] = useState(false);
 
-  const municipioItems = MUNICIPIOS.map((m) => {
-    const cityIds: Record<string, string> = { "Marinilla": "488", "El Peñol": "278", "Guatapé": "358", "Rionegro": "685", "El Retiro": "677", "La Ceja": "410", "San Vicente": "773" };
-    return { href: `/propiedades?ciudad=${cityIds[m] || ""}`, label: m };
-  });
+  const projectsFromNav = primary?.find((item) => item.label === "Proyectos")?.children;
+  const projectItems = (projectsFromNav && projectsFromNav.length > 0)
+    ? projectsFromNav.map((c) => ({ href: c.url, label: c.label }))
+    : FALLBACK_PROJECTS;
+
+  const municipioItems = MUNICIPIOS.map((m) => ({
+    href: `/propiedades?ciudad=${CITY_IDS[m] || ""}`,
+    label: m,
+  }));
 
   return (
     <nav className="sticky top-0 z-50 bg-white border-b border-[var(--color-border)]">
@@ -100,7 +114,7 @@ export default function Navbar() {
           {/* Desktop nav */}
           <div className="hidden md:flex items-center gap-8">
             <Dropdown label="Propiedades" href="/propiedades" items={municipioItems} type="filter" />
-            <Dropdown label="Proyectos" href="/proyectos" items={PROJECTS} type="link" />
+            <Dropdown label="Proyectos" href="/proyectos" items={projectItems} type="link" />
             <Link href="/cotizador" className="text-sm font-medium text-[var(--color-primary)] hover:text-[var(--color-primary-light)] transition-colors duration-200">
               Cotizador
             </Link>
@@ -138,7 +152,7 @@ export default function Navbar() {
         {open && (
           <div className="md:hidden pb-4 space-y-1">
             <MobileAccordion label="Propiedades" items={[{ href: "/propiedades", label: "Ver todas" }, ...municipioItems]} onClose={() => setOpen(false)} />
-            <MobileAccordion label="Proyectos" items={PROJECTS} onClose={() => setOpen(false)} />
+            <MobileAccordion label="Proyectos" items={projectItems} onClose={() => setOpen(false)} />
             <Link href="/cotizador" className="block px-3 py-2 rounded-lg text-sm font-medium text-[var(--color-primary)] hover:bg-gray-50" onClick={() => setOpen(false)}>
               Cotizador
             </Link>

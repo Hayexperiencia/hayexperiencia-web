@@ -1,12 +1,29 @@
 "use client";
 
-export default function WhatsAppButton() {
-  const phone = "573022343659";
-  const message = encodeURIComponent("Hola, me interesa conocer las propiedades disponibles en el Oriente Antioqueno.");
+export type WhatsAppButtonProps = {
+  phone?: string | null;
+  message?: string;
+};
+
+const FALLBACK_PHONE = "573022343659";
+const FALLBACK_MESSAGE =
+  "Hola, me interesa conocer las propiedades disponibles en el Oriente Antioqueno.";
+
+function normalizePhone(raw: string | null | undefined): string {
+  if (!raw) return FALLBACK_PHONE;
+  const digits = raw.replace(/\D/g, "");
+  if (!digits) return FALLBACK_PHONE;
+  if (digits.startsWith("57")) return digits;
+  return `57${digits}`;
+}
+
+export default function WhatsAppButton({ phone, message }: WhatsAppButtonProps) {
+  const target = normalizePhone(phone);
+  const text = encodeURIComponent(message ?? FALLBACK_MESSAGE);
 
   return (
     <a
-      href={`https://wa.me/${phone}?text=${message}`}
+      href={`https://wa.me/${target}?text=${text}`}
       target="_blank"
       rel="noopener noreferrer"
       className="whatsapp-global fixed bottom-6 right-6 z-50 flex h-14 w-14 items-center justify-center rounded-full bg-[#25D366] text-white shadow-lg hover:bg-[#20BD5A] transition-colors duration-200"
