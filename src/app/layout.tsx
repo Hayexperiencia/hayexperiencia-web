@@ -4,6 +4,7 @@ import "./globals.css";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import WhatsAppButton from "@/components/layout/WhatsAppButton";
+import Analytics from "@/components/analytics/Analytics";
 import { getNavigation, getSiteSettings } from "@/lib/strapi";
 
 const montserrat = Montserrat({
@@ -45,6 +46,7 @@ export default async function RootLayout({
   return (
     <html lang="es" className={`${montserrat.variable} h-full antialiased`}>
       <body className="min-h-full flex flex-col font-[var(--font-montserrat)]">
+        <Analytics />
         <Navbar primary={navigation?.primary ?? null} />
         <main className="flex-1">{children}</main>
         <Footer groups={navigation?.footer ?? null} settings={settings} />

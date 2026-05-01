@@ -8,6 +8,7 @@ import SimilarProperties from "@/components/propiedades/SimilarProperties";
 import ShareButtons from "@/components/propiedades/ShareButtons";
 import PropertyContactSidebar from "@/components/propiedades/PropertyContactSidebar";
 import ContactForm from "@/components/ui/ContactForm";
+import PropertyViewTracker from "@/components/analytics/PropertyViewTracker";
 import type { Metadata } from "next";
 
 export const revalidate = 21600;
@@ -57,6 +58,7 @@ export default async function PropertyDetailPage({ params }: PageProps) {
 
   return (
     <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8">
+      <PropertyViewTracker wasiId={id} />
       {/* Gallery */}
       <Gallery
         images={images.map((img) => ({ url: img.url, alt: img.description || undefined }))}
