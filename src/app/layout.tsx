@@ -4,6 +4,7 @@ import "./globals.css";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import WhatsAppButton from "@/components/layout/WhatsAppButton";
+import CookieBanner from "@/components/layout/CookieBanner";
 import Analytics from "@/components/analytics/Analytics";
 import { getNavigation, getSiteSettings } from "@/lib/strapi";
 
@@ -51,6 +52,7 @@ export default async function RootLayout({
         <main className="flex-1">{children}</main>
         <Footer groups={navigation?.footer ?? null} settings={settings} />
         <WhatsAppButton phone={settings?.whatsapp ?? null} />
+        <CookieBanner />
       </body>
     </html>
   );

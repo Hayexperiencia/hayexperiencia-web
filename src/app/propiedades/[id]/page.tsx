@@ -1,12 +1,12 @@
 import { notFound } from "next/navigation";
-import { getProperty, getSimilarProperties } from "@/lib/wasi";
-import { getEnrichedData, getMarketAverage } from "@/lib/db";
-import { formatPrice, formatArea, getPropertyType, getPricePerM2, stripHtml, getWhatsAppLink, getPropertyWhatsAppMessage, extractImages } from "@/lib/utils";
+import { getProperty, getSimilarProperties, getEnrichedDataForWasiId } from "@/lib/wasi";
+import { formatPrice, formatArea, getPropertyType, getPricePerM2, getWhatsAppLink, getPropertyWhatsAppMessage, extractImages } from "@/lib/utils";
 import Gallery from "@/components/ui/Gallery";
 import PropertyKeyFacts from "@/components/propiedades/PropertyKeyFacts";
 import SimilarProperties from "@/components/propiedades/SimilarProperties";
 import ShareButtons from "@/components/propiedades/ShareButtons";
 import PropertyContactSidebar from "@/components/propiedades/PropertyContactSidebar";
+import EnrichmentSection from "@/components/propiedades/EnrichmentSection";
 import ContactForm from "@/components/ui/ContactForm";
 import PropertyViewTracker from "@/components/analytics/PropertyViewTracker";
 import type { Metadata } from "next";
@@ -47,9 +47,8 @@ export default async function PropertyDetailPage({ params }: PageProps) {
   const description = property.observations ? property.observations : "";
 
   // Enriched data (graceful fallback)
-  const [enriched, marketAvg, similar] = await Promise.all([
-    getEnrichedData(id),
-    getMarketAverage(property.city_label, property.id_property_type),
+  const [enriched, similar] = await Promise.all([
+    getEnrichedDataForWasiId(id),
     getSimilarProperties(property.id_property_type, property.id_city, property.id_property, 4),
   ]);
 
@@ -136,18 +135,8 @@ export default async function PropertyDetailPage({ params }: PageProps) {
             </div>
           )}
 
-          {/* Market comparison (enriched - only shows if data exists) */}
-          {marketAvg && enriched?.price_vs_avg_pct !== null && enriched?.price_vs_avg_pct !== undefined && (
-            <div className="p-6 rounded-2xl bg-gray-50">
-              <h3 className="text-xl font-semibold text-[var(--color-primary)] mb-3">Comparativo de mercado</h3>
-              <p className="text-sm text-[var(--color-text-light)]">
-                Precio/m2 promedio en {property.city_label}: {formatPrice(marketAvg.avg_price_m2)}/m2
-              </p>
-              <p className={`mt-2 text-lg font-semibold ${enriched.price_vs_avg_pct < 0 ? "text-green-600" : "text-red-500"}`}>
-                {enriched.price_vs_avg_pct < 0 ? `${Math.abs(enriched.price_vs_avg_pct)}% bajo el promedio` : `${enriched.price_vs_avg_pct}% sobre el promedio`}
-              </p>
-            </div>
-          )}
+          {/* Enrichment v1: posición de mercado, depreciación, cercanías, comparables */}
+          {enriched && <EnrichmentSection enriched={enriched} />}
 
           {/* Map */}
           {property.latitude && property.longitude && parseFloat(property.latitude) !== 0 && (

@@ -1,9 +1,33 @@
+"use client";
+
 import Script from "next/script";
+import { useEffect, useState } from "react";
 
 const GA_ID = process.env.NEXT_PUBLIC_GA_ID;
 const META_PIXEL_ID = process.env.NEXT_PUBLIC_META_PIXEL_ID;
+const STORAGE_KEY = "hei_cookie_consent";
+
+function hasConsent(): boolean {
+  if (typeof window === "undefined") return false;
+  const saved = localStorage.getItem(STORAGE_KEY);
+  return !!saved && saved.includes(":accepted:");
+}
 
 export default function Analytics() {
+  const [consent, setConsent] = useState(false);
+
+  useEffect(() => {
+    setConsent(hasConsent());
+    const onChange = (e: Event) => {
+      const detail = (e as CustomEvent<string>).detail;
+      setConsent(detail === "accepted");
+    };
+    window.addEventListener("hei-cookie-consent", onChange);
+    return () => window.removeEventListener("hei-cookie-consent", onChange);
+  }, []);
+
+  if (!consent) return null;
+
   return (
     <>
       {GA_ID ? (

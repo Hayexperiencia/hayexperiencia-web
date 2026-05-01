@@ -210,6 +210,175 @@ export type Page = {
   seo?: StrapiSEO | null;
 };
 
+// ---------- Property (consumido del Strapi sync Wasi) ----------
+
+export type StrapiPropertySpecs = {
+  areaConstruida?: number | null;
+  areaLote?: number | null;
+  rooms?: number | null;
+  bathrooms?: number | null;
+  parking?: number | null;
+  floors?: number | null;
+  yearBuilt?: number | null;
+  estrato?: number | null;
+};
+
+export type StrapiPropertyFinancial = {
+  price?: number | string | null;
+  currency?: string | null;
+  administracion?: number | null;
+  predial?: number | null;
+  valorMetroCuadrado?: number | null;
+};
+
+export type StrapiPropertyFeature = { items?: unknown };
+
+export type StrapiPropertyEnriched = {
+  version?: number;
+  computedAt?: string;
+  disclaimer?: string;
+  marketBenchmark?: {
+    method?: string;
+    segment?: { city?: string; propertyType?: string; transaction?: string; areaBand?: string };
+    comparablesCount?: number;
+    medianPrice?: number | null;
+    p25Price?: number | null;
+    p75Price?: number | null;
+    medianPxM2?: number | null;
+    p25PxM2?: number | null;
+    p75PxM2?: number | null;
+    codPct?: number | null;
+    medianRecencyMonths?: number | null;
+    confidence?: "high" | "medium" | "low" | "insufficient";
+  };
+  competitivePosition?: {
+    status?: "BAJO" | "EN_RANGO" | "ALTO" | "SIN_BENCHMARK" | "SIN_DATOS";
+    diffVsMedianPct?: number;
+    diffVsMedianCop?: number;
+    pxM2Property?: number;
+    pxM2Market?: number;
+    confidence?: string;
+    narrativeShort?: string;
+    narrativeLong?: string;
+  };
+  depreciation?: {
+    yearBuilt?: number | null;
+    ageYears?: number;
+    usefulLife?: number;
+    conservationClass?: number;
+    fittoCorviniCoeff?: number;
+    depreciationPct?: number;
+    method?: string;
+    applicable?: boolean;
+    confidence?: string;
+    narrativeShort?: string;
+    narrativeLong?: string;
+  };
+  proximity?: {
+    distanceToAutopistaKm?: number;
+    distanceToCascoUrbanoKm?: number;
+    distanceToAirportJmcKm?: number;
+    distanceToMedellinKm?: number;
+    narrativeShort?: string;
+  };
+  marketActivity?: {
+    competitorListingsActive?: number;
+    saturationLabel?: string;
+    newInLast30Days?: number;
+    medianListingAgeMonths?: number;
+  };
+  republishedIn?: {
+    count: number;
+    domains?: string[];
+    matchType?: string | null;
+  };
+  comparablesPublic?: { title?: string; price?: number; areaM2?: number; pxM2?: number }[];
+  comparablesPrivate?: { count: number; sourceTypes?: string[]; accessNote?: string };
+  pricingAlert?: { active: boolean; recommendation?: string | null; suggestedPrice?: number | null };
+};
+
+export type StrapiProperty = {
+  id: number;
+  documentId: string;
+  title: string;
+  slug: string;
+  wasiId: string;
+  type: string;
+  transaction: string;
+  status?: string;
+  description?: string | null;
+  shortDescription?: string | null;
+  video?: string | null;
+  tour360Url?: string | null;
+  coverUrl?: string | null;
+  galleryUrls?: string[] | null;
+  wasiUrl?: string | null;
+  lastSyncedAt?: string | null;
+  address?: Address | null;
+  specs?: StrapiPropertySpecs | null;
+  features?: StrapiPropertyFeature | null;
+  financial?: StrapiPropertyFinancial | null;
+  zone?: { name: string; slug: string; summary?: string | null } | null;
+  project?: { name: string; slug: string } | null;
+  enrichedData?: StrapiPropertyEnriched | null;
+};
+
+export type StrapiPropertyFilters = {
+  city?: string;
+  type?: string;
+  transaction?: string;
+  minPrice?: number;
+  maxPrice?: number;
+  bedrooms?: number;
+  bathrooms?: number;
+  pageSize?: number;
+  page?: number;
+};
+
+export async function getPropertyByWasiId(wasiId: string | number): Promise<StrapiProperty | null> {
+  const url = `properties?filters[wasiId][$eq]=${encodeURIComponent(String(wasiId))}`;
+  const data = await strapiFetch<StrapiProperty[]>(url, {
+    tags: ["properties", `property:${wasiId}`],
+  });
+  return data?.[0] ?? null;
+}
+
+export async function getStrapiProperties(
+  filters: StrapiPropertyFilters = {}
+): Promise<{ items: StrapiProperty[]; total: number }> {
+  const parts: string[] = [];
+  if (filters.city) parts.push(`filters[address][city][$eqi]=${encodeURIComponent(filters.city)}`);
+  if (filters.type) parts.push(`filters[type][$eq]=${encodeURIComponent(filters.type)}`);
+  if (filters.transaction) parts.push(`filters[transaction][$eq]=${encodeURIComponent(filters.transaction)}`);
+  if (filters.minPrice) parts.push(`filters[financial][price][$gte]=${filters.minPrice}`);
+  if (filters.maxPrice) parts.push(`filters[financial][price][$lte]=${filters.maxPrice}`);
+  if (filters.bedrooms) parts.push(`filters[specs][rooms][$gte]=${filters.bedrooms}`);
+  parts.push(`pagination[pageSize]=${filters.pageSize ?? 24}`);
+  parts.push(`pagination[page]=${filters.page ?? 1}`);
+  parts.push(`sort[0]=lastSyncedAt:desc`);
+
+  const path = `properties?${parts.join("&")}`;
+  const url = new URL(`/api/${path}`, STRAPI_URL);
+  url.searchParams.set("locale", DEFAULT_LOCALE);
+  url.searchParams.set("populate", "*");
+
+  try {
+    const res = await fetch(url.toString(), {
+      headers: STRAPI_TOKEN ? { Authorization: `Bearer ${STRAPI_TOKEN}` } : {},
+      next: { tags: ["properties"], revalidate: DEFAULT_REVALIDATE },
+    });
+    if (!res.ok) {
+      console.error(`[strapi] properties ${res.status}`);
+      return { items: [], total: 0 };
+    }
+    const json = (await res.json()) as { data: StrapiProperty[]; meta?: { pagination?: { total?: number } } };
+    return { items: json.data ?? [], total: json.meta?.pagination?.total ?? 0 };
+  } catch (err) {
+    console.error("[strapi] getStrapiProperties failed:", err);
+    return { items: [], total: 0 };
+  }
+}
+
 export async function getHomepage() {
   return strapiFetch<Homepage>("homepage", { tags: ["homepage"] });
 }
