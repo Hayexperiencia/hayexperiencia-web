@@ -34,6 +34,8 @@ export const metadata: Metadata = {
   },
 };
 
+const META_PIXEL_ID = process.env.NEXT_PUBLIC_META_PIXEL_ID;
+
 export default async function RootLayout({
   children,
 }: Readonly<{
@@ -46,8 +48,22 @@ export default async function RootLayout({
 
   return (
     <html lang="es" className={`${montserrat.variable} h-full antialiased`}>
-      <body className="min-h-full flex flex-col font-[var(--font-montserrat)]">
+      <head>
         <Analytics />
+      </head>
+      <body className="min-h-full flex flex-col font-[var(--font-montserrat)]">
+        {META_PIXEL_ID ? (
+          <noscript>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              height="1"
+              width="1"
+              style={{ display: "none" }}
+              src={`https://www.facebook.com/tr?id=${META_PIXEL_ID}&ev=PageView&noscript=1`}
+              alt=""
+            />
+          </noscript>
+        ) : null}
         <Navbar primary={navigation?.primary ?? null} />
         <main className="flex-1">{children}</main>
         <Footer groups={navigation?.footer ?? null} settings={settings} />
