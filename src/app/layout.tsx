@@ -32,6 +32,9 @@ export const metadata: Metadata = {
     siteName: "Hay Experiencia Inmobiliaria",
     images: ["/images/hero-oriente.jpg"],
   },
+  other: {
+    "facebook-domain-verification": "s8fji1xy0ttj08b2lyynsb04t8j8ts",
+  },
 };
 
 const META_PIXEL_ID = process.env.NEXT_PUBLIC_META_PIXEL_ID;
