@@ -3,8 +3,6 @@
 import { useState } from 'react';
 import MercadoPanel from '@/components/admin/mercado/MercadoPanel';
 
-const ADMIN_PASSWORD = 'hayexperiencia';
-
 export default function AdminMercadoPage() {
   const [authenticated, setAuthenticated] = useState(false);
   const [password, setPassword] = useState('');
@@ -16,9 +14,14 @@ export default function AdminMercadoPage() {
         <div className="bg-white rounded-2xl border border-[var(--color-border)] p-8 w-full max-w-sm shadow-sm">
           <h1 className="text-xl font-bold text-[var(--color-primary)] mb-2">Inteligencia de Mercado</h1>
           <p className="text-sm text-[var(--color-text-light)] mb-6">Acceso restringido al equipo Hay Experiencia.</p>
-          <form onSubmit={(e) => {
+          <form onSubmit={async (e) => {
             e.preventDefault();
-            if (password === ADMIN_PASSWORD) {
+            const r = await fetch('/api/admin/login', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ password }),
+            });
+            if (r.ok) {
               setAuthenticated(true);
               setError(false);
             } else {

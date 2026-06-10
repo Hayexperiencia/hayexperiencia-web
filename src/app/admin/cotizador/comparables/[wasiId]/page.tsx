@@ -3,8 +3,6 @@
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 
-const ADMIN_PASSWORD = "hayexperiencia";
-
 type Comparable = {
   rank: number;
   source_domain: string;
@@ -30,10 +28,20 @@ export default function ComparablesPage() {
   const [loading, setLoading] = useState(false);
   const [err, setErr] = useState<string | null>(null);
 
+  const login = async () => {
+    const r = await fetch("/api/admin/login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ password }),
+    });
+    if (r.ok) setAuthed(true);
+    else setErr("Contraseña incorrecta");
+  };
+
   useEffect(() => {
     if (!authed || !wasiId) return;
     setLoading(true);
-    fetch(`/api/admin/comparables/${wasiId}?key=${ADMIN_PASSWORD}`)
+    fetch(`/api/admin/comparables/${wasiId}`)
       .then(async (r) => {
         if (!r.ok) throw new Error(`${r.status}`);
         return r.json();
@@ -57,11 +65,11 @@ export default function ComparablesPage() {
           placeholder="Contraseña"
           className="w-full border rounded px-3 py-2 mb-3"
           onKeyDown={(e) => {
-            if (e.key === "Enter" && password === ADMIN_PASSWORD) setAuthed(true);
+            if (e.key === "Enter") void login();
           }}
         />
         <button
-          onClick={() => password === ADMIN_PASSWORD && setAuthed(true)}
+          onClick={() => void login()}
           className="w-full bg-[var(--color-primary)] text-white rounded py-2"
         >
           Entrar

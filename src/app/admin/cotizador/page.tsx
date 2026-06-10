@@ -3,8 +3,6 @@
 import { useState } from 'react';
 import AdminPanel from '@/components/admin/AdminCotizador';
 
-const ADMIN_PASSWORD = 'hayexperiencia';
-
 export default function AdminCotizadorPage() {
   const [authenticated, setAuthenticated] = useState(false);
   const [password, setPassword] = useState('');
@@ -16,9 +14,14 @@ export default function AdminCotizadorPage() {
         <div className="bg-white rounded-2xl border border-[var(--color-border)] p-8 w-full max-w-sm shadow-sm">
           <h1 className="text-xl font-bold text-[var(--color-primary)] mb-2">Admin Cotizador</h1>
           <p className="text-sm text-[var(--color-text-light)] mb-6">Ingresa la contraseña para continuar.</p>
-          <form onSubmit={e => {
+          <form onSubmit={async e => {
             e.preventDefault();
-            if (password === ADMIN_PASSWORD) {
+            const r = await fetch('/api/admin/login', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ password }),
+            });
+            if (r.ok) {
               setAuthenticated(true);
               setError(false);
             } else {

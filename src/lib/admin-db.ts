@@ -15,11 +15,14 @@ export async function getAdminPool(): Promise<Pool> {
   return _pool;
 }
 
-const ADMIN_KEY = process.env.ADMIN_API_KEY ?? 'hayexperiencia';
-
 export function checkAdminAuth(req: NextRequest): NextResponse | null {
-  const auth = req.headers.get('x-admin-key') ?? req.nextUrl.searchParams.get('key');
-  if (auth !== ADMIN_KEY) {
+  const adminKey = process.env.ADMIN_API_KEY;
+  const provided =
+    req.headers.get('x-admin-key') ??
+    req.cookies.get('hei_admin')?.value ??
+    req.nextUrl.searchParams.get('key');
+  // Sin env configurada falla cerrado (nunca un fallback hardcodeado).
+  if (!adminKey || provided !== adminKey) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
   return null;

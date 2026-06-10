@@ -2,8 +2,6 @@
 
 import { useEffect, useState } from 'react';
 
-const ADMIN_KEY = 'hayexperiencia';
-
 export interface FetchState<T> {
   data: T | null;
   loading: boolean;
@@ -21,7 +19,7 @@ export function useMercadoData<T>(endpoint: string, refreshKey: number = 0, para
     }
     if (refreshKey) url.searchParams.set('t', String(refreshKey));
 
-    fetch(url.toString(), { headers: { 'x-admin-key': ADMIN_KEY } })
+    fetch(url.toString())
       .then((r) => {
         if (!r.ok) throw new Error(`HTTP ${r.status}`);
         return r.json();
@@ -40,9 +38,6 @@ export function useMercadoData<T>(endpoint: string, refreshKey: number = 0, para
 }
 
 export async function postRefresh(): Promise<{ ok: boolean; refreshed?: string[]; skipped?: string[]; duration_ms?: number; error?: string }> {
-  const r = await fetch('/api/admin/mercado/refresh', {
-    method: 'POST',
-    headers: { 'x-admin-key': ADMIN_KEY },
-  });
+  const r = await fetch('/api/admin/mercado/refresh', { method: 'POST' });
   return r.json();
 }

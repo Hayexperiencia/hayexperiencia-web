@@ -12,16 +12,13 @@ async function getPool() {
   return pool;
 }
 
-const ADMIN_KEY = process.env.ADMIN_API_KEY ?? "hayexperiencia";
-
 export async function GET(
   req: NextRequest,
   { params }: { params: Promise<{ wasiId: string }> }
 ) {
-  const auth = req.headers.get("x-admin-key") ?? req.nextUrl.searchParams.get("key");
-  if (auth !== ADMIN_KEY) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  }
+  const { checkAdminAuth } = await import("@/lib/admin-db");
+  const unauthorized = checkAdminAuth(req);
+  if (unauthorized) return unauthorized;
   const { wasiId } = await params;
   if (!/^\d+$/.test(wasiId)) {
     return NextResponse.json({ error: "Invalid wasiId" }, { status: 400 });
