@@ -7,6 +7,7 @@ import CotizacionesSection from './CotizacionesSection';
 import CrmSection from './CrmSection';
 import InstrumentacionSection from './InstrumentacionSection';
 import ConexionesSection from './ConexionesSection';
+import Ga4Section from './Ga4Section';
 
 export default function AnalyticsPanel() {
   const [refreshKey, setRefreshKey] = useState(0);
@@ -36,6 +37,7 @@ export default function AnalyticsPanel() {
         <CotizacionesSection refreshKey={refreshKey} />
         <CrmSection refreshKey={refreshKey} />
         <InstrumentacionSection />
+        <Ga4Section refreshKey={refreshKey} />
         <ConexionesSection />
       </div>
 
