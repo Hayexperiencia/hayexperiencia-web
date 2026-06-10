@@ -99,7 +99,7 @@ export function generatePaymentPlan(input: PaymentPlanInput, now?: Date): Paymen
   let effectiveDate: Date
   if (input.ci_date_mode === 'dynamic') {
     let month = today.getMonth() + input.ci_dynamic_months
-    let year = today.getFullYear() + Math.floor(month / 12)
+    const year = today.getFullYear() + Math.floor(month / 12)
     month = month % 12
     const day = Math.min(today.getDate(), daysInMonth(year, month + 1))
     effectiveDate = new Date(year, month, day)
@@ -138,7 +138,7 @@ export function generatePaymentPlan(input: PaymentPlanInput, now?: Date): Paymen
 
   for (let i = 1; i <= ciInstallments; i++) {
     let month = today.getMonth() + i
-    let year = today.getFullYear() + Math.floor(month / 12)
+    const year = today.getFullYear() + Math.floor(month / 12)
     month = month % 12
     const day = Math.min(today.getDate(), daysInMonth(year, month + 1))
     const fecha = new Date(year, month, day)
