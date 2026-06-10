@@ -6,8 +6,8 @@ import VisitasSection from './VisitasSection';
 import CotizacionesSection from './CotizacionesSection';
 import CrmSection from './CrmSection';
 import InstrumentacionSection from './InstrumentacionSection';
-import ConexionesSection from './ConexionesSection';
 import Ga4Section from './Ga4Section';
+import MetaSection from './MetaSection';
 
 export default function AnalyticsPanel() {
   const [refreshKey, setRefreshKey] = useState(0);
@@ -38,7 +38,7 @@ export default function AnalyticsPanel() {
         <CrmSection refreshKey={refreshKey} />
         <InstrumentacionSection />
         <Ga4Section refreshKey={refreshKey} />
-        <ConexionesSection />
+        <MetaSection refreshKey={refreshKey} />
       </div>
 
       <footer className="max-w-6xl mx-auto px-4 py-6 text-center text-xs text-[var(--color-text-light)]">

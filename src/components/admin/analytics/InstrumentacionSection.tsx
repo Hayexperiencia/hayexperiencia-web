@@ -14,9 +14,7 @@ const EVENTOS = [
 ];
 
 const GAPS = [
-  { gap: 'Meta AEM (matching avanzado) sin configurar', impacto: 'Se pierde ~20% de atribución en Meta Ads', quien: 'Gabriel (HEI-84, admin Meta Business)' },
-  { gap: 'Domain Verification de Meta sin hacer', impacto: 'Aggregated Event Measurement (iOS) no funciona', quien: 'Gabriel (HEI-84)' },
-  { gap: 'Meta CAPI server-side no existe', impacto: '~30% de eventos perdidos por adblockers/iOS', quien: 'Claude (tras HEI-84)' },
+  { gap: 'Meta CAPI server-side no existe', impacto: '~30% de eventos perdidos por adblockers/iOS', quien: 'Claude (HEI-84 cerrada: dominio verificado + AEM activos desde 2026-06-10)' },
   { gap: 'Enhanced Conversions de Google sin activar', impacto: 'Prerrequisito para campañas AI Max', quien: 'Gabriel + Claude' },
   { gap: 'Cotizador/WhatsApp no se guardan en Postgres', impacto: 'El embudo propio queda incompleto', quien: 'Claude (tabla lead_attribution)' },
   { gap: 'GHL sin campo de fuente (UTM) en leads del cotizador', impacto: 'No se sabe qué canal trae los leads que cierran', quien: 'Claude' },
