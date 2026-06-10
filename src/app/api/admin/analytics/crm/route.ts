@@ -32,7 +32,7 @@ export async function GET(req: NextRequest) {
     const porPipeline = await Promise.all(
       pipelines.map(async (pl) => {
         try {
-          const d = (await ghl(`/opportunities?pipeline=${pl.id}&limit=1`)) as {
+          const d = (await ghl(`/opportunities?pipeline_id=${pl.id}&limit=1`)) as {
             meta?: { total?: number };
           };
           return { pipeline: pl.name, total: d.meta?.total ?? 0 };
