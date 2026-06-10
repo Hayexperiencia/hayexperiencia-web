@@ -1,23 +1,36 @@
 'use client';
 
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 
 type Estado = 'disponible' | 'reservado' | 'vendido';
 
-// Datos reales de ALUNA — actualizado abril 2026
-const LOTES = [
-  { id: 4,  area: 2500.00, precio: 498151819, estado: 'disponible' as Estado, tipo: 'Luz',    label: 'Lote 4' },
-  { id: 5,  area: 2500.00, precio: 498151819, estado: 'disponible' as Estado, tipo: 'Luz',    label: 'Lote 5' },
-  { id: 14, area: 2504.97, precio: 459340208, estado: 'disponible' as Estado, tipo: 'Luz',    label: 'Lote 14' },
-  { id: 16, area: 2547.93, precio: 507280602, estado: 'disponible' as Estado, tipo: 'Luz',    label: 'Lote 16' },
-  { id: 19, area: 2620.35, precio: 410865215, estado: 'disponible' as Estado, tipo: 'Bosque', label: 'Lote 19' },
-  { id: 20, area: 2627.30, precio: 480697680, estado: 'disponible' as Estado, tipo: 'Bosque', label: 'Lote 20' },
-  { id: 21, area: 2507.99, precio: 499673600, estado: 'disponible' as Estado, tipo: 'Bosque', label: 'Lote 21' },
-  { id: 29, area: 2500.33, precio: 498214671, estado: 'disponible' as Estado, tipo: 'Bosque', label: 'Lote 29' },
-  { id: 36, area: 2500.25, precio: 636369422, estado: 'disponible' as Estado, tipo: 'Aire',   label: 'Lote 36' },
-];
+// Inventario ALUNA: fuente única = BD via /api/quotation/units (no hardcodear,
+// los precios cambian y un hardcode viejo mostró lotes a $40M menos del valor real).
+type Lote = { id: number; area: number; precio: number; estado: Estado; tipo: string; label: string };
 
-const LOTES_VENDIDOS = 30; // De 39 lotes totales
+interface ApiUnit {
+  unit_code: string;
+  unit_type: string;
+  area_total_m2: string | number;
+  list_price: string | number;
+  unit_status: string;
+}
+
+function titleCase(s: string): string {
+  return s ? s.charAt(0).toUpperCase() + s.slice(1).toLowerCase() : s;
+}
+
+function mapUnit(u: ApiUnit): Lote {
+  const num = parseInt((u.unit_code.match(/\d+/) || ['0'])[0], 10);
+  return {
+    id: num,
+    area: Number(u.area_total_m2),
+    precio: Number(u.list_price),
+    estado: (u.unit_status as Estado) || 'disponible',
+    tipo: titleCase(u.unit_type),
+    label: u.unit_code,
+  };
+}
 
 const CONFIG = {
   valorizacionAnual: 0.07,    // 7% anual
@@ -52,8 +65,24 @@ export default function AlunaCotizador() {
   const [tasaEA, setTasaEA] = useState(12);
   const [plazoCredito, setPlazoCredito] = useState(15);
   const [downloading, setDownloading] = useState(false);
+  const [lotes, setLotes] = useState<Lote[]>([]);
+  const [loadingLotes, setLoadingLotes] = useState(true);
 
-  const lote = selected !== null ? LOTES.find(l => l.id === selected) : null;
+  useEffect(() => {
+    let cancelled = false;
+    fetch('/api/quotation/units?project_slug=aluna')
+      .then(r => r.ok ? r.json() : Promise.reject(new Error(`HTTP ${r.status}`)))
+      .then((d: { units?: ApiUnit[] } | ApiUnit[]) => {
+        const units = Array.isArray(d) ? d : (d.units ?? []);
+        if (!cancelled) setLotes(units.map(mapUnit).sort((a, b) => a.id - b.id));
+      })
+      .catch(() => { /* deja la lista vacía; el grid muestra estado de carga/sin datos */ })
+      .finally(() => { if (!cancelled) setLoadingLotes(false); });
+    return () => { cancelled = true; };
+  }, []);
+
+  const disponibles = lotes.filter(l => l.estado === 'disponible').length;
+  const lote = selected !== null ? lotes.find(l => l.id === selected) : null;
 
   const planPagos = useMemo(() => {
     if (!lote) return [];
@@ -142,12 +171,14 @@ export default function AlunaCotizador() {
     <section id="cotizador" className="py-16 bg-gray-50/50">
       <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
         <h2 className="text-3xl font-bold text-[var(--color-primary)] mb-2">Cotizador</h2>
-        <p className="text-[var(--color-text-light)] mb-2">9 lotes disponibles de 39 — {Math.round((LOTES_VENDIDOS / 39) * 100)}% vendido</p>
+        <p className="text-[var(--color-text-light)] mb-2">
+          {loadingLotes ? 'Cargando inventario…' : `${disponibles} lotes disponibles de 39 — ${Math.round(((39 - disponibles) / 39) * 100)}% vendido`}
+        </p>
         <p className="text-sm text-[var(--color-text-light)] mb-8">Entrega inmediata. Selecciona un lote para ver la cotización.</p>
 
         {/* Grid de lotes */}
         <div className="grid grid-cols-3 sm:grid-cols-5 gap-3 mb-10">
-          {LOTES.map(l => (
+          {lotes.map(l => (
             <button
               key={l.id}
               disabled={l.estado === 'vendido'}

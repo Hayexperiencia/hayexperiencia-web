@@ -87,8 +87,9 @@ function calculateFrenchPayment(principal: number, rateEA: number, termMonths: n
   return Math.round(principal * r / (1 - Math.pow(1 + r, -termMonths)))
 }
 
-export function generatePaymentPlan(input: PaymentPlanInput): PaymentPlan {
-  const today = new Date()
+export function generatePaymentPlan(input: PaymentPlanInput, now?: Date): PaymentPlan {
+  // `now` inyectable para tests deterministas; en producción default = fecha actual.
+  const today = now ?? new Date()
 
   // 1. Cuota inicial
   const ciAmount = Math.round(input.list_price * input.ci_percentage / 100)
