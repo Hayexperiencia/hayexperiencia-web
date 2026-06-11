@@ -1,123 +1,75 @@
 import { NextResponse } from 'next/server'
-import {
-  calculatePlanForUnit,
-  generateAndSavePdf,
-  loadProjectAndUnit,
-  nextQuotationCode,
-  persistQuotation,
-  upsertCotizadorContact,
-} from '@/lib/quotation-pipeline'
-
-let pool: import('pg').Pool | null = null
-
-async function getPool() {
-  if (!pool) {
-    const { Pool } = await import('pg')
-    pool = new Pool({ connectionString: process.env.DATABASE_URL })
-  }
-  return pool
-}
+import { getPool } from '@/lib/pg'
+import { saveQuotationFull } from '@/lib/quotation-pipeline'
+import { asPositiveInt, parseOverrides, parseClientData, parseChannel } from '@/lib/validate'
+import { rateLimit, clientIp } from '@/lib/rate-limit'
 
 export async function POST(request: Request) {
-  const body = await request.json()
-  const { unit_id, client_data, channel } = body as {
-    unit_id?: number
-    client_data?: { name?: string; phone?: string; email?: string; city?: string }
-    channel?: string
+  if (!rateLimit(`save:${clientIp(request)}`, 6)) {
+    return NextResponse.json({ error: 'Demasiadas solicitudes, intenta en un minuto' }, { status: 429 })
   }
 
-  if (!unit_id) {
+  const body = await request.json().catch(() => null)
+  if (!body) return NextResponse.json({ error: 'Body JSON invalido' }, { status: 400 })
+
+  const unitId = asPositiveInt(body.unit_id)
+  if (!unitId) {
     return NextResponse.json({ error: 'unit_id es requerido' }, { status: 400 })
   }
-  if (!client_data?.name) {
-    return NextResponse.json(
-      { error: 'client_data.name es requerido' },
-      { status: 400 }
-    )
+
+  const parsed = parseClientData(body.client_data)
+  if ('error' in parsed) {
+    return NextResponse.json({ error: parsed.error }, { status: 400 })
   }
+
+  const overrides = parseOverrides(body.overrides)
+  const channel = parseChannel(body.channel, 'harry')
 
   const p = await getPool()
   const client = await p.connect()
   try {
-    const calc = await calculatePlanForUnit(client, unit_id)
-    if (!calc) {
-      return NextResponse.json(
-        { error: 'Unidad no encontrada o inactiva' },
-        { status: 404 }
-      )
+    const result = await saveQuotationFull(client, {
+      unitId,
+      overrides,
+      clientData: parsed.data,
+      channel,
+    })
+    if ('error' in result) {
+      return NextResponse.json({ error: result.error }, { status: result.status })
     }
 
-    const { proj, unitData } = await loadProjectAndUnit(client, calc.project_id, unit_id)
-    if (!proj) {
-      return NextResponse.json({ error: 'Proyecto no encontrado' }, { status: 404 })
-    }
-
-    const quotation_code = await nextQuotationCode(client)
-
-    const pdfResult = await generateAndSavePdf({
-      unit: unitData ?? {},
-      project: {
-        slug: proj.slug,
-        name: proj.name,
-        logo_url: proj.logo_url,
-        cover_image_url: proj.cover_image_url,
-        description: proj.description,
-        location: proj.location,
-        delivery_date_text: proj.delivery_date_text,
-      },
-      paymentPlan: calc.payment_plan as unknown as Record<string, unknown>,
-      quotationCode: quotation_code,
-      clientName: client_data.name,
-      clientPhone: client_data.phone,
-      clientEmail: client_data.email,
-    })
-
-    const ghl_contact_id = await upsertCotizadorContact({
-      name: client_data.name,
-      phone: client_data.phone || null,
-      email: client_data.email || null,
-      projectSlug: proj.slug,
-      quotationCode: quotation_code,
-      pdfUrl: pdfResult.absoluteUrl,
-      channel: channel || 'harry',
-      codigoInmueble: unitData?.unit_code || null,
-    })
-
-    const inserted = await persistQuotation(client, {
-      quotationCode: quotation_code,
-      unitId: unit_id,
-      projectId: calc.project_id,
-      paymentPlan: calc.payment_plan as unknown as Record<string, unknown>,
-      clientData: client_data,
-      ghlContactId: ghl_contact_id,
-      channel: channel || 'harry',
-      pdfUrl: pdfResult.relativeUrl,
-    })
-
+    const plan = result.calc.payment_plan
     return NextResponse.json({
-      quotation_code: inserted.quotation_code,
-      quotation_id: inserted.id,
-      ghl_contact_id,
-      pdf_url: pdfResult.absoluteUrl,
-      pdf_status: pdfResult.status,
-      project: { slug: proj.slug, name: proj.name },
+      quotation_code: result.quotation_code,
+      quotation_id: result.quotation_id,
+      ghl_contact_id: result.ghl_contact_id,
+      pdf_url: result.pdf_url,
+      pdf_status: result.pdf_status,
+      share_url: result.share_url,
+      valid_until: plan.valid_until_iso,
+      project: { slug: result.calc.project.slug, name: result.calc.project.name },
       unit: {
-        id: calc.unit.id,
-        unit_code: calc.unit.unit_code,
-        unit_type: calc.unit.unit_type,
+        id: result.calc.unit.id,
+        unit_code: result.calc.unit.unit_code,
+        unit_type: result.calc.unit.unit_type,
       },
       summary: {
-        list_price: calc.payment_plan.list_price,
-        list_price_fmt: calc.payment_plan.list_price_fmt,
-        separation_value: calc.payment_plan.separation_value,
-        ci_amount: calc.payment_plan.ci_amount,
-        ci_installments: calc.payment_plan.ci_installments,
-        ci_monthly: calc.payment_plan.ci_monthly,
-        financing_amount: calc.payment_plan.financing_amount,
-        total_monthly: calc.payment_plan.total_monthly_with_insurance,
-        income_required: calc.payment_plan.income_required,
+        list_price: plan.list_price,
+        list_price_fmt: plan.list_price_fmt,
+        separation_value: plan.separation_value,
+        ci_amount: plan.ci_amount,
+        ci_installments: plan.ci_installments,
+        ci_monthly: plan.ci_monthly,
+        financing_amount: plan.financing_amount,
+        total_monthly: plan.total_monthly_with_insurance,
+        income_required: plan.income_required,
+        cash_price: plan.cash_price,
+        cash_discount_pct: plan.cash_discount_pct,
       },
     })
+  } catch (e) {
+    console.error('quick-save error:', e)
+    return NextResponse.json({ error: 'Error guardando la cotizacion' }, { status: 500 })
   } finally {
     client.release()
   }

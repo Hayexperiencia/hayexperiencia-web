@@ -69,7 +69,9 @@ export async function PUT(request: Request) {
     'reference_rate_ea', 'loan_term_years', 'max_loan_pct',
     'life_insurance_monthly', 'fire_insurance_rate_annual',
     'discount_rate_monthly', 'late_rate_monthly',
-    'is_active', 'sort_order', 'cover_image_url', 'logo_url'
+    'is_active', 'sort_order', 'cover_image_url', 'logo_url',
+    'description', 'cash_discount_pct', 'appreciation_rate_annual',
+    'contact_whatsapp', 'advisor_name', 'quote_validity_days'
   ]
 
   const sets: string[] = []

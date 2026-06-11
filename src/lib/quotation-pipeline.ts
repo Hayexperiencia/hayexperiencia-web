@@ -1,6 +1,7 @@
 import { writeFile, mkdir, stat } from 'fs/promises'
 import path from 'path'
-import { generatePaymentPlan } from '@/lib/quotation-engine'
+import crypto from 'node:crypto'
+import { generatePaymentPlan, type PlanOverrides, type PaymentPlan } from '@/lib/quotation-engine'
 import type { PoolClient } from 'pg'
 
 const PDF_SERVICE_URL = process.env.PDF_SERVICE_URL || 'http://host.docker.internal:3001'
@@ -151,54 +152,20 @@ export async function nextQuotationCode(client: PoolClient): Promise<string> {
   return `HEI-${year}-${counter}`
 }
 
-export async function loadProjectAndUnit(client: PoolClient, projectId: number, unitId: number) {
-  const projectResult = await client.query(
-    'SELECT slug, name, logo_url, cover_image_url, description, location, delivery_date_text FROM hei_projects WHERE id = $1',
-    [projectId]
-  )
-  const proj = projectResult.rows[0]
-  if (!proj) return { proj: null, unitData: null }
-
-  const unitResult = await client.query(
-    `
-    SELECT u.unit_code, u.unit_type, u.area_total_m2, u.area_private_m2,
-           u.area_terrace_m2, u.bedrooms, u.bathrooms, u.has_parking, u.has_storage,
-           u.description, COALESCE(u.image_url, ti.image_url, p.cover_image_url) as resolved_image_url
-    FROM hei_inventory_units u
-    JOIN hei_projects p ON p.id = u.project_id
-    LEFT JOIN hei_unit_type_images ti ON ti.project_id = u.project_id AND ti.unit_type = u.unit_type AND ti.sort_order = 0
-    WHERE u.id = $1
-  `,
-    [unitId]
-  )
-  return { proj, unitData: unitResult.rows[0] || null }
-}
-
 export interface PersistArgs {
   quotationCode: string
   unitId: number
   projectId: number
-  paymentPlan: Record<string, unknown> & {
-    list_price?: unknown
-    separation_value?: unknown
-    ci_percentage?: unknown
-    ci_amount?: unknown
-    ci_installments?: unknown
-    ci_monthly?: unknown
-    ci_target_date_iso?: unknown
-    financing_amount?: unknown
-    reference_rate_ea?: unknown
-    loan_term_months?: unknown
-    total_monthly_with_insurance?: unknown
-    income_required?: unknown
-  }
-  clientData: { name?: string; phone?: string; email?: string; city?: string } | null
+  paymentPlan: PaymentPlan
+  clientData: { name?: string; phone?: string | null; email?: string | null; city?: string | null } | null
   ghlContactId: string | null
   channel: string
   pdfUrl: string | null
 }
 
 export async function persistQuotation(client: PoolClient, args: PersistArgs) {
+  const shareToken = crypto.randomBytes(6).toString('hex')
+  const plan = args.paymentPlan
   const { rows } = await client.query(
     `
     INSERT INTO hei_quotations (
@@ -208,26 +175,27 @@ export async function persistQuotation(client: PoolClient, args: PersistArgs) {
       financing_amount, reference_rate_ea, loan_term_months,
       monthly_payment_est, income_required_est,
       client_name, client_phone, client_email, client_city,
-      ghl_contact_id, channel, pdf_url
-    ) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$20,$21,$22)
-    RETURNING id, quotation_code
+      ghl_contact_id, channel, pdf_url,
+      share_token, valid_until, overrides, plan_snapshot
+    ) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$20,$21,$22,$23,$24,$25,$26)
+    RETURNING id, quotation_code, share_token
   `,
     [
       args.quotationCode,
       args.unitId,
       args.projectId,
-      args.paymentPlan.list_price,
-      args.paymentPlan.separation_value,
-      args.paymentPlan.ci_percentage,
-      args.paymentPlan.ci_amount,
-      args.paymentPlan.ci_installments,
-      args.paymentPlan.ci_monthly,
-      args.paymentPlan.ci_target_date_iso,
-      args.paymentPlan.financing_amount,
-      args.paymentPlan.reference_rate_ea,
-      args.paymentPlan.loan_term_months,
-      args.paymentPlan.total_monthly_with_insurance,
-      args.paymentPlan.income_required,
+      plan.list_price,
+      plan.separation_value,
+      plan.ci_percentage,
+      plan.ci_amount,
+      plan.ci_installments,
+      plan.ci_monthly,
+      plan.ci_target_date_iso,
+      plan.financing_amount,
+      plan.reference_rate_ea,
+      plan.loan_term_months,
+      plan.total_monthly_with_insurance,
+      plan.income_required,
       args.clientData?.name || null,
       args.clientData?.phone || null,
       args.clientData?.email || null,
@@ -235,24 +203,42 @@ export async function persistQuotation(client: PoolClient, args: PersistArgs) {
       args.ghlContactId,
       args.channel || 'web',
       args.pdfUrl,
+      shareToken,
+      plan.valid_until_iso,
+      plan.overrides_applied ? JSON.stringify(plan.overrides_applied) : null,
+      JSON.stringify(plan),
     ]
   )
-  return rows[0] as { id: number; quotation_code: string }
+  return rows[0] as { id: number; quotation_code: string; share_token: string }
 }
 
-export async function calculatePlanForUnit(client: PoolClient, unitId: number) {
+export interface CalcResult {
+  project_id: number
+  unit: Record<string, unknown> & { id: number; unit_code: string }
+  project: Record<string, unknown> & { slug: string; name: string }
+  payment_plan: PaymentPlan
+}
+
+export async function calculatePlanForUnit(
+  client: PoolClient,
+  unitId: number,
+  overrides?: PlanOverrides
+): Promise<CalcResult | null> {
   const { rows } = await client.query(
     `
     SELECT
-      u.list_price, u.unit_code, u.unit_type, u.project_id,
+      u.list_price, u.unit_code, u.unit_type, u.project_id, u.unit_status,
       u.area_total_m2, u.area_private_m2, u.area_built_m2, u.area_terrace_m2,
       u.bedrooms, u.bathrooms, u.has_parking, u.has_storage,
       p.id as project_id_full, p.slug as project_slug, p.name as project_name,
+      p.project_type,
       p.separation_value, p.ci_percentage,
       p.ci_target_date::text as ci_target_date,
       p.ci_date_mode, p.ci_dynamic_months,
       p.reference_rate_ea, p.loan_term_years, p.max_loan_pct,
       p.life_insurance_monthly, p.fire_insurance_rate_annual,
+      p.cash_discount_pct, p.appreciation_rate_annual, p.quote_validity_days,
+      p.contact_whatsapp, p.advisor_name,
       p.logo_url as project_logo_url, p.delivery_date_text,
       p.description as project_description,
       p.cover_image_url as project_cover_image_url,
@@ -268,25 +254,33 @@ export async function calculatePlanForUnit(client: PoolClient, unitId: number) {
   )
   if (rows.length === 0) return null
   const u = rows[0]
-  const plan = generatePaymentPlan({
-    list_price: Number(u.list_price),
-    separation_value: Number(u.separation_value),
-    ci_percentage: Number(u.ci_percentage),
-    ci_target_date: u.ci_target_date,
-    ci_date_mode: u.ci_date_mode,
-    ci_dynamic_months: Number(u.ci_dynamic_months),
-    reference_rate_ea: Number(u.reference_rate_ea),
-    loan_term_years: Number(u.loan_term_years),
-    max_loan_pct: Number(u.max_loan_pct),
-    life_insurance_monthly: Number(u.life_insurance_monthly),
-    fire_insurance_rate_annual: Number(u.fire_insurance_rate_annual),
-  })
+  const plan = generatePaymentPlan(
+    {
+      list_price: Number(u.list_price),
+      separation_value: Number(u.separation_value),
+      ci_percentage: Number(u.ci_percentage),
+      ci_target_date: u.ci_target_date,
+      ci_date_mode: u.ci_date_mode,
+      ci_dynamic_months: Number(u.ci_dynamic_months),
+      reference_rate_ea: Number(u.reference_rate_ea),
+      loan_term_years: Number(u.loan_term_years),
+      max_loan_pct: Number(u.max_loan_pct),
+      life_insurance_monthly: Number(u.life_insurance_monthly),
+      fire_insurance_rate_annual: Number(u.fire_insurance_rate_annual),
+      cash_discount_pct: Number(u.cash_discount_pct) || 0,
+      appreciation_rate_annual: Number(u.appreciation_rate_annual) || 0,
+      quote_validity_days: Number(u.quote_validity_days) || 15,
+    },
+    undefined,
+    overrides
+  )
   return {
     project_id: u.project_id_full as number,
     unit: {
       id: unitId,
       unit_code: u.unit_code,
       unit_type: u.unit_type,
+      unit_status: u.unit_status,
       area_total_m2: u.area_total_m2,
       area_private_m2: u.area_private_m2,
       area_built_m2: u.area_built_m2,
@@ -301,12 +295,125 @@ export async function calculatePlanForUnit(client: PoolClient, unitId: number) {
     project: {
       slug: u.project_slug,
       name: u.project_name,
+      project_type: u.project_type,
       logo_url: u.project_logo_url,
       delivery_date_text: u.delivery_date_text,
       description: u.project_description,
       cover_image_url: u.project_cover_image_url,
       location: u.project_location,
+      contact_whatsapp: u.contact_whatsapp,
+      advisor_name: u.advisor_name,
     },
     payment_plan: plan,
+  }
+}
+
+export interface SaveResult {
+  quotation_code: string
+  quotation_id: number
+  share_token: string
+  share_url: string
+  ghl_contact_id: string | null
+  pdf_url: string | null
+  pdf_status: PdfStatus
+  calc: CalcResult
+}
+
+/**
+ * Flujo completo de guardado (v2): SIEMPRE recalcula server-side desde la BD
+ * (el cliente solo aporta overrides acotados, nunca montos), genera PDF,
+ * upsertea contacto en GHL y persiste con share token.
+ * Usado por /api/quotation/save y /api/quotation/quick-save.
+ */
+export async function saveQuotationFull(
+  client: PoolClient,
+  args: {
+    unitId: number
+    overrides?: PlanOverrides
+    clientData: { name: string; phone: string | null; email: string | null; city: string | null } | null
+    channel: string
+  }
+): Promise<SaveResult | { error: string; status: number }> {
+  const calc = await calculatePlanForUnit(client, args.unitId, args.overrides)
+  if (!calc) return { error: 'Unidad no encontrada o inactiva', status: 404 }
+
+  const quotation_code = await nextQuotationCode(client)
+
+  const pdfResult = await generateAndSavePdf({
+    unit: calc.unit,
+    project: calc.project,
+    paymentPlan: calc.payment_plan as unknown as Record<string, unknown>,
+    quotationCode: quotation_code,
+    clientName: args.clientData?.name,
+    clientPhone: args.clientData?.phone ?? undefined,
+    clientEmail: args.clientData?.email ?? undefined,
+  })
+
+  let ghl_contact_id: string | null = null
+  if (args.clientData?.name) {
+    ghl_contact_id = await upsertCotizadorContact({
+      name: args.clientData.name,
+      phone: args.clientData.phone,
+      email: args.clientData.email,
+      projectSlug: calc.project.slug,
+      quotationCode: quotation_code,
+      pdfUrl: pdfResult.absoluteUrl,
+      channel: args.channel,
+      codigoInmueble: calc.unit.unit_code,
+    })
+  }
+
+  const inserted = await persistQuotation(client, {
+    quotationCode: quotation_code,
+    unitId: args.unitId,
+    projectId: calc.project_id,
+    paymentPlan: calc.payment_plan,
+    clientData: args.clientData,
+    ghlContactId: ghl_contact_id,
+    channel: args.channel,
+    pdfUrl: pdfResult.relativeUrl,
+  })
+
+  return {
+    quotation_code: inserted.quotation_code,
+    quotation_id: inserted.id,
+    share_token: inserted.share_token,
+    share_url: `${SITE_URL}/cotizacion/${inserted.share_token}`,
+    ghl_contact_id,
+    pdf_url: pdfResult.absoluteUrl,
+    pdf_status: pdfResult.status,
+    calc,
+  }
+}
+
+/** Registra un evento del funnel del cotizador. Nunca lanza (fire-and-forget). */
+export async function trackCotizadorEvent(
+  client: PoolClient,
+  args: {
+    sessionHash: string | null
+    event: string
+    projectSlug?: string | null
+    unitId?: number | null
+    quotationCode?: string | null
+    channel?: string
+    meta?: Record<string, unknown> | null
+  }
+): Promise<void> {
+  try {
+    await client.query(
+      `INSERT INTO hei_cotizador_events (session_hash, event, project_slug, unit_id, quotation_code, channel, meta)
+       VALUES ($1,$2,$3,$4,$5,$6,$7)`,
+      [
+        args.sessionHash,
+        args.event,
+        args.projectSlug ?? null,
+        args.unitId ?? null,
+        args.quotationCode ?? null,
+        args.channel ?? 'web',
+        args.meta ? JSON.stringify(args.meta) : null,
+      ]
+    )
+  } catch (e) {
+    console.error('trackCotizadorEvent error:', e)
   }
 }

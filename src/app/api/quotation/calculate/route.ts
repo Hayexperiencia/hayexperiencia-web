@@ -1,99 +1,41 @@
 import { NextResponse } from 'next/server'
-import { generatePaymentPlan } from '@/lib/quotation-engine'
-
-let pool: import('pg').Pool | null = null
-
-async function getPool() {
-  if (!pool) {
-    const { Pool } = await import('pg')
-    pool = new Pool({ connectionString: process.env.DATABASE_URL })
-  }
-  return pool
-}
+import { getPool } from '@/lib/pg'
+import { calculatePlanForUnit } from '@/lib/quotation-pipeline'
+import { asPositiveInt, parseOverrides } from '@/lib/validate'
+import { rateLimit, clientIp } from '@/lib/rate-limit'
 
 export async function POST(request: Request) {
-  const { unit_id } = await request.json()
+  if (!rateLimit(`calc:${clientIp(request)}`, 60)) {
+    return NextResponse.json({ error: 'Demasiadas solicitudes, intenta en un minuto' }, { status: 429 })
+  }
 
-  if (!unit_id) {
+  const body = await request.json().catch(() => null)
+  if (!body) return NextResponse.json({ error: 'Body JSON invalido' }, { status: 400 })
+
+  const unitId = asPositiveInt(body.unit_id)
+  if (!unitId) {
     return NextResponse.json({ error: 'unit_id es requerido' }, { status: 400 })
   }
+  // Overrides acotados por el motor (ci_percentage, ci_installments,
+  // loan_term_years, reference_rate_ea) — soporta el body plano legacy de Harry
+  // ({"unit_id":42,"ci_installments":18}) y el shape v2 ({overrides:{...}}).
+  const overrides = parseOverrides(body.overrides) ?? parseOverrides(body)
 
   const p = await getPool()
   const client = await p.connect()
   try {
-    const { rows } = await client.query(`
-      SELECT
-        u.list_price, u.unit_code, u.unit_type,
-        u.area_total_m2, u.area_private_m2, u.area_built_m2, u.area_terrace_m2,
-        u.bedrooms, u.bathrooms, u.has_parking, u.has_storage,
-        p.slug as project_slug, p.name as project_name,
-        p.separation_value, p.ci_percentage,
-        p.ci_target_date::text as ci_target_date,
-        p.ci_date_mode, p.ci_dynamic_months,
-        p.reference_rate_ea, p.loan_term_years, p.max_loan_pct,
-        p.life_insurance_monthly,
-        p.fire_insurance_rate_annual,
-        p.logo_url as project_logo_url,
-        p.delivery_date_text,
-        p.description as project_description,
-        p.cover_image_url as project_cover_image_url,
-        p.location as project_location,
-        u.description as unit_description
-        ,COALESCE(u.image_url, ti.image_url, p.cover_image_url) as resolved_image_url
-      FROM hei_inventory_units u
-      JOIN hei_projects p ON p.id = u.project_id
-      LEFT JOIN hei_unit_type_images ti ON ti.project_id = u.project_id AND ti.unit_type = u.unit_type AND ti.sort_order = 0
-      WHERE u.id = $1 AND u.is_active = true
-    `, [unit_id])
-
-    if (rows.length === 0) {
+    const calc = await calculatePlanForUnit(client, unitId, overrides)
+    if (!calc) {
       return NextResponse.json({ error: 'Unidad no encontrada' }, { status: 404 })
     }
-
-    const unit = rows[0]
-
-    const plan = generatePaymentPlan({
-      list_price: Number(unit.list_price),
-      separation_value: Number(unit.separation_value),
-      ci_percentage: Number(unit.ci_percentage),
-      ci_target_date: unit.ci_target_date,
-      ci_date_mode: unit.ci_date_mode,
-      ci_dynamic_months: Number(unit.ci_dynamic_months),
-      reference_rate_ea: Number(unit.reference_rate_ea),
-      loan_term_years: Number(unit.loan_term_years),
-      max_loan_pct: Number(unit.max_loan_pct),
-      life_insurance_monthly: Number(unit.life_insurance_monthly),
-      fire_insurance_rate_annual: Number(unit.fire_insurance_rate_annual),
-    })
-
     return NextResponse.json({
-      unit: {
-        id: unit_id,
-        unit_code: unit.unit_code,
-        unit_type: unit.unit_type,
-        area_total_m2: unit.area_total_m2,
-        area_private_m2: unit.area_private_m2,
-        area_built_m2: unit.area_built_m2,
-        area_terrace_m2: unit.area_terrace_m2,
-        bedrooms: unit.bedrooms,
-        bathrooms: unit.bathrooms,
-        has_parking: unit.has_parking,
-        has_storage: unit.has_storage,
-        description: unit.unit_description,
-        resolved_image_url: unit.resolved_image_url,
-      },
-      project: {
-        slug: unit.project_slug,
-        name: unit.project_name,
-        logo_url: unit.project_logo_url,
-        delivery_date_text: unit.delivery_date_text,
-        description: unit.project_description,
-        cover_image_url: unit.project_cover_image_url,
-        location: unit.project_location,
-      },
-      payment_plan: plan,
+      unit: calc.unit,
+      project: calc.project,
+      payment_plan: calc.payment_plan,
     })
-
+  } catch (e) {
+    console.error('calculate error:', e)
+    return NextResponse.json({ error: 'Error calculando el plan' }, { status: 500 })
   } finally {
     client.release()
   }

@@ -1,14 +1,5 @@
 import { NextResponse } from 'next/server'
-
-let pool: import('pg').Pool | null = null
-
-async function getPool() {
-  if (!pool) {
-    const { Pool } = await import('pg')
-    pool = new Pool({ connectionString: process.env.DATABASE_URL })
-  }
-  return pool
-}
+import { getPool } from '@/lib/pg'
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url)
@@ -23,12 +14,13 @@ export async function GET(request: Request) {
   const p = await getPool()
   const client = await p.connect()
   try {
+    // Orden natural: "Lote 2" antes que "Lote 10" (alfabetico puro los invierte)
     const { rows } = await client.query(`
       SELECT u.id, u.unit_code, u.unit_type, u.tower, u.floor_number,
              u.area_total_m2, u.area_private_m2, u.area_built_m2, u.area_terrace_m2,
              u.bedrooms, u.bathrooms,
              u.has_parking, u.parking_type, u.has_storage,
-             u.view_description, u.list_price, u.unit_status,
+             u.view_description, u.list_price, u.unit_status, u.description,
              s.name as stage_name,
              COALESCE(u.image_url, ti.image_url, p.cover_image_url) as resolved_image_url,
              ti.caption as type_image_caption
@@ -43,7 +35,8 @@ export async function GET(request: Request) {
         AND u.is_active = true
         AND ($2::integer IS NULL OR u.stage_id = $2::integer)
         AND u.unit_status = $3
-      ORDER BY u.unit_code
+      ORDER BY NULLIF(regexp_replace(u.unit_code, '\\D', '', 'g'), '')::bigint NULLS LAST,
+               u.unit_code
     `, [project_slug, stage_id ? parseInt(stage_id) : null, status])
     return NextResponse.json(rows)
   } finally {

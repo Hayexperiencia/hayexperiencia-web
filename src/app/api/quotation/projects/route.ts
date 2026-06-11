@@ -1,14 +1,5 @@
 import { NextResponse } from 'next/server'
-
-let pool: import('pg').Pool | null = null
-
-async function getPool() {
-  if (!pool) {
-    const { Pool } = await import('pg')
-    pool = new Pool({ connectionString: process.env.DATABASE_URL })
-  }
-  return pool
-}
+import { getPool } from '@/lib/pg'
 
 export async function GET() {
   const p = await getPool()
@@ -22,6 +13,8 @@ export async function GET() {
         p.ci_target_date, p.ci_date_mode, p.ci_dynamic_months,
         p.reference_rate_ea, p.loan_term_years, p.max_loan_pct,
         p.life_insurance_monthly, p.fire_insurance_rate_annual,
+        p.cash_discount_pct, p.appreciation_rate_annual, p.quote_validity_days,
+        p.contact_whatsapp, p.advisor_name,
         COALESCE(
           json_agg(
             json_build_object('id', s.id, 'name', s.name, 'stage_order', s.stage_order)

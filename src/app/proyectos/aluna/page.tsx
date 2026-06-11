@@ -3,7 +3,7 @@ import Link from "next/link";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import ProjectGallery from "@/components/propiedades/ProjectGallery";
-import AlunaCotizador from "@/components/proyectos/AlunaCotizador";
+import CotizadorApp from "@/components/cotizador/CotizadorApp";
 import ProjectSidebar from "@/components/proyectos/ProjectSidebar";
 import { getProject } from "@/lib/strapi";
 import { markdownToHtml } from "@/lib/markdown";
@@ -313,8 +313,10 @@ export default async function AlunaPage() {
         </div>
       </section>
 
-      {/* Cotizador */}
-      <AlunaCotizador />
+      {/* Cotizador — central v2 embebido (inventario y parametros desde BD) */}
+      <div id="cotizador" className="bg-gray-50/50 scroll-mt-20">
+        <CotizadorApp initialSlug="aluna" />
+      </div>
 
       {/* Alianza */}
       {project.partner && (
