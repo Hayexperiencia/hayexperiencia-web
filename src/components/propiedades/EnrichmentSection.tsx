@@ -55,9 +55,9 @@ export default function EnrichmentSection({ enriched }: { enriched: StrapiProper
   if (!hasMarket && !hasProximity && !hasDepreciation) return null;
 
   return (
-    <div className="space-y-6 border-t border-gray-200 pt-8">
+    <div className="space-y-6">
       <div>
-        <h3 className="text-xl font-semibold text-[var(--color-primary)] mb-1">
+        <h3 className="text-lg font-semibold text-[var(--color-primary)] mb-1">
           Posición de mercado
         </h3>
         <p className="text-xs text-gray-500">

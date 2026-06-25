@@ -13,6 +13,8 @@ import PropertyFaq from "@/components/propiedades/PropertyFaq";
 import ContactForm from "@/components/ui/ContactForm";
 import PropertyViewTracker from "@/components/analytics/PropertyViewTracker";
 import { marketHeroProof } from "@/lib/market";
+import { buildPropertyHeadline } from "@/lib/property-headline";
+import { getZonaByCity } from "@/lib/zonas";
 import { buildPropertyFaqs, buildPropertyJsonLd } from "@/lib/property-jsonld";
 import type { Metadata } from "next";
 
@@ -36,7 +38,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const type = getPropertyType(property.id_property_type);
   const ubic = ubicacion(property);
   const url = `${SITE}/propiedades/${id}`;
-  const title = `${type} en ${ubic} - ${price}`;
+  const title = `${buildPropertyHeadline(property, type)} - ${price}`;
   const specs = [
     formatArea(property.area),
     property.bedrooms ? `${property.bedrooms} hab` : "",
@@ -64,7 +66,7 @@ export default async function PropertyDetailPage({ params }: PageProps) {
   const price = isSale ? formatPrice(property.sale_price) : formatPrice(property.rent_price);
   const priceM2 = isSale ? getPricePerM2(property.sale_price, property.area) : "";
   const type = getPropertyType(property.id_property_type);
-  const ubic = ubicacion(property);
+  const headline = buildPropertyHeadline(property, type);
   const description = property.observations ? property.observations : "";
 
   // Enriched data (graceful fallback)
@@ -118,7 +120,7 @@ export default async function PropertyDetailPage({ params }: PageProps) {
               <span className="text-sm text-[var(--color-text-light)]">Ref: {property.id_property}</span>
             </div>
             <h1 className="text-2xl sm:text-3xl font-bold text-[var(--color-primary)]">
-              {type} en {ubic}
+              {headline}
             </h1>
             <div className="mt-2 flex items-baseline gap-2 flex-wrap">
               <span className="text-3xl sm:text-4xl font-bold text-[var(--color-primary)]">{price}</span>
@@ -147,12 +149,22 @@ export default async function PropertyDetailPage({ params }: PageProps) {
             </div>
           </div>
 
-          {/* Posición de mercado — subida al tercio superior (el diferenciador) */}
-          {enriched && <EnrichmentSection enriched={enriched} />}
-
-          {/* Inteligencia de mercado de la zona — para TODA propiedad en zona conocida
-              (es el dato de mercado correcto en lotes/fincas sin benchmark individual). */}
-          <ZonaMercadoCard city={property.city_label} typeLabel={type} />
+          {/* Esta propiedad frente al mercado: texto resumen + posición individual + zona.
+              Solo en propiedades del Oriente (zona conocida). */}
+          {getZonaByCity(property.city_label) && (
+            <section className="border-t border-gray-200 pt-8">
+              <h3 className="text-xl font-semibold text-[var(--color-primary)] mb-2">Esta propiedad frente al mercado</h3>
+              <p className="text-sm text-[var(--color-text-light)] leading-relaxed mb-5 max-w-2xl">
+                En Hay Experiencia no te mostramos solo la propiedad: la comparamos con el mercado
+                real del Oriente Antioqueño para que sepas si su precio es justo y decidas con datos,
+                no con corazonadas.
+              </p>
+              {enriched && <EnrichmentSection enriched={enriched} />}
+              <div className="mt-4">
+                <ZonaMercadoCard city={property.city_label} typeLabel={type} />
+              </div>
+            </section>
+          )}
 
           {/* Descripción */}
           {description && (
@@ -222,15 +234,16 @@ export default async function PropertyDetailPage({ params }: PageProps) {
             </div>
           )}
 
-          {/* CTA secundario: cotizador */}
+          {/* CTA provisional: el cotizador lead-magnet (modal multi-paso → Capiolab) va aquí
+              cuando esté listo. Hasta entonces, NO se enlaza al cotizador de proyectos. */}
           {isSale && (
             <div className="flex flex-wrap items-center justify-between gap-4 rounded-2xl border border-[var(--color-border)] bg-gray-50 p-5">
               <div>
-                <p className="font-semibold text-[var(--color-primary)]">¿Quieres simular tu plan de pago?</p>
-                <p className="text-sm text-[var(--color-text-light)]">Calcula cuota inicial y financiación en un minuto.</p>
+                <p className="font-semibold text-[var(--color-primary)]">¿Te interesa esta propiedad?</p>
+                <p className="text-sm text-[var(--color-text-light)]">Cuéntanos qué buscas y cómo planeas pagarla; te asesoramos sin costo.</p>
               </div>
-              <a href="/cotizador" className="rounded-full bg-[var(--color-primary)] px-5 py-2.5 font-medium text-white transition hover:opacity-90">
-                Abrir cotizador
+              <a href={waLink} target="_blank" rel="noopener noreferrer" className="rounded-full bg-[#25D366] px-5 py-2.5 font-medium text-white transition hover:opacity-90">
+                Hablar con un asesor
               </a>
             </div>
           )}

@@ -19,6 +19,8 @@ interface GalleryProps {
 export default function Gallery({ images, virtualTourUrl, videoUrl, className = "" }: GalleryProps) {
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [heroIndex, setHeroIndex] = useState(0);
+  const [heroPaused, setHeroPaused] = useState(false);
   const touchStartX = useRef(0);
   const thumbsRef = useRef<HTMLDivElement>(null);
 
@@ -58,6 +60,13 @@ export default function Gallery({ images, virtualTourUrl, videoUrl, className = 
     }
   }, [currentIndex, lightboxOpen]);
 
+  // Autoplay del hero: la foto principal rota sola; pausa al pasar el mouse o con el lightbox abierto.
+  useEffect(() => {
+    if (images.length < 2 || lightboxOpen || heroPaused) return;
+    const id = setInterval(() => setHeroIndex((i) => (i + 1) % images.length), 4500);
+    return () => clearInterval(id);
+  }, [images.length, lightboxOpen, heroPaused]);
+
   const onTouchStart = (e: React.TouchEvent) => { touchStartX.current = e.touches[0].clientX; };
   const onTouchEnd = (e: React.TouchEvent) => {
     const diff = touchStartX.current - e.changedTouches[0].clientX;
@@ -72,7 +81,6 @@ export default function Gallery({ images, virtualTourUrl, videoUrl, className = 
     );
   }
 
-  const main = images[0];
   const side = images.slice(1, 5);
   const remaining = images.length - 5;
 
@@ -81,18 +89,36 @@ export default function Gallery({ images, virtualTourUrl, videoUrl, className = 
       {/* Grid: main left + 4 thumbnails right */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-1.5 rounded-2xl overflow-hidden">
         <button
-          onClick={() => openLightbox(0)}
+          onClick={() => openLightbox(heroIndex)}
+          onMouseEnter={() => setHeroPaused(true)}
+          onMouseLeave={() => setHeroPaused(false)}
           className="md:col-span-2 md:row-span-2 relative aspect-[4/3] md:aspect-auto overflow-hidden group cursor-pointer"
         >
-          <Image
-            src={main.url}
-            alt={main.alt || "Foto principal"}
-            fill
-            className="object-cover transition-transform duration-300 group-hover:scale-105"
-            sizes="(max-width: 768px) 100vw, 50vw"
-            priority
-          />
+          {images.map((img, i) => (
+            <Image
+              key={i}
+              src={img.url}
+              alt={img.alt || "Foto principal"}
+              fill
+              className={`object-cover transition-opacity duration-700 ${i === heroIndex ? "opacity-100" : "opacity-0"}`}
+              sizes="(max-width: 768px) 100vw, 50vw"
+              priority={i === 0}
+            />
+          ))}
           <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors" />
+          {images.length > 1 && (
+            <div className="absolute bottom-3 left-1/2 -translate-x-1/2 z-10">
+              {images.length <= 8 ? (
+                <div className="flex gap-1.5">
+                  {images.map((_, i) => (
+                    <span key={i} className={`h-1.5 rounded-full transition-all ${i === heroIndex ? "w-5 bg-white" : "w-1.5 bg-white/60"}`} />
+                  ))}
+                </div>
+              ) : (
+                <span className="px-2.5 py-1 rounded-full bg-black/50 text-white text-xs font-medium">{heroIndex + 1} / {images.length}</span>
+              )}
+            </div>
+          )}
         </button>
         {side.map((img, i) => (
           <button
