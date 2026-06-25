@@ -250,6 +250,9 @@ export type StrapiPropertyEnriched = {
     codPct?: number | null;
     medianRecencyMonths?: number | null;
     confidence?: "high" | "medium" | "low" | "insufficient";
+    asOf?: string;
+    level?: string;
+    comparablesRaw?: number;
   };
   competitivePosition?: {
     status?: "BAJO" | "EN_RANGO" | "ALTO" | "SIN_BENCHMARK" | "SIN_DATOS";

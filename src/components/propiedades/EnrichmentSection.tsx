@@ -16,6 +16,13 @@ const POSITION_COLOR: Record<string, string> = {
   SIN_DATOS: "bg-gray-50 text-gray-600 border-gray-200",
 };
 
+const CONF_LABEL: Record<string, string> = {
+  high: "Alta",
+  medium: "Media",
+  low: "Baja",
+  insufficient: "Insuficiente",
+};
+
 function formatCop(n: number | null | undefined): string {
   if (!n) return "—";
   if (n >= 1_000_000) return `$${(n / 1_000_000).toFixed(0)}M`;
@@ -32,8 +39,16 @@ export default function EnrichmentSection({ enriched }: { enriched: StrapiProper
   const comparables = enriched.comparablesPublic ?? [];
   const conf = benchmark?.confidence ?? "insufficient";
 
-  // Si no hay nada útil, no renderizar la sección
-  const hasMarket = benchmark && (benchmark.comparablesCount ?? 0) >= 3 && conf !== "insufficient";
+  // Política HE: la posición de mercado se publica como argumento de venta SOLO cuando
+  // (a) es estadísticamente sólida — confianza alta o media, nunca baja/insuficiente — y
+  // (b) favorece o no perjudica la venta (precio por debajo o dentro del rango de mercado).
+  // Si la propiedad está sobre el mercado o la confianza es baja, NO se muestra el bloque
+  // de posición: ese dato vive en el admin para asesorar el precio con el dueño. No se
+  // afirma nada falso; se elige qué mostrar al comprador.
+  const confSolida = conf === "high" || conf === "medium";
+  const posicionFavorable = position?.status === "BAJO" || position?.status === "EN_RANGO";
+  const hasMarket =
+    !!benchmark && (benchmark.comparablesCount ?? 0) >= 5 && confSolida && posicionFavorable;
   const hasProximity = proximity && (proximity.distanceToAutopistaKm !== undefined);
   const hasDepreciation = depreciation?.applicable !== false && depreciation?.yearBuilt;
 
@@ -88,7 +103,7 @@ export default function EnrichmentSection({ enriched }: { enriched: StrapiProper
           <Stat label="Comparables" value={`${benchmark.comparablesCount ?? 0}`} />
           <Stat
             label="Confianza"
-            value={conf.charAt(0).toUpperCase() + conf.slice(1)}
+            value={CONF_LABEL[conf] ?? "—"}
           />
         </div>
       )}
@@ -150,12 +165,17 @@ export default function EnrichmentSection({ enriched }: { enriched: StrapiProper
         </div>
       )}
 
-      {/* Actividad del mercado */}
+      {/* Actividad del mercado — el "nuevos en 30 días" se omite si es igual al total
+          (señal del bug donde el motor copia el total del segmento). */}
       {activity && activity.competitorListingsActive !== undefined && (
         <p className="text-xs text-gray-500">
           Mercado: {activity.competitorListingsActive} listings activos en este segmento ·
           saturación <span className="font-medium">{activity.saturationLabel}</span>
-          {activity.newInLast30Days !== undefined ? ` · ${activity.newInLast30Days} nuevos en 30 días` : ""}
+          {activity.newInLast30Days !== undefined &&
+          activity.newInLast30Days > 0 &&
+          activity.newInLast30Days < (activity.competitorListingsActive ?? 0)
+            ? ` · ${activity.newInLast30Days} nuevos en 30 días`
+            : ""}
         </p>
       )}
 
