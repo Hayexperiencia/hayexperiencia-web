@@ -133,3 +133,35 @@ export function getZona(slug: string): Zona | null {
 export function listZonaSlugs(): string[] {
   return Object.keys(ZONAS);
 }
+
+const CITY_TO_SLUG: Record<string, string> = {
+  marinilla: "marinilla",
+  rionegro: "rionegro",
+  "la ceja": "la-ceja",
+  "el peñol": "el-penol",
+  "el penol": "el-penol",
+};
+
+// Inteligencia de mercado a nivel de ZONA: para propiedades sin benchmark individual
+// confiable (lotes, fincas, casas — mercados dispersos) la posicion de mercado correcta
+// es la de su zona, no una mediana de comparables que no existe.
+export function getZonaByCity(city: string | null | undefined): Zona | null {
+  if (!city) return null;
+  const slug = CITY_TO_SLUG[city.trim().toLowerCase()];
+  return slug ? ZONAS[slug] ?? null : null;
+}
+
+const TIPO_LABEL_TO_SEG: Record<string, string> = {
+  apartamento: "apartamento",
+  apartaestudio: "apartamento",
+  casa: "casa",
+  "casa campestre": "casa",
+  "casa campestre ": "casa",
+  finca: "finca",
+  lote: "lote",
+  "lote campestre": "lote",
+};
+
+export function segmentoDeTipo(typeLabel: string): string | null {
+  return TIPO_LABEL_TO_SEG[typeLabel.trim().toLowerCase()] ?? null;
+}

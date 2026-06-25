@@ -7,6 +7,7 @@ import SimilarProperties from "@/components/propiedades/SimilarProperties";
 import ShareButtons from "@/components/propiedades/ShareButtons";
 import PropertyContactSidebar from "@/components/propiedades/PropertyContactSidebar";
 import EnrichmentSection from "@/components/propiedades/EnrichmentSection";
+import ZonaMercadoCard from "@/components/propiedades/ZonaMercadoCard";
 import OwnerCaptureBlock from "@/components/propiedades/OwnerCaptureBlock";
 import PropertyFaq from "@/components/propiedades/PropertyFaq";
 import ContactForm from "@/components/ui/ContactForm";
@@ -148,6 +149,10 @@ export default async function PropertyDetailPage({ params }: PageProps) {
 
           {/* Posición de mercado — subida al tercio superior (el diferenciador) */}
           {enriched && <EnrichmentSection enriched={enriched} />}
+
+          {/* Inteligencia de mercado de la zona — para TODA propiedad en zona conocida
+              (es el dato de mercado correcto en lotes/fincas sin benchmark individual). */}
+          <ZonaMercadoCard city={property.city_label} typeLabel={type} />
 
           {/* Descripción */}
           {description && (
