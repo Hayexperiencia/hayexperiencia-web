@@ -8,6 +8,7 @@ import ShareButtons from "@/components/propiedades/ShareButtons";
 import PropertyContactSidebar from "@/components/propiedades/PropertyContactSidebar";
 import EnrichmentSection from "@/components/propiedades/EnrichmentSection";
 import ZonaMercadoCard from "@/components/propiedades/ZonaMercadoCard";
+import PropertyIntentCTA from "@/components/propiedades/PropertyIntentCTA";
 import OwnerCaptureBlock from "@/components/propiedades/OwnerCaptureBlock";
 import PropertyFaq from "@/components/propiedades/PropertyFaq";
 import ContactForm from "@/components/ui/ContactForm";
@@ -234,18 +235,15 @@ export default async function PropertyDetailPage({ params }: PageProps) {
             </div>
           )}
 
-          {/* CTA provisional: el cotizador lead-magnet (modal multi-paso → Capiolab) va aquí
-              cuando esté listo. Hasta entonces, NO se enlaza al cotizador de proyectos. */}
+          {/* Lead-magnet: modal multi-paso que califica y manda el lead a Capiolab + Telegram */}
           {isSale && (
-            <div className="flex flex-wrap items-center justify-between gap-4 rounded-2xl border border-[var(--color-border)] bg-gray-50 p-5">
-              <div>
-                <p className="font-semibold text-[var(--color-primary)]">¿Te interesa esta propiedad?</p>
-                <p className="text-sm text-[var(--color-text-light)]">Cuéntanos qué buscas y cómo planeas pagarla; te asesoramos sin costo.</p>
-              </div>
-              <a href={waLink} target="_blank" rel="noopener noreferrer" className="rounded-full bg-[#25D366] px-5 py-2.5 font-medium text-white transition hover:opacity-90">
-                Hablar con un asesor
-              </a>
-            </div>
+            <PropertyIntentCTA
+              wasiId={id}
+              headline={headline}
+              precioNum={parseInt((property.sale_price || "").replace(/\D/g, ""), 10) || 0}
+              precioLabel={price}
+              waLink={waLink}
+            />
           )}
 
           {/* Captación de propietarios */}
