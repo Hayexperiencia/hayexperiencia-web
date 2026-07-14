@@ -16,18 +16,17 @@ export async function GET() {
         p.cash_discount_pct, p.appreciation_rate_annual, p.quote_validity_days,
         p.contact_whatsapp, p.advisor_name,
         COALESCE(
-          json_agg(
-            json_build_object('id', s.id, 'name', s.name, 'stage_order', s.stage_order)
-            ORDER BY s.stage_order
-          ) FILTER (WHERE s.id IS NOT NULL),
+          (SELECT json_agg(
+             json_build_object('id', s.id, 'name', s.name, 'stage_order', s.stage_order)
+             ORDER BY s.stage_order
+           ) FROM hei_project_stages s
+           WHERE s.project_id = p.id AND s.is_active = true),
           '[]'
         ) as stages,
-        COUNT(u.id) FILTER (WHERE u.unit_status = 'disponible') as units_available
+        (SELECT COUNT(*) FROM hei_inventory_units u
+         WHERE u.project_id = p.id AND u.is_active = true AND u.unit_status = 'disponible')::int as units_available
       FROM hei_projects p
-      LEFT JOIN hei_project_stages s ON s.project_id = p.id AND s.is_active = true
-      LEFT JOIN hei_inventory_units u ON u.project_id = p.id AND u.is_active = true
       WHERE p.is_active = true
-      GROUP BY p.id
       ORDER BY p.sort_order
     `)
     return NextResponse.json(rows)
