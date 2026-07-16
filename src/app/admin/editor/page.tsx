@@ -1,5 +1,6 @@
 'use client';
 import { useState, useEffect, useRef, useCallback } from 'react';
+import AdminGate from '@/components/admin/AdminGate';
 
 type Project = { id: string; name: string; status: string; duration?: number; cuts?: number; created?: number };
 type Cut = { id: number; start: number; end: number; type: string; text: string; confidence: string; reason: string };
@@ -10,9 +11,6 @@ const GOLD = '#ffcd07';
 const TYPE_LABEL: Record<string, string> = { muletilla: 'Muletilla', repeticion: 'Repetición', silencio: 'Silencio' };
 
 export default function EditorPage() {
-  const [auth, setAuth] = useState(false);
-  const [pw, setPw] = useState('');
-  const [loginErr, setLoginErr] = useState(false);
   const [view, setView] = useState<'gallery' | 'new' | 'project'>('gallery');
   const [projects, setProjects] = useState<Project[]>([]);
   const [driveUrl, setDriveUrl] = useState('');
@@ -22,17 +20,11 @@ export default function EditorPage() {
   const [err, setErr] = useState('');
   const poll = useRef<ReturnType<typeof setInterval> | null>(null);
 
-  async function login(e: React.FormEvent) {
-    e.preventDefault();
-    const r = await fetch('/api/admin/login', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ password: pw }) });
-    if (r.ok) { setAuth(true); setLoginErr(false); } else setLoginErr(true);
-  }
-
   const loadGallery = useCallback(() => {
     fetch('/api/admin/editor/projects').then((r) => r.json()).then((d) => Array.isArray(d) && setProjects(d)).catch(() => {});
   }, []);
 
-  useEffect(() => { if (auth) loadGallery(); }, [auth, loadGallery]);
+  useEffect(() => { loadGallery(); }, [loadGallery]);
   useEffect(() => () => { if (poll.current) clearInterval(poll.current); }, []);
 
   function stopPoll() { if (poll.current) { clearInterval(poll.current); poll.current = null; } }
@@ -81,21 +73,8 @@ export default function EditorPage() {
     } catch { setBusy(''); setErr('Error de red.'); }
   }
 
-  if (!auth) {
-    return (
-      <div className="min-h-screen flex items-center justify-center" style={{ background: NAVY }}>
-        <form onSubmit={login} className="bg-white rounded-2xl p-8 w-full max-w-sm shadow-xl">
-          <h1 className="text-xl font-bold mb-1" style={{ color: NAVY }}>Editor de Reels</h1>
-          <p className="text-sm text-gray-500 mb-5">Hay Experiencia</p>
-          <input type="password" value={pw} onChange={(e) => setPw(e.target.value)} placeholder="Contraseña" className="w-full border rounded-lg px-3 py-2 mb-3" autoFocus />
-          {loginErr && <p className="text-red-600 text-sm mb-3">Contraseña incorrecta.</p>}
-          <button type="submit" className="w-full font-bold py-2 rounded-lg" style={{ background: GOLD, color: NAVY }}>Entrar</button>
-        </form>
-      </div>
-    );
-  }
-
   return (
+    <AdminGate title="Admin Editor">
     <div className="min-h-screen py-8 px-4" style={{ background: '#f6f6fa' }}>
       <div className="max-w-2xl mx-auto">
         <header className="mb-6 flex items-center justify-between">
@@ -191,5 +170,6 @@ export default function EditorPage() {
         )}
       </div>
     </div>
+    </AdminGate>
   );
 }

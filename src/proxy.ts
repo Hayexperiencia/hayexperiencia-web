@@ -1,15 +1,33 @@
 import { NextRequest, NextResponse } from 'next/server';
 
-// Gate único para todas las APIs admin. La key llega por header (scripts/Harry),
-// cookie hei_admin (páginas admin tras login) o query ?key= (compat).
+// Gate admin. Autenticación por dos vías:
+//  (1) Intranet SSO: Authelia inyecta el header Remote-Email tras su forward-auth
+//      (solo en tráfico que pasa por el proxy Traefik). Si está presente, el usuario
+//      ya está logueado en la intranet → auto-setea la cookie hei_admin y NO se pide
+//      la contraseña del admin.
+//  (2) Clásica: key por header x-admin-key (scripts/Harry), cookie hei_admin (login
+//      con contraseña) o query ?key= (compat).
 // Sin ADMIN_API_KEY configurada falla cerrado: nunca volver al fallback público.
 export function proxy(req: NextRequest) {
   const { pathname } = req.nextUrl;
+  const adminKey = process.env.ADMIN_API_KEY;
+
+  // (1) Usuario autenticado por la intranet (Authelia). Auto-login sin contraseña.
+  const remoteEmail = req.headers.get('remote-email');
+  if (remoteEmail && adminKey && (pathname.startsWith('/admin') || pathname.startsWith('/api/admin'))) {
+    const res = NextResponse.next();
+    if (req.cookies.get('hei_admin')?.value !== adminKey) {
+      res.cookies.set('hei_admin', adminKey, {
+        httpOnly: true, secure: true, sameSite: 'lax', path: '/', maxAge: 60 * 60 * 24 * 30,
+      });
+    }
+    return res;
+  }
+
+  // (2) Gate clásico de las APIs admin.
   if (!pathname.startsWith('/api/admin') || pathname === '/api/admin/login') {
     return NextResponse.next();
   }
-
-  const adminKey = process.env.ADMIN_API_KEY;
   const provided =
     req.headers.get('x-admin-key') ??
     req.cookies.get('hei_admin')?.value ??
@@ -21,4 +39,4 @@ export function proxy(req: NextRequest) {
   return NextResponse.next();
 }
 
-export const config = { matcher: '/api/admin/:path*' };
+export const config = { matcher: ['/admin/:path*', '/api/admin/:path*'] };

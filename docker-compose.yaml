@@ -50,6 +50,16 @@ services:
       - traefik.http.services.http-1-hhc1afp29any1kulfucplz13.loadbalancer.server.port=3000
       - traefik.http.services.https-0-hhc1afp29any1kulfucplz13.loadbalancer.server.port=3000
       - traefik.http.services.https-1-hhc1afp29any1kulfucplz13.loadbalancer.server.port=3000
+      # Intranet: las PÁGINAS /admin pasan por el login único (Authelia forward-auth) que
+      # inyecta Remote-Email → el admin auto-loguea sin pedir contraseña. Solo /admin (no
+      # /api/admin, que sigue con x-admin-key para Harry/scripts). Prioridad > catch-all.
+      - traefik.http.routers.https-admin-hhc1afp29any1kulfucplz13.entryPoints=https
+      - "traefik.http.routers.https-admin-hhc1afp29any1kulfucplz13.rule=Host(`hayexperiencia.com`) && PathPrefix(`/admin`)"
+      - traefik.http.routers.https-admin-hhc1afp29any1kulfucplz13.priority=100
+      - traefik.http.routers.https-admin-hhc1afp29any1kulfucplz13.middlewares=gzip,authelia@docker
+      - traefik.http.routers.https-admin-hhc1afp29any1kulfucplz13.service=https-0-hhc1afp29any1kulfucplz13
+      - traefik.http.routers.https-admin-hhc1afp29any1kulfucplz13.tls.certresolver=letsencrypt
+      - traefik.http.routers.https-admin-hhc1afp29any1kulfucplz13.tls=true
 
 networks:
   coolify:
