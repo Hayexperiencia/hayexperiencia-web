@@ -69,3 +69,36 @@ body {
   border-top: 1px solid var(--color-border);
   margin: 2rem 0;
 }
+
+/* ===== ALUNA — tokens de marca para la landing /aluna ===== */
+:root {
+  --color-crema: #FFEFD3;
+  --color-crema-50: #FFF9EE;
+  --color-crema-200: #F5E2BE;
+  --color-verde: #29371C;
+  --color-verde-600: #3A4E28;
+  --color-verde-500: #4E6836;
+  --color-verde-200: #C0CFAF;
+  --color-verde-100: #E7EDDF;
+  --color-marron: #4A1C11;
+  --color-tierra: #D8A579;
+  --color-tierra-400: #E2B994;
+  --color-gris: #444444;
+}
+@theme inline {
+  --color-crema: var(--color-crema);
+  --color-crema-50: var(--color-crema-50);
+  --color-crema-200: var(--color-crema-200);
+  --color-verde: var(--color-verde);
+  --color-verde-600: var(--color-verde-600);
+  --color-verde-500: var(--color-verde-500);
+  --color-verde-200: var(--color-verde-200);
+  --color-verde-100: var(--color-verde-100);
+  --color-marron: var(--color-marron);
+  --color-tierra: var(--color-tierra);
+  --color-tierra-400: var(--color-tierra-400);
+  --color-gris: var(--color-gris);
+}
+@keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+.animate-marquee { animation: marquee 40s linear infinite; }
+.marquee-mask { -webkit-mask-image: linear-gradient(to right, transparent, #000 6%, #000 94%, transparent); }

@@ -5,6 +5,7 @@ import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import WhatsAppButton from "@/components/layout/WhatsAppButton";
 import CookieBanner from "@/components/layout/CookieBanner";
+import ConditionalChrome from "@/components/layout/ConditionalChrome";
 import Analytics from "@/components/analytics/Analytics";
 import { getNavigation, getSiteSettings } from "@/lib/strapi";
 
@@ -67,10 +68,13 @@ export default async function RootLayout({
             />
           </noscript>
         ) : null}
-        <Navbar primary={navigation?.primary ?? null} />
-        <main className="flex-1">{children}</main>
-        <Footer groups={navigation?.footer ?? null} settings={settings} />
-        <WhatsAppButton phone={settings?.whatsapp ?? null} />
+        <ConditionalChrome
+          navbar={<Navbar primary={navigation?.primary ?? null} />}
+          footer={<Footer groups={navigation?.footer ?? null} settings={settings} />}
+          whatsapp={<WhatsAppButton phone={settings?.whatsapp ?? null} />}
+        >
+          {children}
+        </ConditionalChrome>
         <CookieBanner />
       </body>
     </html>
