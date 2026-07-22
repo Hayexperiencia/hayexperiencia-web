@@ -6,7 +6,7 @@ import { cop, elementLabel, type Lot } from "@/lib/aluna-lots";
 
 const WA = (code: string) =>
   "https://wa.me/573137939382?text=" +
-  encodeURIComponent(`Hola, me interesa el ${code} de ALUNA. ¿Podemos agendar una visita?`);
+  encodeURIComponent(`Hola, me interesa el ${code} de ALUNA. ¿Me compartes el plano y agendamos una visita?`);
 
 const elementColor: Record<Lot["element"], string> = {
   LUZ: "bg-tierra text-verde",
@@ -114,46 +114,41 @@ export default function LotSelector({ lots }: { lots: Lot[] }) {
               </button>
             </div>
 
-            <div className="mt-6 grid grid-cols-3 gap-3">
-              <div className="relative col-span-3 sm:col-span-2 h-56 overflow-hidden rounded-2xl bg-verde-100">
-                <Image src={sel.image || "/images/aluna-hero-poster.jpg"} alt={sel.code} fill sizes="(max-width:640px) 100vw, 66vw" className="object-cover" />
-              </div>
-              <div className="hidden sm:flex h-56 flex-col gap-3">
-                <div className="flex-1 rounded-2xl bg-verde/5 flex items-center justify-center text-center text-sm text-gris">+ Fotos<br />del lote</div>
-                <div className="flex-1 rounded-2xl bg-verde flex items-center justify-center text-crema text-sm font-semibold">▶ Recorrido</div>
+            <div className="mt-6 overflow-hidden rounded-2xl bg-verde-100">
+              <div className="relative aspect-[16/10] w-full">
+                <Image src={sel.image || "/images/aluna-hero-poster.jpg"} alt={`Vista del ${sel.code} en ALUNA`} fill sizes="(max-width:768px) 100vw, 720px" className="object-cover" />
+                <a
+                  href="#video-aluna"
+                  onClick={() => setSel(null)}
+                  className="absolute bottom-3 right-3 inline-flex items-center gap-2 rounded-full bg-verde/90 px-4 py-2 text-sm font-semibold text-crema backdrop-blur transition hover:bg-verde"
+                >
+                  ▶ Recorrido aéreo
+                </a>
               </div>
             </div>
 
-            <div className="mt-6 grid gap-6 md:grid-cols-2">
-              <div>
-                <h4 className="text-sm font-semibold uppercase tracking-widest text-tierra">Ficha técnica</h4>
-                <dl className="mt-3 divide-y divide-verde-100">
-                  {[
-                    ["Código", sel.code],
-                    ["Elemento", elementLabel[sel.element]],
-                    ["Área", `${sel.area.toLocaleString("es-CO")} m²`],
-                    ["Precio", cop(sel.price)],
-                    ["Estado", "Disponible"],
-                    ["Entrega", "Inmediata · escriturado"],
-                  ].map(([k, v]) => (
-                    <div key={k} className="flex justify-between py-2.5">
-                      <dt className="text-gris">{k}</dt>
-                      <dd className="font-semibold text-verde">{v}</dd>
-                    </div>
-                  ))}
-                </dl>
-              </div>
-              <div>
-                <h4 className="text-sm font-semibold uppercase tracking-widest text-tierra">Plano del lote</h4>
-                <div className="mt-3 h-40 rounded-2xl border-2 border-dashed border-verde-200 bg-crema-50 flex items-center justify-center text-center text-sm text-gris">
-                  Plano {sel.code}<br />(DWG/PDF disponible)
-                </div>
-              </div>
+            <div className="mt-6">
+              <h4 className="text-sm font-semibold uppercase tracking-widest text-tierra">Ficha técnica</h4>
+              <dl className="mt-3 grid gap-x-8 sm:grid-cols-2">
+                {[
+                  ["Código", sel.code],
+                  ["Elemento", elementLabel[sel.element]],
+                  ["Área", `${sel.area.toLocaleString("es-CO")} m²`],
+                  ["Precio", cop(sel.price)],
+                  ["Estado", "Disponible"],
+                  ["Entrega", "Inmediata · escriturado"],
+                ].map(([k, v]) => (
+                  <div key={k} className="flex justify-between border-b border-verde-100 py-2.5">
+                    <dt className="text-gris">{k}</dt>
+                    <dd className="font-semibold text-verde">{v}</dd>
+                  </div>
+                ))}
+              </dl>
             </div>
 
             <div className="mt-7 flex flex-wrap gap-3">
               <a href="/cotizador?proyecto=aluna" className="rounded-full bg-tierra px-7 py-3 font-semibold text-verde transition hover:bg-tierra-400">Cotizar este lote</a>
-              <a href={WA(sel.code)} className="rounded-full border-2 border-verde px-7 py-3 font-semibold text-verde transition hover:bg-verde/5">Agenda por WhatsApp</a>
+              <a href={WA(sel.code)} className="rounded-full border-2 border-verde px-7 py-3 font-semibold text-verde transition hover:bg-verde/5">Pide el plano y agenda</a>
             </div>
           </div>
         </div>

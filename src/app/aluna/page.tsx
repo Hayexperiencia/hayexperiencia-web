@@ -59,7 +59,7 @@ export default async function AlunaLanding() {
       </section>
 
       {/* VIDEO PROMO */}
-      <section className="bg-crema px-6 py-16 md:px-12 md:py-20">
+      <section id="video-aluna" className="scroll-mt-8 bg-crema px-6 py-16 md:px-12 md:py-20">
         <Reveal className="mx-auto max-w-5xl">
           <div className="grid gap-8 md:grid-cols-5 md:items-center">
             <div className="md:col-span-2">
