@@ -1,4 +1,3 @@
-import Image from "next/image";
 import Marquee from "@/components/aluna/Marquee";
 import LotSelector from "@/components/aluna/LotSelector";
 import Reveal from "@/components/aluna/Reveal";
@@ -14,12 +13,16 @@ export default function AlunaLanding() {
       {/* HERO — V3 alto contraste */}
       <section className="relative min-h-screen flex flex-col justify-between overflow-hidden">
         <div className="absolute inset-0">
-          <Image
-            src="/images/aluna-landing-hero.jpg"
-            alt="Bosque y naturaleza de ALUNA Campestre en Marinilla"
-            fill priority sizes="100vw"
-            className="object-cover al-kenburns"
-          />
+          <video
+            autoPlay
+            muted
+            loop
+            playsInline
+            poster="/images/aluna-hero-poster.jpg"
+            className="h-full w-full object-cover"
+          >
+            <source src="/videos/aluna-hero.mp4" type="video/mp4" />
+          </video>
         </div>
         <div className="absolute inset-0" aria-hidden style={{ background: "linear-gradient(100deg, rgba(41,55,28,.92) 0%, rgba(41,55,28,.55) 38%, rgba(41,55,28,.12) 72%, rgba(41,55,28,0) 100%)" }} />
         <div aria-hidden className="al-float pointer-events-none absolute -right-24 top-8 h-[440px] w-[440px] rounded-full border border-tierra/25" />

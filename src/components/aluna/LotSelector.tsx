@@ -35,6 +35,19 @@ export default function LotSelector() {
           </p>
         </Reveal>
 
+        {/* Fichas rápidas de lotes (encima del mapa) */}
+        <div className="mt-8 flex flex-wrap gap-2">
+          {disponibles.map((l) => (
+            <button
+              key={l.code}
+              onClick={() => setSel(l)}
+              className="rounded-full border border-verde-200 bg-crema px-4 py-2 text-sm font-semibold text-verde transition hover:bg-verde-100"
+            >
+              {l.code} · {cop(l.price)}
+            </button>
+          ))}
+        </div>
+
         {/* MAPA INTERACTIVO */}
         <Reveal className="mt-10 overflow-hidden rounded-3xl ring-1 ring-verde-100 shadow-sm">
           <div className="relative">
@@ -77,19 +90,6 @@ export default function LotSelector() {
             <span className="ml-auto text-gris">Toca un lote para ver su hoja de vida →</span>
           </div>
         </Reveal>
-
-        {/* Lista rápida (móvil / accesibilidad) */}
-        <div className="mt-6 flex flex-wrap gap-2">
-          {disponibles.map((l) => (
-            <button
-              key={l.code}
-              onClick={() => setSel(l)}
-              className="rounded-full border border-verde-200 bg-crema px-4 py-2 text-sm font-semibold text-verde transition hover:bg-verde-100"
-            >
-              {l.code} · {cop(l.price)}
-            </button>
-          ))}
-        </div>
       </div>
 
       {/* HOJA DE VIDA */}
