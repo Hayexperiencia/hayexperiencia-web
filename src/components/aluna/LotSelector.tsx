@@ -25,7 +25,7 @@ export default function LotSelector() {
       <div className="mx-auto max-w-6xl">
         <Reveal>
           <span className="text-sm font-semibold uppercase tracking-widest text-tierra">Elige tu lote</span>
-          <h2 className="mt-3 text-3xl md:text-5xl font-bold text-verde leading-tight">
+          <h2 className="al-display mt-3 text-4xl md:text-6xl text-verde leading-[1.02]">
             {disponibles} lotes disponibles. Cada uno, un elemento.
           </h2>
           <p className="mt-4 max-w-2xl text-lg text-gris">
@@ -89,8 +89,8 @@ export default function LotSelector() {
                 <span className={`rounded-full px-3 py-1 text-xs font-semibold uppercase tracking-wide ${elementColor[sel.element]}`}>
                   Elemento {elementLabel[sel.element]}
                 </span>
-                <h3 className="mt-3 text-3xl font-bold text-verde">{sel.code}</h3>
-                <p className="mt-1 text-xl font-semibold text-marron">{cop(sel.price)}</p>
+                <h3 className="al-display mt-3 text-4xl text-verde">{sel.code}</h3>
+                <p className="al-display mt-1 text-2xl text-marron">{cop(sel.price)}</p>
               </div>
               <button onClick={() => setSel(null)} className="rounded-full bg-verde/10 px-4 py-2 text-verde font-semibold transition hover:bg-verde/20">
                 Cerrar

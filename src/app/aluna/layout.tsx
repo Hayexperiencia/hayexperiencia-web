@@ -1,11 +1,19 @@
 import type { Metadata } from "next";
-import { Poppins } from "next/font/google";
+import { DM_Serif_Display, Bricolage_Grotesque } from "next/font/google";
 import SmoothScroll from "@/components/aluna/SmoothScroll";
 
-const poppins = Poppins({
+// Sistema tipografico ALUNA 2026 (direccion "alto contraste / moda-lujo", elegida por Gabriel):
+// Display de alto contraste para titulares/stats + grotesca calida para cuerpo/UI. Adios Poppins.
+const display = DM_Serif_Display({
   subsets: ["latin"],
-  weight: ["300", "400", "500", "600", "700"],
-  variable: "--font-poppins",
+  weight: ["400"],
+  style: ["normal", "italic"],
+  variable: "--font-display",
+  display: "swap",
+});
+const body = Bricolage_Grotesque({
+  subsets: ["latin"],
+  variable: "--font-body",
   display: "swap",
 });
 
@@ -26,8 +34,8 @@ export const metadata: Metadata = {
 export default function AlunaLayout({ children }: { children: React.ReactNode }) {
   return (
     <div
-      className={poppins.variable}
-      style={{ fontFamily: "var(--font-poppins), Poppins, sans-serif", color: "var(--color-verde)" }}
+      className={`${display.variable} ${body.variable}`}
+      style={{ fontFamily: "var(--font-body), sans-serif", color: "var(--color-verde)" }}
     >
       <SmoothScroll>{children}</SmoothScroll>
     </div>
