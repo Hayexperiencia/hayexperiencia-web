@@ -18,7 +18,8 @@ const elementColor: Record<Lot["element"], string> = {
 
 export default function LotSelector() {
   const [sel, setSel] = useState<Lot | null>(null);
-  const disponibles = lots.filter((l) => l.status === "disponible").length;
+  const disponibles = lots.filter((l) => l.status === "disponible");
+  const mapped = lots.filter((l) => l.mapX != null && l.mapY != null);
 
   return (
     <section id="lotes" className="bg-crema-50 px-6 py-20 md:px-12 md:py-28">
@@ -26,53 +27,68 @@ export default function LotSelector() {
         <Reveal>
           <span className="text-sm font-semibold uppercase tracking-widest text-tierra">Elige tu lote</span>
           <h2 className="al-display mt-3 text-4xl md:text-6xl text-verde leading-[1.02]">
-            {disponibles} lotes disponibles. Cada uno, un elemento.
+            {disponibles.length} lotes disponibles. Cada uno, un elemento.
           </h2>
           <p className="mt-4 max-w-2xl text-lg text-gris">
-            Selecciona un lote para ver su hoja de vida: fotos, recorrido, plano y ficha técnica — antes de cotizar.
+            Explora el plano de la parcelación. Toca un lote para ver su hoja de vida: fotos, recorrido,
+            plano y ficha técnica — antes de cotizar.
           </p>
         </Reveal>
 
-        <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-          {lots.map((l, i) => {
-            const sold = l.status === "vendido";
-            return (
-              <Reveal key={l.code} delay={(i % 3) * 90}>
+        {/* MAPA INTERACTIVO */}
+        <Reveal className="mt-10 overflow-hidden rounded-3xl ring-1 ring-verde-100 shadow-sm">
+          <div className="relative">
+            <Image
+              src="/images/aluna-plano.jpg"
+              alt="Plano de loteo de ALUNA Campestre"
+              width={1600}
+              height={1321}
+              sizes="(max-width:1024px) 100vw, 1120px"
+              className="w-full h-auto"
+            />
+            {mapped.map((l) => {
+              const sold = l.status === "vendido";
+              return (
                 <button
+                  key={l.code}
                   onClick={() => !sold && setSel(l)}
                   disabled={sold}
-                  className={`group w-full text-left overflow-hidden rounded-2xl bg-crema shadow-sm transition ${
-                    sold ? "opacity-55 cursor-not-allowed" : "hover:-translate-y-1 hover:shadow-lg"
-                  }`}
+                  style={{ left: `${l.mapX}%`, top: `${l.mapY}%` }}
+                  aria-label={`${l.code} ${sold ? "vendido" : "disponible"}`}
+                  className="group absolute z-10 -translate-x-1/2 -translate-y-1/2"
                 >
-                  <div className="relative h-44 w-full overflow-hidden bg-verde-100">
-                    <Image
-                      src={l.image || ""}
-                      alt={l.code}
-                      fill
-                      sizes="(max-width:640px) 100vw, (max-width:1024px) 50vw, 33vw"
-                      className="object-cover transition duration-700 group-hover:scale-105"
-                    />
-                    <span className={`absolute left-3 top-3 z-10 rounded-full px-3 py-1 text-xs font-semibold uppercase tracking-wide ${elementColor[l.element]}`}>
-                      {sold ? "Vendido" : elementLabel[l.element]}
+                  <span
+                    className={`block h-5 w-5 rounded-full ring-4 transition group-hover:scale-125 ${
+                      sold ? "bg-gris/70 ring-white/30 cursor-not-allowed" : "bg-tierra ring-crema/60 al-pulse"
+                    }`}
+                  />
+                  {!sold && (
+                    <span className="pointer-events-none absolute bottom-8 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-lg bg-verde px-3 py-1.5 text-xs font-semibold text-crema opacity-0 shadow-lg transition group-hover:opacity-100">
+                      {l.code} · {l.area.toLocaleString("es-CO")} m² · {cop(l.price)}
                     </span>
-                  </div>
-                  <div className="p-5">
-                    <div className="flex items-baseline justify-between">
-                      <h3 className="text-xl font-bold text-verde">{l.code}</h3>
-                      <span className="text-sm text-gris">{l.area.toLocaleString("es-CO")} m²</span>
-                    </div>
-                    <p className="mt-2 text-lg font-semibold text-marron">{cop(l.price)}</p>
-                    {!sold && (
-                      <span className="mt-3 inline-block text-sm font-semibold text-tierra group-hover:underline">
-                        Ver hoja de vida →
-                      </span>
-                    )}
-                  </div>
+                  )}
                 </button>
-              </Reveal>
-            );
-          })}
+              );
+            })}
+          </div>
+          <div className="flex flex-wrap items-center gap-5 bg-crema px-5 py-4 text-sm">
+            <span className="flex items-center gap-2"><i className="h-3 w-3 rounded-full bg-tierra" />Disponible</span>
+            <span className="flex items-center gap-2"><i className="h-3 w-3 rounded-full bg-gris/70" />Vendido</span>
+            <span className="ml-auto text-gris">Toca un lote para ver su hoja de vida →</span>
+          </div>
+        </Reveal>
+
+        {/* Lista rápida (móvil / accesibilidad) */}
+        <div className="mt-6 flex flex-wrap gap-2">
+          {disponibles.map((l) => (
+            <button
+              key={l.code}
+              onClick={() => setSel(l)}
+              className="rounded-full border border-verde-200 bg-crema px-4 py-2 text-sm font-semibold text-verde transition hover:bg-verde-100"
+            >
+              {l.code} · {cop(l.price)}
+            </button>
+          ))}
         </div>
       </div>
 

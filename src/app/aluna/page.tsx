@@ -59,11 +59,15 @@ export default function AlunaLanding() {
               <p className="mt-4 text-gris">Un recorrido corto por el proyecto: la portería, el bosque, el coworking y la maloca — y por qué ya es una realidad.</p>
             </div>
             <div className="md:col-span-3">
-              <div className="relative aspect-video overflow-hidden rounded-2xl bg-verde flex items-center justify-center">
-                <div className="text-center text-crema">
-                  <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-tierra text-verde text-2xl transition hover:scale-110">▶</div>
-                  <p className="mt-3 text-sm text-crema-200">Video de Gabriel — próximamente</p>
-                </div>
+              <div className="relative aspect-video overflow-hidden rounded-2xl bg-verde shadow-lg">
+                <iframe
+                  className="absolute inset-0 h-full w-full"
+                  src="https://www.youtube-nocookie.com/embed/8IQI6uGWI2c?rel=0"
+                  title="ALUNA Campestre — video del proyecto"
+                  loading="lazy"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                  allowFullScreen
+                />
               </div>
             </div>
           </div>

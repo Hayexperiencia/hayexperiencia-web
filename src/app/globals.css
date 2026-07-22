@@ -124,3 +124,7 @@ body {
 .al-grain { position: fixed; inset: 0; pointer-events: none; z-index: 30; opacity: .05; mix-blend-mode: multiply;
   background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='120' height='120'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>"); }
 @media (prefers-reduced-motion: reduce) { .al-grain { display: none; } }
+
+.al-pulse { animation: al-pulse 2.2s ease-in-out infinite; }
+@keyframes al-pulse { 0%,100% { box-shadow: 0 0 0 0 rgba(216,165,121,.55); } 50% { box-shadow: 0 0 0 9px rgba(216,165,121,0); } }
+@media (prefers-reduced-motion: reduce) { .al-pulse { animation: none; } }
