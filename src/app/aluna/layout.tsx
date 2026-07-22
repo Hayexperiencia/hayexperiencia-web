@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Poppins } from "next/font/google";
+import SmoothScroll from "@/components/aluna/SmoothScroll";
 
 const poppins = Poppins({
   subsets: ["latin"],
@@ -28,7 +29,7 @@ export default function AlunaLayout({ children }: { children: React.ReactNode })
       className={poppins.variable}
       style={{ fontFamily: "var(--font-poppins), Poppins, sans-serif", color: "var(--color-verde)" }}
     >
-      {children}
+      <SmoothScroll>{children}</SmoothScroll>
     </div>
   );
 }
