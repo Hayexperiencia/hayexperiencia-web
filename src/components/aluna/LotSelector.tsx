@@ -96,7 +96,7 @@ export default function LotSelector({ lots }: { lots: Lot[] }) {
       {/* HOJA DE VIDA */}
       {sel && (
         <div
-          className="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto p-4 md:p-8"
+          className="fixed inset-0 z-[110] flex items-start justify-center overflow-y-auto p-4 md:p-8"
           style={{ background: "rgba(41,55,28,.8)" }}
           onClick={() => setSel(null)}
         >
