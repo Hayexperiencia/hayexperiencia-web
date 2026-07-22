@@ -1,11 +1,17 @@
 import Marquee from "@/components/aluna/Marquee";
 import LotSelector from "@/components/aluna/LotSelector";
 import Reveal from "@/components/aluna/Reveal";
+import { getAlunaLots } from "@/lib/aluna-inventory";
 
 const WA = "https://wa.me/573137939382?text=" +
   encodeURIComponent("Hola, quiero conocer ALUNA y agendar una visita.");
 
-export default function AlunaLanding() {
+// Inventario en vivo del cotizador: SSR en cada request (la BD no es alcanzable
+// en build, y el mapa debe reflejar disponibilidad real siempre).
+export const dynamic = "force-dynamic";
+
+export default async function AlunaLanding() {
+  const lots = await getAlunaLots();
   return (
     <div style={{ background: "var(--color-crema)" }}>
       <div className="al-grain" aria-hidden />
@@ -108,7 +114,7 @@ export default function AlunaLanding() {
       </section>
 
       {/* SELECTOR DE LOTES */}
-      <LotSelector />
+      <LotSelector lots={lots} />
 
       {/* PLAN DE PAGOS */}
       <section id="plan" className="bg-verde px-6 py-20 md:px-12 md:py-28 text-crema">

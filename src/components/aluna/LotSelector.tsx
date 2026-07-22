@@ -2,7 +2,7 @@
 import { useState } from "react";
 import Image from "next/image";
 import Reveal from "@/components/aluna/Reveal";
-import { lots, cop, elementLabel, type Lot } from "@/lib/aluna-lots";
+import { cop, elementLabel, type Lot } from "@/lib/aluna-lots";
 
 const WA = (code: string) =>
   "https://wa.me/573137939382?text=" +
@@ -16,9 +16,10 @@ const elementColor: Record<Lot["element"], string> = {
   "—": "bg-gris/20 text-gris",
 };
 
-export default function LotSelector() {
+export default function LotSelector({ lots }: { lots: Lot[] }) {
   const [sel, setSel] = useState<Lot | null>(null);
   const disponibles = lots.filter((l) => l.status === "disponible");
+  const vendidos = lots.filter((l) => l.status === "vendido");
   const mapped = lots.filter((l) => l.mapX != null && l.mapY != null);
 
   return (
@@ -85,8 +86,8 @@ export default function LotSelector() {
             })}
           </div>
           <div className="flex flex-wrap items-center gap-5 bg-crema px-5 py-4 text-sm">
-            <span className="flex items-center gap-2"><i className="h-3 w-3 rounded-full bg-tierra" />Disponible</span>
-            <span className="flex items-center gap-2"><i className="h-3 w-3 rounded-full bg-gris/70" />Vendido</span>
+            <span className="flex items-center gap-2"><i className="h-3 w-3 rounded-full bg-tierra al-pulse" /><b className="text-verde">{disponibles.length}</b> disponibles</span>
+            <span className="flex items-center gap-2"><i className="h-3 w-3 rounded-full bg-gris/70" /><b className="text-verde">{vendidos.length}</b> vendidos</span>
             <span className="ml-auto text-gris">Toca un lote para ver su hoja de vida →</span>
           </div>
         </Reveal>
@@ -115,7 +116,7 @@ export default function LotSelector() {
 
             <div className="mt-6 grid grid-cols-3 gap-3">
               <div className="relative col-span-3 sm:col-span-2 h-56 overflow-hidden rounded-2xl bg-verde-100">
-                <Image src={sel.image || ""} alt={sel.code} fill sizes="(max-width:640px) 100vw, 66vw" className="object-cover" />
+                <Image src={sel.image || "/images/aluna-hero-poster.jpg"} alt={sel.code} fill sizes="(max-width:640px) 100vw, 66vw" className="object-cover" />
               </div>
               <div className="hidden sm:flex h-56 flex-col gap-3">
                 <div className="flex-1 rounded-2xl bg-verde/5 flex items-center justify-center text-center text-sm text-gris">+ Fotos<br />del lote</div>
