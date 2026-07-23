@@ -9,6 +9,8 @@ const RAZONES = [
   "Respaldo Fideicomiso Credicorp",
   "Alianza Bancolombia",
   "A 10 min de Marinilla",
+  "Marinilla, capital gastronómica",
+  "Vida nocturna y cultura",
   "Alta valorización",
   "Aparta con $10.000.000",
   "Financiación hasta 12 meses",

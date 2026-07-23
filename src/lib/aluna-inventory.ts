@@ -1,6 +1,6 @@
 import "server-only";
 import { getPool } from "@/lib/pg";
-import { LOT_COORDS, type Lot, type Element } from "@/lib/aluna-lots";
+import { LOT_COORDS, LOT_MEDIA, type Lot, type Element } from "@/lib/aluna-lots";
 
 const M = "https://hayexperiencia.com";
 const ELEMENTS: Element[] = ["LUZ", "BOSQUE", "AGUA", "AIRE"];
@@ -36,13 +36,17 @@ export async function getAlunaLots(): Promise<Lot[]> {
         const num = (r.unit_code as string).replace(/\D/g, "");
         const t = String(r.unit_type || "").toUpperCase() as Element;
         const element: Element = ELEMENTS.includes(t) ? t : "—";
+        const media = LOT_MEDIA[num] || {};
+        const dbImg = toAbs(r.image_url);
+        const images = media.images && media.images.length ? media.images : dbImg ? [dbImg] : [];
         return {
           code: r.unit_code,
           element,
           area: Math.round(Number(r.area_total_m2) * 100) / 100,
           price: Number(r.list_price) || 0,
           status: r.unit_status === "vendido" ? "vendido" : "disponible",
-          image: toAbs(r.image_url),
+          images,
+          video: media.video,
           ...(LOT_COORDS[num] || {}),
         };
       });

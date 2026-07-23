@@ -8,9 +8,17 @@ export type Lot = {
   area: number;
   price: number;
   status: "disponible" | "vendido";
-  image?: string; // sirve desde hayexperiencia.com/media
+  images?: string[]; // galería (sirve desde /media o Drive)
+  video?: string;    // recorrido aéreo (YouTube URL/ID o .mp4)
   mapX?: number;
   mapY?: number;
+};
+
+// Galería + recorrido aéreo POR LOTE. Se llena cuando Yesica entrega el material
+// (2026-07-23): images = URLs de fotos (varias = carrusel); video = YouTube o .mp4.
+// Si un lote NO está aquí, cae a la foto única del cotizador (1 imagen, sin recorrido).
+// Ej: "16": { images: ["https://hayexperiencia.com/media/aluna/16/a.jpg", ".../b.jpg"], video: "https://youtu.be/XXXXXXXXXXX" },
+export const LOT_MEDIA: Record<string, { images?: string[]; video?: string }> = {
 };
 
 export const cop = (n: number) => (n > 0 ? "$" + n.toLocaleString("es-CO") : "—");

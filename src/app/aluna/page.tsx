@@ -44,8 +44,8 @@ export default async function AlunaLanding() {
 
         <div className="relative z-10 px-6 pb-20 md:px-12 md:pb-28 max-w-4xl">
           <div className="al-heroin text-sm font-semibold uppercase tracking-[0.28em] text-tierra mb-6">Marinilla · Entrega inmediata</div>
-          <h1 className="al-heroin al-display text-crema text-7xl md:text-[9.5rem]" style={{ lineHeight: 0.85, animationDelay: ".08s" }}>
-            Ten las<br /><em className="italic text-tierra-400">dos</em> vidas.
+          <h1 className="al-heroin al-display text-crema text-6xl sm:text-8xl md:text-[8.5rem]" style={{ lineHeight: 0.86, animationDelay: ".08s" }}>
+            El equilibrio<br /><em className="italic text-tierra-400">consciente</em>.
           </h1>
           <p className="al-heroin mt-7 max-w-xl text-lg md:text-2xl text-crema-200" style={{ animationDelay: ".16s" }}>
             El proyecto consciente para tu cuerpo, mente y espíritu. De una reunión virtual a la maloca,
@@ -113,8 +113,68 @@ export default async function AlunaLanding() {
         </div>
       </section>
 
+      {/* MARINILLA — pueblo moderno */}
+      <section className="bg-verde px-6 py-20 md:px-12 md:py-28 text-crema">
+        <div className="mx-auto max-w-5xl">
+          <Reveal>
+            <span className="text-sm font-semibold uppercase tracking-widest text-tierra">A minutos de tu lote</span>
+            <h2 className="al-display mt-3 text-4xl md:text-6xl leading-[1.02]">
+              Marinilla, tu <em className="italic text-tierra-400">pueblo moderno</em>.
+            </h2>
+            <p className="mt-5 max-w-2xl text-lg text-crema-200">
+              El equilibrio consciente no es renunciar a la buena vida: es tenerla al lado. Una de las
+              plazas gastronómicas más vibrantes del Oriente, cultura y planes de noche — y en minutos,
+              el silencio de tu reserva.
+            </p>
+          </Reveal>
+          <div className="mt-10 grid gap-5 md:grid-cols-3">
+            {[
+              ["Capital gastronómica del Oriente", "Cocina de autor y de talla mundial a minutos: Marinilla se volvió el epicentro gastronómico de la región."],
+              ["Vida nocturna", "Bares, cafés de especialidad, música y planes de noche. La vida social no se queda en la ciudad."],
+              ["Pueblo moderno y conectado", "Autopista Medellín–Bogotá, Aeropuerto JMC a ~25 min, comercio, salud y colegios. Todo cerca."],
+            ].map(([t, d], i) => (
+              <Reveal key={t} delay={i * 110} className="rounded-2xl bg-crema/5 p-6 ring-1 ring-crema/10 transition hover:-translate-y-1 hover:bg-crema/10">
+                <h3 className="al-display text-2xl text-crema">{t}</h3>
+                <p className="mt-2 text-crema-200">{d}</p>
+              </Reveal>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* SELECTOR DE LOTES */}
       <LotSelector lots={lots} />
+
+      {/* TESTIMONIOS / VALIDADORES */}
+      <section className="bg-crema px-6 py-20 md:px-12 md:py-28">
+        <div className="mx-auto max-w-6xl">
+          <Reveal>
+            <span className="text-sm font-semibold uppercase tracking-widest text-tierra">Testimonios</span>
+            <h2 className="al-display mt-3 text-4xl md:text-6xl text-verde leading-[1.02]">
+              Quienes ya creen en <em className="italic text-marron">ALUNA</em>.
+            </h2>
+            <p className="mt-4 max-w-2xl text-lg text-gris">
+              Propietarios y voces del Oriente que ya eligieron el proyecto. Escúchalos.
+            </p>
+          </Reveal>
+          <div className="mt-10 grid gap-6 sm:grid-cols-3">
+            {["F1Z1HcUPmk8", "pCQ6Q_4wflw", "_5dOljaBbdQ"].map((id, i) => (
+              <Reveal key={id} delay={i * 110} className="mx-auto w-full max-w-[320px]">
+                <div className="relative aspect-[9/16] overflow-hidden rounded-2xl bg-verde shadow-lg ring-1 ring-verde-100">
+                  <iframe
+                    className="absolute inset-0 h-full w-full"
+                    src={`https://www.youtube-nocookie.com/embed/${id}?rel=0`}
+                    title={`Testimonio ALUNA ${i + 1}`}
+                    loading="lazy"
+                    allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                    allowFullScreen
+                  />
+                </div>
+              </Reveal>
+            ))}
+          </div>
+        </div>
+      </section>
 
       {/* PLAN DE PAGOS */}
       <section id="plan" className="bg-verde px-6 py-20 md:px-12 md:py-28 text-crema">

@@ -27,7 +27,7 @@ export const metadata: Metadata = {
     siteName: "ALUNA Campestre",
     title: "ALUNA Campestre | El proyecto consciente",
     description:
-      "Lotes campestres listos para entregar en Marinilla. Trabaja hiperconectado y desconéctate en minutos. Ten las dos vidas.",
+      "Lotes campestres listos para entregar en Marinilla. Trabaja hiperconectado y desconéctate en minutos: el equilibrio consciente.",
   },
 };
 

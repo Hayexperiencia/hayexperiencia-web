@@ -2,6 +2,7 @@
 import { useState } from "react";
 import Image from "next/image";
 import Reveal from "@/components/aluna/Reveal";
+import LotMedia from "@/components/aluna/LotMedia";
 import { cop, elementLabel, type Lot } from "@/lib/aluna-lots";
 
 const WA = (code: string) =>
@@ -114,17 +115,14 @@ export default function LotSelector({ lots }: { lots: Lot[] }) {
               </button>
             </div>
 
-            <div className="mt-6 overflow-hidden rounded-2xl bg-verde-100">
-              <div className="relative aspect-[16/10] w-full">
-                <Image src={sel.image || "/images/aluna-hero-poster.jpg"} alt={`Vista del ${sel.code} en ALUNA`} fill sizes="(max-width:768px) 100vw, 720px" className="object-cover" />
-                <a
-                  href="#video-aluna"
-                  onClick={() => setSel(null)}
-                  className="absolute bottom-3 right-3 inline-flex items-center gap-2 rounded-full bg-verde/90 px-4 py-2 text-sm font-semibold text-crema backdrop-blur transition hover:bg-verde"
-                >
-                  ▶ Recorrido aéreo
-                </a>
-              </div>
+            <div className="mt-6">
+              <LotMedia
+                images={sel.images ?? []}
+                video={sel.video}
+                alt={`Vista del ${sel.code} en ALUNA`}
+                fallbackHref="#video-aluna"
+                onFallback={() => setSel(null)}
+              />
             </div>
 
             <div className="mt-6">
