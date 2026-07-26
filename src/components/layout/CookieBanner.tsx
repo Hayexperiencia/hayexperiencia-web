@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 
 const STORAGE_KEY = "hei_cookie_consent";
@@ -10,11 +11,16 @@ type Choice = "accepted" | "essential";
 
 export default function CookieBanner() {
   const [visible, setVisible] = useState(false);
+  const pathname = usePathname();
+  // El admin es herramienta interna: no hay analytics que consentir y el banner
+  // tapaba paneles (p.ej. la tarjeta de OpenRouter en /admin/usage).
+  const isAdmin = pathname?.startsWith("/admin") ?? false;
 
   useEffect(() => {
+    if (isAdmin) return;
     const saved = localStorage.getItem(STORAGE_KEY);
     if (!saved || !saved.startsWith(VERSION)) setVisible(true);
-  }, []);
+  }, [isAdmin]);
 
   const choose = (c: Choice) => {
     localStorage.setItem(STORAGE_KEY, `${VERSION}:${c}:${Date.now()}`);
