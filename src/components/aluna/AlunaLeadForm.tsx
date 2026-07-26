@@ -55,6 +55,15 @@ export default function AlunaLeadForm() {
       // Evento Lead al pixel de ALUNA, deduplicado con CAPI por eventID.
       const w = window as unknown as { fbq?: (...a: unknown[]) => void; gtag?: (...a: unknown[]) => void };
       try {
+        // Advanced Matching: el pixel hashea client-side. Sube el EMQ del evento
+        // de navegador (el de CAPI ya manda em/ph server-side).
+        const digits = phone.replace(/\D/g, "");
+        const am: Record<string, string> = {};
+        if (email) am.em = email.trim().toLowerCase();
+        if (digits) am.ph = digits.length === 10 ? "57" + digits : digits;
+        const fn = name.trim().split(/\s+/)[0];
+        if (fn) am.fn = fn.toLowerCase();
+        if (Object.keys(am).length) w.fbq?.("init", ALUNA_PIXEL_ID, am);
         w.fbq?.("trackSingle", ALUNA_PIXEL_ID, "Lead", { content_name: "ALUNA", currency: "COP", value: 0 }, { eventID: eventId });
         w.gtag?.("event", "generate_lead", { proyecto: "aluna" });
       } catch {}
