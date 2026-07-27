@@ -118,8 +118,8 @@ export default async function AlunaLanding() {
         <div className="mx-auto max-w-6xl">
           <Reveal>
             <span className="text-sm font-semibold uppercase tracking-widest text-tierra">Galería</span>
-            <h2 className="al-display mt-3 text-4xl md:text-6xl text-verde leading-[1.02]">El paisaje que te rodea.</h2>
-            <p className="mt-4 max-w-2xl text-lg text-gris">Vistas aéreas reales de ALUNA y su entorno en el Oriente antioqueño: bosque, reserva y montaña.</p>
+            <h2 className="al-display mt-3 text-4xl md:text-6xl text-verde leading-[1.02]">Así se ve ALUNA hoy.</h2>
+            <p className="mt-4 max-w-2xl text-lg text-gris">La portería ya construida, las vías pavimentadas y la reserva natural — fotos aéreas reales del proyecto en Marinilla. Toca cualquiera para verla en grande.</p>
           </Reveal>
           <Reveal className="mt-10"><AlunaGallery /></Reveal>
         </div>
