@@ -22,13 +22,24 @@ const PHOTOS: Photo[] = [
 
 export default function AlunaGallery() {
   const [open, setOpen] = useState<number | null>(null);
+  const [show, setShow] = useState(false); // controla el fade de entrada/salida
   const touchX = useRef<number | null>(null);
 
-  const close = useCallback(() => setOpen(null), []);
+  const close = useCallback(() => {
+    setShow(false);
+    window.setTimeout(() => setOpen(null), 260); // desmonta tras la salida
+  }, []);
   const go = useCallback(
     (d: number) => setOpen((p) => (p === null ? null : (p + d + PHOTOS.length) % PHOTOS.length)),
     [],
   );
+
+  // Fade-in del overlay al abrir (pinta opacity-0 y en el próximo frame -> 100)
+  useEffect(() => {
+    if (open === null) return;
+    const id = requestAnimationFrame(() => setShow(true));
+    return () => cancelAnimationFrame(id);
+  }, [open]);
 
   useEffect(() => {
     if (open === null) return;
@@ -77,7 +88,7 @@ export default function AlunaGallery() {
       {/* LIGHTBOX (en portal a document.body para escapar del transform de Lenis) */}
       {open !== null && typeof document !== "undefined" && createPortal(
         <div
-          className="fixed inset-0 z-[120] flex h-[100dvh] flex-col bg-verde/95 backdrop-blur-sm"
+          className={`al-lb fixed inset-0 z-[120] flex h-[100dvh] flex-col bg-verde/95 backdrop-blur-sm ${show ? "opacity-100" : "opacity-0"}`}
           onClick={close}
         >
           <div className="flex items-center justify-between px-5 py-4 text-crema" onClick={(e) => e.stopPropagation()}>
@@ -104,14 +115,16 @@ export default function AlunaGallery() {
               touchX.current = null;
             }}
           >
-            <Image
-              src={PHOTOS[open].src}
-              alt={PHOTOS[open].caption}
-              fill
-              sizes="100vw"
-              priority
-              className="object-contain px-4"
-            />
+            <div key={open} className="al-lb-img absolute inset-0">
+              <Image
+                src={PHOTOS[open].src}
+                alt={PHOTOS[open].caption}
+                fill
+                sizes="100vw"
+                priority
+                className="object-contain px-4"
+              />
+            </div>
             <button
               onClick={() => go(-1)}
               aria-label="Foto anterior"
