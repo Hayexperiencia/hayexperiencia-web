@@ -17,6 +17,12 @@ export function proxy(req: NextRequest) {
   if (pathname === '/' && (host === 'alunacampestre.com' || host === 'www.alunacampestre.com')) {
     return NextResponse.rewrite(new URL('/aluna', req.url));
   }
+  // Posicionar el dominio de marca: hayexperiencia.com/aluna -> 301 a alunacampestre.com.
+  if (pathname === '/aluna' && (host === 'hayexperiencia.com' || host === 'www.hayexperiencia.com')) {
+    const dest = new URL('https://alunacampestre.com/');
+    dest.search = req.nextUrl.search;
+    return NextResponse.redirect(dest, 301);
+  }
 
   const adminKey = process.env.ADMIN_API_KEY;
 
@@ -47,4 +53,4 @@ export function proxy(req: NextRequest) {
   return NextResponse.next();
 }
 
-export const config = { matcher: ['/', '/admin/:path*', '/api/admin/:path*'] };
+export const config = { matcher: ['/', '/aluna', '/admin/:path*', '/api/admin/:path*'] };

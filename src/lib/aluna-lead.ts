@@ -3,7 +3,8 @@ import type { Attribution } from "@/lib/attribution";
 
 const GHL_SERVICE_URL = process.env.GHL_SERVICE_URL || "http://host.docker.internal:3002";
 const GHL_SERVICE_API_KEY = process.env.GHL_SERVICE_API_KEY || "";
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://hayexperiencia.com";
+// Dominio de marca de la landing (para el event_source_url de CAPI).
+const LANDING_URL = process.env.ALUNA_LANDING_URL || "https://alunacampestre.com";
 
 // CAPI (Conversions API). Se activa cuando META_CAPI_ACCESS_TOKEN esté en el env
 // de Coolify; si no, se omite sin romper (el pixel de navegador sigue midiendo).
@@ -125,7 +126,7 @@ export async function sendAlunaCapiLead(args: {
         event_time: Math.floor(Date.now() / 1000),
         event_id: args.eventId,
         action_source: "website",
-        event_source_url: `${SITE_URL}${a.landing || "/aluna"}`,
+        event_source_url: `${LANDING_URL}${a.landing || "/"}`,
         user_data: userData,
         custom_data: { content_name: "ALUNA", content_category: "aluna", currency: "COP", value: 0 },
       },
