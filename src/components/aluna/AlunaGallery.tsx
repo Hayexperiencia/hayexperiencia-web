@@ -1,5 +1,6 @@
 "use client";
 import { useState, useCallback, useEffect, useRef } from "react";
+import { createPortal } from "react-dom";
 import Image from "next/image";
 
 type Photo = { src: string; caption: string };
@@ -73,10 +74,10 @@ export default function AlunaGallery() {
         ))}
       </div>
 
-      {/* LIGHTBOX */}
-      {open !== null && (
+      {/* LIGHTBOX (en portal a document.body para escapar del transform de Lenis) */}
+      {open !== null && typeof document !== "undefined" && createPortal(
         <div
-          className="fixed inset-0 z-[120] flex flex-col bg-verde/95 backdrop-blur-sm"
+          className="fixed inset-0 z-[120] flex h-[100dvh] flex-col bg-verde/95 backdrop-blur-sm"
           onClick={close}
         >
           <div className="flex items-center justify-between px-5 py-4 text-crema" onClick={(e) => e.stopPropagation()}>
@@ -145,7 +146,8 @@ export default function AlunaGallery() {
               </button>
             ))}
           </div>
-        </div>
+        </div>,
+        document.body,
       )}
     </>
   );

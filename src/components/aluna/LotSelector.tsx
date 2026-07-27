@@ -1,5 +1,6 @@
 "use client";
 import { useState } from "react";
+import { createPortal } from "react-dom";
 import Image from "next/image";
 import Reveal from "@/components/aluna/Reveal";
 import LotMedia from "@/components/aluna/LotMedia";
@@ -94,8 +95,8 @@ export default function LotSelector({ lots }: { lots: Lot[] }) {
         </Reveal>
       </div>
 
-      {/* HOJA DE VIDA */}
-      {sel && (
+      {/* HOJA DE VIDA (portal a body para escapar del transform de Lenis) */}
+      {sel && typeof document !== "undefined" && createPortal(
         <div
           className="fixed inset-0 z-[110] flex items-start justify-center overflow-y-auto p-4 md:p-8"
           style={{ background: "rgba(41,55,28,.8)" }}
@@ -149,7 +150,8 @@ export default function LotSelector({ lots }: { lots: Lot[] }) {
               <a href={WA(sel.code)} className="rounded-full border-2 border-verde px-7 py-3 font-semibold text-verde transition hover:bg-verde/5">Pide el plano y agenda</a>
             </div>
           </div>
-        </div>
+        </div>,
+        document.body,
       )}
     </section>
   );
