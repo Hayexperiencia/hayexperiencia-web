@@ -146,7 +146,7 @@ export default function LotSelector({ lots }: { lots: Lot[] }) {
             </div>
 
             <div className="mt-7 flex flex-wrap gap-3">
-              <a href="/cotizador?proyecto=aluna" className="rounded-full bg-tierra px-7 py-3 font-semibold text-verde transition hover:bg-tierra-400">Cotizar este lote</a>
+              <a href="/aluna/cotizador" className="rounded-full bg-tierra px-7 py-3 font-semibold text-verde transition hover:bg-tierra-400">Cotizar este lote</a>
               <a href={WA(sel.code)} className="rounded-full border-2 border-verde px-7 py-3 font-semibold text-verde transition hover:bg-verde/5">Pide el plano y agenda</a>
             </div>
           </div>

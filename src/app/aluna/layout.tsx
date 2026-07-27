@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import Script from "next/script";
 import { DM_Serif_Display, Bricolage_Grotesque } from "next/font/google";
-import SmoothScroll from "@/components/aluna/SmoothScroll";
 import AlunaTracking from "@/components/aluna/AlunaTracking";
 
 // Pixel dedicado de ALUNA (campaña de pauta). Coexiste con el global de HE:
@@ -54,7 +53,9 @@ export default function AlunaLayout({ children }: { children: React.ReactNode })
         `}
       </Script>
       <AlunaTracking />
-      <SmoothScroll>{children}</SmoothScroll>
+      {/* SmoothScroll (Lenis) vive en la landing (page.tsx), NO en el layout, para
+          que /aluna/cotizador no quede envuelto en Lenis (sus modales fixed se romperían). */}
+      {children}
     </div>
   );
 }

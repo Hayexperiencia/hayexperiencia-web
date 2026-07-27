@@ -4,6 +4,7 @@ import Reveal from "@/components/aluna/Reveal";
 import AlunaLeadForm from "@/components/aluna/AlunaLeadForm";
 import AlunaGallery from "@/components/aluna/AlunaGallery";
 import AlunaCTA from "@/components/aluna/AlunaCTA";
+import SmoothScroll from "@/components/aluna/SmoothScroll";
 import { getAlunaLots } from "@/lib/aluna-inventory";
 
 // Inventario en vivo del cotizador: SSR en cada request (la BD no es alcanzable
@@ -13,6 +14,7 @@ export const dynamic = "force-dynamic";
 export default async function AlunaLanding() {
   const lots = await getAlunaLots();
   return (
+    <SmoothScroll>
     <div style={{ background: "var(--color-crema)" }}>
       <div className="al-grain" aria-hidden />
 
@@ -199,7 +201,7 @@ export default async function AlunaLanding() {
           <h2 className="al-display mt-3 text-5xl md:text-8xl leading-[0.95]">Aparta con <em className="italic text-tierra-400">$10.000.000</em></h2>
           <p className="mt-6 text-lg md:text-xl text-crema-200">Financiación hasta 12 meses sobre un lote que ya existe y se escritura.</p>
           <div className="mt-8 flex flex-wrap justify-center gap-4">
-            <a href="/cotizador?proyecto=aluna" className="inline-block rounded-full bg-tierra px-9 py-4 text-base font-semibold text-verde transition hover:bg-tierra-400 hover:-translate-y-0.5">Calcula tu plan de pagos</a>
+            <a href="/aluna/cotizador" className="inline-block rounded-full bg-tierra px-9 py-4 text-base font-semibold text-verde transition hover:bg-tierra-400 hover:-translate-y-0.5">Calcula tu plan de pagos</a>
             <a href="#contacto" className="inline-block rounded-full border-2 border-crema/80 px-9 py-4 text-base font-semibold text-crema transition hover:bg-crema/10">Agenda tu visita</a>
           </div>
           {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -230,5 +232,6 @@ export default async function AlunaLanding() {
         </div>
       </section>
     </div>
+    </SmoothScroll>
   );
 }
