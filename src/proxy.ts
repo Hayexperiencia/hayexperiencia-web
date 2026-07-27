@@ -10,6 +10,14 @@ import { NextRequest, NextResponse } from 'next/server';
 // Sin ADMIN_API_KEY configurada falla cerrado: nunca volver al fallback público.
 export function proxy(req: NextRequest) {
   const { pathname } = req.nextUrl;
+
+  // Dominio de marca ALUNA: alunacampestre.com (+ www) sirve la landing en su raíz
+  // SIN cambiar la URL (rewrite interno a /aluna). El resto de rutas pasa igual.
+  const host = req.headers.get('host') || '';
+  if (pathname === '/' && (host === 'alunacampestre.com' || host === 'www.alunacampestre.com')) {
+    return NextResponse.rewrite(new URL('/aluna', req.url));
+  }
+
   const adminKey = process.env.ADMIN_API_KEY;
 
   // (1) Usuario autenticado por la intranet (Authelia). Auto-login sin contraseña.
@@ -39,4 +47,4 @@ export function proxy(req: NextRequest) {
   return NextResponse.next();
 }
 
-export const config = { matcher: ['/admin/:path*', '/api/admin/:path*'] };
+export const config = { matcher: ['/', '/admin/:path*', '/api/admin/:path*'] };
