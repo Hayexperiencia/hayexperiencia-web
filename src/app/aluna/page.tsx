@@ -69,7 +69,7 @@ export default async function AlunaLanding() {
               <div className="relative aspect-video overflow-hidden rounded-2xl bg-verde shadow-lg">
                 <iframe
                   className="absolute inset-0 h-full w-full"
-                  src="https://www.youtube-nocookie.com/embed/8IQI6uGWI2c?rel=0"
+                  src="https://www.youtube-nocookie.com/embed/IciI90J9vtM?rel=0"
                   title="ALUNA Campestre — video del proyecto"
                   loading="lazy"
                   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
