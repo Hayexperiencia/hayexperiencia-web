@@ -2,6 +2,8 @@ import Marquee from "@/components/aluna/Marquee";
 import LotSelector from "@/components/aluna/LotSelector";
 import Reveal from "@/components/aluna/Reveal";
 import AlunaLeadForm from "@/components/aluna/AlunaLeadForm";
+import AlunaGallery from "@/components/aluna/AlunaGallery";
+import AlunaCTA from "@/components/aluna/AlunaCTA";
 import { getAlunaLots } from "@/lib/aluna-inventory";
 
 // Inventario en vivo del cotizador: SSR en cada request (la BD no es alcanzable
@@ -111,6 +113,20 @@ export default async function AlunaLanding() {
         </div>
       </section>
 
+      {/* GALERÍA */}
+      <section className="bg-crema px-6 py-20 md:px-12 md:py-28">
+        <div className="mx-auto max-w-6xl">
+          <Reveal>
+            <span className="text-sm font-semibold uppercase tracking-widest text-tierra">Galería</span>
+            <h2 className="al-display mt-3 text-4xl md:text-6xl text-verde leading-[1.02]">El paisaje que te rodea.</h2>
+            <p className="mt-4 max-w-2xl text-lg text-gris">Vistas aéreas reales de ALUNA y su entorno en el Oriente antioqueño: bosque, reserva y montaña.</p>
+          </Reveal>
+          <Reveal className="mt-10"><AlunaGallery /></Reveal>
+        </div>
+      </section>
+
+      <AlunaCTA text="ALUNA ya es una realidad. Ven y camínalo." />
+
       {/* MARINILLA — pueblo moderno */}
       <section className="bg-verde px-6 py-20 md:px-12 md:py-28 text-crema">
         <div className="mx-auto max-w-5xl">
@@ -142,6 +158,8 @@ export default async function AlunaLanding() {
 
       {/* SELECTOR DE LOTES */}
       <LotSelector lots={lots} />
+
+      <AlunaCTA text="¿Ya viste tu lote? Agéndalo antes de que lo tomen." />
 
       {/* TESTIMONIOS / VALIDADORES */}
       <section className="bg-crema px-6 py-20 md:px-12 md:py-28">
