@@ -24,12 +24,15 @@ const body = Bricolage_Grotesque({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://alunacampestre.com"),
   title: "ALUNA Campestre | Lotes campestres listos para entregar en Marinilla",
   description:
     "El proyecto consciente para tu cuerpo, mente y espíritu. Lotes campestres de 2.500 m² con entrega inmediata y escrituración en Marinilla, Oriente Antioqueño. Aparta con $10.000.000, financiación hasta 12 meses.",
+  alternates: { canonical: "https://alunacampestre.com" },
   openGraph: {
     type: "website",
     locale: "es_CO",
+    url: "https://alunacampestre.com",
     siteName: "ALUNA Campestre",
     title: "ALUNA Campestre | El proyecto consciente",
     description:
