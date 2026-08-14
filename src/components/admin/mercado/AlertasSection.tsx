@@ -97,11 +97,11 @@ export default function AlertasSection({ refreshKey }: { refreshKey: number }) {
                 <div className="text-sm text-[var(--color-text)]">{recomendacion(r)}</div>
                 <div className="mt-2 flex gap-2 text-xs">
                   <a
-                    href={`https://app.wasi.co/property/${r.wasi_id}`}
+                    href={`/propiedades/${r.wasi_id}`}
                     target="_blank"
                     rel="noreferrer"
                     className="text-[var(--color-primary)] hover:underline"
-                  >Abrir en Wasi →</a>
+                  >Ver ficha →</a>
                   <a
                     href={`/admin/cotizador/comparables/${r.wasi_id}`}
                     target="_blank"

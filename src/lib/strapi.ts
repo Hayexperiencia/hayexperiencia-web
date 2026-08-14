@@ -356,6 +356,9 @@ export async function getStrapiProperties(
   if (filters.minPrice) parts.push(`filters[financial][price][$gte]=${filters.minPrice}`);
   if (filters.maxPrice) parts.push(`filters[financial][price][$lte]=${filters.maxPrice}`);
   if (filters.bedrooms) parts.push(`filters[specs][rooms][$gte]=${filters.bedrooms}`);
+  // Solo inventario comercialmente vivo: vendido/arrendado/retirado no salen en listados
+  parts.push(`filters[status][$in][0]=activo`);
+  parts.push(`filters[status][$in][1]=reservado`);
   parts.push(`pagination[pageSize]=${filters.pageSize ?? 24}`);
   parts.push(`pagination[page]=${filters.page ?? 1}`);
   parts.push(`sort[0]=lastSyncedAt:desc`);
