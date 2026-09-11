@@ -134,3 +134,21 @@ body {
 .al-lb-img { animation: al-lb-img .45s cubic-bezier(.16,1,.3,1) both; }
 @keyframes al-lb-img { from { opacity: 0; transform: scale(1.04); } to { opacity: 1; transform: none; } }
 @media (prefers-reduced-motion: reduce) { .al-lb { transition: none; } .al-lb-img { animation: none; } }
+
+/* ===== ZOE — bienvenida personal (/zoe) ===== */
+/* Subrayado Gold de marca (motivo firma) que se dibuja tras aparecer el nombre. */
+.zoe-hl { position: relative; white-space: nowrap; isolation: isolate; }
+.zoe-hl > * { position: relative; z-index: 1; }
+.zoe-hl::before {
+  content: ""; position: absolute; left: -0.06em; right: -0.06em; bottom: 0.08em; height: 0.24em;
+  background: var(--color-accent); border-radius: 3px; z-index: 0;
+  transform-origin: left center;
+  animation: zoe-underline .7s cubic-bezier(.22,1,.36,1) .55s both;
+}
+@keyframes zoe-underline { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+.zoe-in { opacity: 0; transform: translateY(16px); animation: zoe-in .8s cubic-bezier(.22,1,.36,1) forwards; }
+.zoe-in-2 { animation-delay: .15s; }
+@keyframes zoe-in { to { opacity: 1; transform: none; } }
+@media (prefers-reduced-motion: reduce) {
+  .zoe-in, .zoe-hl::before { animation: none !important; opacity: 1 !important; transform: none !important; }
+}
